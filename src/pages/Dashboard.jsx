@@ -50,7 +50,7 @@ export default function Dashboard({ store, setPage }) {
         <div className="stat-card stat-card--purple">
           <div className="stat-icon">✅</div>
           <div className="stat-val">{thisWeekAttendance}</div>
-          <div className="stat-label">Attendance Records</div>
+          <div className="stat-label">Roll Call</div>
           <div className="stat-sub">Total logged</div>
         </div>
       </div>
