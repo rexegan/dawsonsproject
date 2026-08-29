@@ -27,6 +27,12 @@ export default function Header({ page, onMenuClick }) {
             <span className="header-verse-ref">Colossians 3:23</span>
           </div>
         )}
+        {page === 'attendance' && (
+          <div className="header-verse">
+            <span className="header-verse-text">"And let us consider how we may spur one another on toward love and good deeds, not giving up meeting together… but encouraging one another."</span>
+            <span className="header-verse-ref">Hebrews 10:24–25 NIV</span>
+          </div>
+        )}
         {page === 'students' && (
           <div className="header-verse">
             <span className="header-verse-text">"Don't let anyone look down on you because you are young, but set an example for the believers in speech, in conduct, in love, in faith and in purity."</span>
