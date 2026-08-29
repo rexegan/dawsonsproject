@@ -94,7 +94,7 @@ const CAMPS = [
 
 const ORG_CHART = {
   homeOffice: { name:'Young Life', role:'International Home Office', location:'Colorado Springs, CO', phone:'(719) 381-1800', website:'https://www.younglife.org' },
-  regional: { name:'Holly', role:'Regional Director', region:'North Texas Region' },
+  regional: { name:'Holly McLean', role:'Regional Director', region:'West Texas Region' },
   area: { name:'Theresa Boydston', role:'Area Director', area:'Johnson County Young Life' },
   staffLeaders: [
     { name:'Theresa Boydston', role:'Area Director', program:'Both' },
@@ -373,11 +373,11 @@ export default function Resources({ store }) {
         </Modal>
       )}
       {orgModal === 'regional' && (
-        <Modal open title="Regional Director — North Texas" onClose={() => setOrgModal(false)} size="sm">
+        <Modal open title="Regional Director — West Texas" onClose={() => setOrgModal(false)} size="sm">
           <div style={{display:'flex',flexDirection:'column',gap:14}}>
             <div className="org-detail-row"><span className="org-detail-label">Name</span><span>Holly</span></div>
             <div className="org-detail-row"><span className="org-detail-label">Role</span><span>Regional Director, North Texas</span></div>
-            <div className="org-detail-row"><span className="org-detail-label">Oversees</span><span>All Young Life areas in the North Texas region</span></div>
+            <div className="org-detail-row"><span className="org-detail-label">Oversees</span><span>All Young Life areas in the West Texas region</span></div>
             <div className="modal-actions">
               <button className="btn-primary" onClick={() => setOrgModal(false)}>Close</button>
             </div>
