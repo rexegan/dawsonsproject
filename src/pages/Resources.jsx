@@ -92,6 +92,253 @@ const CAMPS = [
   },
 ]
 
+const GRANTS = [
+  // ── CORPORATE ──────────────────────────────────────────────────────────────
+  {
+    id:'g1', category:'Corporate', name:'Walmart Foundation — Community Grant',
+    funder:'Walmart Foundation', amount:'$250 – $5,000', cycle:'Rolling / Annual',
+    eligibility:'501(c)(3) nonprofits serving communities near a Walmart store.',
+    focus:'Youth development, education, hunger relief, community betterment.',
+    tips:'Apply through local store manager. Each store has a separate budget. Emphasize local community impact and student count served.',
+    website:'https://walmart.org/how-we-give/local-community-grants',
+    deadline:'Applications accepted year-round; reviewed quarterly.',
+    difficulty:'Easy',
+  },
+  {
+    id:'g2', category:'Corporate', name:'Target Foundation — Community Grant',
+    funder:'Target Corporation', amount:'$1,000 – $10,000', cycle:'Annual',
+    eligibility:'501(c)(3) youth and education nonprofits near Target stores.',
+    focus:'Education, arts, youth development.',
+    tips:'Apply through local Target store. Highlight measurable outcomes — number of students served, attendance rates, camp placements.',
+    website:'https://corporate.target.com/sustainability-governance/philanthropy',
+    deadline:'Varies by store; typically spring and fall cycles.',
+    difficulty:'Easy',
+  },
+  {
+    id:'g3', category:'Corporate', name:'Bank of America Charitable Foundation',
+    funder:'Bank of America', amount:'$5,000 – $50,000', cycle:'Annual',
+    eligibility:'501(c)(3) organizations in Bank of America markets.',
+    focus:'Workforce development, community development, arts & culture.',
+    tips:'Connect with a local BofA market president or relationship manager. Personal relationships greatly increase success rate.',
+    website:'https://about.bankofamerica.com/en/making-an-impact/charitable-foundation-funding',
+    deadline:'Varies by market; applications typically open in Q1.',
+    difficulty:'Medium',
+  },
+  {
+    id:'g4', category:'Corporate', name:'Wells Fargo Foundation',
+    funder:'Wells Fargo', amount:'$5,000 – $25,000', cycle:'Annual',
+    eligibility:'501(c)(3) nonprofits in Wells Fargo banking communities.',
+    focus:'Financial health, housing, small business, diversity & inclusion.',
+    tips:'Strongest fit when connecting Young Life\'s economic empowerment angle — helping at-risk youth avoid poverty through mentorship.',
+    website:'https://www.wellsfargo.com/about/corporate-responsibility/community-giving/',
+    deadline:'Rolling applications reviewed quarterly.',
+    difficulty:'Medium',
+  },
+  {
+    id:'g5', category:'Corporate', name:'ExxonMobil Foundation — Educational Grants',
+    funder:'ExxonMobil', amount:'$10,000 – $100,000', cycle:'Annual',
+    eligibility:'501(c)(3) education and youth STEM nonprofits.',
+    focus:'Math, science education, community development in ExxonMobil operating areas.',
+    tips:'Strong fit for Johnson County given ExxonMobil\'s presence in Texas. Frame around academic achievement and keeping students in school.',
+    website:'https://corporate.exxonmobil.com/community-engagement',
+    deadline:'Applications accepted annually; typically Q1–Q2.',
+    difficulty:'Medium',
+  },
+  {
+    id:'g6', category:'Corporate', name:'AT&T Believes — Community Grants',
+    funder:'AT&T', amount:'$5,000 – $50,000', cycle:'Annual',
+    eligibility:'501(c)(3) nonprofits focused on education and digital inclusion.',
+    focus:'Education, digital literacy, workforce development for youth.',
+    tips:'Emphasize how Young Life connects students who might otherwise fall through the cracks, and any digital/communication components.',
+    website:'https://about.att.com/csr/home/community.html',
+    deadline:'Invitation-based; reach out to local AT&T community affairs manager.',
+    difficulty:'Hard',
+  },
+
+  // ── FAITH-BASED & MINISTRY ────────────────────────────────────────────────
+  {
+    id:'g7', category:'Faith-Based', name:'Maclellan Foundation',
+    funder:'Maclellan Foundation', amount:'$10,000 – $200,000', cycle:'Annual',
+    eligibility:'Christian nonprofits with strong evangelical mission alignment.',
+    focus:'Christian ministry, youth discipleship, church planting, evangelism.',
+    tips:'Very strong fit for Young Life. Frame around spiritual formation, campus ministry, and reproducible discipleship model. Submit a detailed theory of change.',
+    website:'https://www.maclellan.net',
+    deadline:'Letter of Inquiry accepted year-round; grant decisions in Q2 and Q4.',
+    difficulty:'Medium',
+  },
+  {
+    id:'g8', category:'Faith-Based', name:'M.J. Murdock Charitable Trust',
+    funder:'M.J. Murdock Charitable Trust', amount:'$25,000 – $500,000', cycle:'Annual',
+    eligibility:'Nonprofits in Pacific Northwest and select faith-aligned organizations nationally.',
+    focus:'Arts, education, health, human services, scientific research, faith.',
+    tips:'Competitive but excellent fit for faith-based youth ministries. Requires strong board governance documentation and multi-year financial statements.',
+    website:'https://murdocktrust.org',
+    deadline:'Applications accepted year-round; reviewed quarterly.',
+    difficulty:'Hard',
+  },
+  {
+    id:'g9', category:'Faith-Based', name:'Mustard Seed Foundation — Harvey Fellows',
+    funder:'Mustard Seed Foundation', amount:'$5,000 – $30,000', cycle:'Annual',
+    eligibility:'Christian organizations advancing kingdom impact in underserved communities.',
+    focus:'Christian ministry, community development, youth, leadership development.',
+    tips:'Emphasize leader development pipeline — how Young Life trains young adults to become ministry leaders. Show long-term kingdom ROI.',
+    website:'https://www.msfdn.org',
+    deadline:'Applications open in the fall for following year funding.',
+    difficulty:'Medium',
+  },
+  {
+    id:'g10', category:'Faith-Based', name:'National Christian Foundation — Giving Funds',
+    funder:'National Christian Foundation', amount:'Varies — donor-advised', cycle:'Ongoing',
+    eligibility:'Any evangelical 501(c)(3) or fiscally sponsored Christian ministry.',
+    focus:'All Christian ministry categories.',
+    tips:'NCF connects donors with ministries through its giving fund platform. Enroll Young Life with NCF so donors who already give through NCF can easily support you.',
+    website:'https://www.ncfgiving.com',
+    deadline:'No formal deadline — relationship-based.',
+    difficulty:'Easy',
+  },
+  {
+    id:'g11', category:'Faith-Based', name:'Lilly Endowment — Religion Initiatives',
+    funder:'Lilly Endowment', amount:'$50,000 – $2,000,000', cycle:'Annual by initiative',
+    eligibility:'501(c)(3) religious and educational organizations.',
+    focus:'Christian ministry, pastoral development, religious education, youth faith formation.',
+    tips:'Lilly issues specific RFPs (Request for Proposals) for each initiative. Monitor their website. Best fit: Youth Theology Initiative or Thriving in Ministry.',
+    website:'https://lillyendowment.org/our-work/religion/',
+    deadline:'Varies by initiative; watch for annual RFP releases.',
+    difficulty:'Hard',
+  },
+
+  // ── YOUTH & COMMUNITY ─────────────────────────────────────────────────────
+  {
+    id:'g12', category:'Youth & Community', name:'Annie E. Casey Foundation',
+    funder:'Annie E. Casey Foundation', amount:'$50,000 – $500,000', cycle:'Annual',
+    eligibility:'501(c)(3) nonprofits improving outcomes for disadvantaged youth.',
+    focus:'Child welfare, youth development, poverty reduction, family strengthening.',
+    tips:'Frame Young Life\'s work around breaking cycles of poverty through mentorship and community connection. Data on long-term student outcomes is key.',
+    website:'https://www.aecf.org/work/grant-making',
+    deadline:'Primarily invitation-based; submit a letter of inquiry to start.',
+    difficulty:'Hard',
+  },
+  {
+    id:'g13', category:'Youth & Community', name:'W.K. Kellogg Foundation',
+    funder:'W.K. Kellogg Foundation', amount:'$75,000 – $1,000,000', cycle:'Annual',
+    eligibility:'Nonprofits advancing racial equity and youth development.',
+    focus:'Education, food security, family economic security, racial equity.',
+    tips:'Competitive. Strong fit if Johnson County Young Life can demonstrate work with underserved or minority youth populations. Equity narrative is essential.',
+    website:'https://www.wkkf.org/grants',
+    deadline:'Invitation-based; submit online letter of inquiry.',
+    difficulty:'Hard',
+  },
+  {
+    id:'g14', category:'Youth & Community', name:'Johnson County Community Foundation',
+    funder:'Johnson County (TX) Community Foundation', amount:'$1,000 – $25,000', cycle:'Annual',
+    eligibility:'Nonprofits serving Johnson County, Texas residents.',
+    focus:'Education, arts, community betterment, youth.',
+    tips:'Highest likelihood of success — local foundation, local mission. Apply every year. Attend foundation events and build relationships with board members.',
+    website:'https://www.jccf.net',
+    deadline:'Typically spring cycle; watch local announcements.',
+    difficulty:'Easy',
+  },
+  {
+    id:'g15', category:'Youth & Community', name:'United Way of Tarrant County',
+    funder:'United Way', amount:'$5,000 – $50,000', cycle:'Annual',
+    eligibility:'Nonprofits serving Tarrant/Johnson County with measurable outcomes.',
+    focus:'Education, income, health, basic needs.',
+    tips:'Become a United Way funded partner — requires application, site visit, and outcomes reporting. Once approved, funding renews annually.',
+    website:'https://www.unitedwaytarrant.org',
+    deadline:'Partner applications typically open in late winter.',
+    difficulty:'Medium',
+  },
+  {
+    id:'g16', category:'Youth & Community', name:'Charles Butt Foundation (H-E-B)',
+    funder:'Charles Butt Foundation / H-E-B', amount:'$10,000 – $100,000', cycle:'Annual',
+    eligibility:'Texas nonprofits in education and youth development.',
+    focus:'Public education quality, teacher excellence, youth development in Texas.',
+    tips:'Texas-based and well-funded. Strong alignment with youth mentorship. Emphasize Texas student outcomes and partnership with local schools.',
+    website:'https://charlesbutt.org',
+    deadline:'Applications reviewed annually; contact foundation for intake.',
+    difficulty:'Medium',
+  },
+
+  // ── GOVERNMENT ────────────────────────────────────────────────────────────
+  {
+    id:'g17', category:'Government', name:'SAMHSA — Youth Mental Health & Prevention',
+    funder:'Substance Abuse and Mental Health Services Administration', amount:'$100,000 – $500,000', cycle:'Annual',
+    eligibility:'501(c)(3) nonprofits providing mental health or substance abuse prevention programs for youth.',
+    focus:'Youth mental health, substance abuse prevention, resilience building.',
+    tips:'Requires detailed evaluation plan and data collection. Young Life\'s mentorship model aligns with resilience-building criteria. Partner with a local school or health district to strengthen the application.',
+    website:'https://www.samhsa.gov/grants',
+    deadline:'Grant-specific; check grants.gov for current opportunities.',
+    difficulty:'Hard',
+  },
+  {
+    id:'g18', category:'Government', name:'OJJDP — Juvenile Delinquency Prevention',
+    funder:'Office of Juvenile Justice & Delinquency Prevention', amount:'$200,000 – $1,000,000', cycle:'Annual',
+    eligibility:'Nonprofits with evidence-based youth crime prevention programs.',
+    focus:'At-risk youth, mentorship, juvenile crime prevention.',
+    tips:'Young Life\'s relational ministry model fits the evidence-based mentoring criteria. Apply as a subgrantee through the Texas Juvenile Justice Department (TJJD).',
+    website:'https://ojjdp.gov/grants/',
+    deadline:'Varies; review grants.gov and TJJD announcements.',
+    difficulty:'Hard',
+  },
+  {
+    id:'g19', category:'Government', name:'AmeriCorps — Volunteer Generation Fund',
+    funder:'AmeriCorps (federal)', amount:'$25,000 – $200,000', cycle:'Annual',
+    eligibility:'Nonprofits expanding their volunteer base and civic engagement.',
+    focus:'Volunteer recruitment, training, and management.',
+    tips:'Young Life\'s volunteer leader model is a perfect fit. This grant pays for staff time to recruit and support volunteers — it can fund a part-time volunteer coordinator.',
+    website:'https://americorps.gov/partner/how-to-work-with-americorps/grants',
+    deadline:'Applications typically open in winter for following fiscal year.',
+    difficulty:'Medium',
+  },
+  {
+    id:'g20', category:'Government', name:'Texas Governor\'s Prevention Programs',
+    funder:'Texas Health & Human Services / Governor\'s Office', amount:'$10,000 – $150,000', cycle:'Annual',
+    eligibility:'Texas 501(c)(3) nonprofits with youth prevention programs.',
+    focus:'At-risk youth, dropout prevention, substance abuse prevention.',
+    tips:'Apply through THHS or the Governor\'s Criminal Justice Division. Johnson County\'s rural designation may qualify for additional rural youth funding set-asides.',
+    website:'https://www.hhs.texas.gov/grants-contracts',
+    deadline:'Varies by program; monitor THHS and GCJ announcements.',
+    difficulty:'Medium',
+  },
+
+  // ── HOW TO APPLY ─────────────────────────────────────────────────────────
+]
+
+const GRANT_TIPS = [
+  {
+    step:1, title:'Get Your House in Order',
+    body:'Before applying anywhere: obtain your IRS determination letter, maintain current 990s (3 years), have audited financials if budget > $500K, keep board minutes current, and have a one-page program summary ready. Most funders require all of these.',
+  },
+  {
+    step:2, title:'Write a Compelling Needs Statement',
+    body:'Answer: Who are you serving? What problem exists? What data proves it? For Johnson County, cite local poverty rates, dropout statistics, and the gap in after-school mentorship programs. Use Census and TEA data.',
+  },
+  {
+    step:3, title:'Define Clear, Measurable Outcomes',
+    body:'Funders want outcomes, not activities. Not "we run club 40 times a year" but "85% of students in our program report at least one trusted adult relationship; 92% graduate high school." Track and report these every year.',
+  },
+  {
+    step:4, title:'Submit a Letter of Inquiry (LOI) First',
+    body:'Many foundations require an LOI before a full application. A strong LOI is 1–2 pages: who you are, what you\'re asking for, and why it fits their mission. Always customize to each funder\'s language.',
+  },
+  {
+    step:5, title:'Build Relationships Before You Apply',
+    body:'The #1 predictor of grant success is a prior relationship with a program officer. Attend funder events, introduce yourself at community gatherings, and call before you submit. A warm application is 3x more likely to succeed.',
+  },
+  {
+    step:6, title:'Apply Consistently — Every Year',
+    body:'Most grants are renewable. A "no" this year is often a "not yet." Ask for feedback when declined. Reapply with stronger data. The average successful grant relationship takes 2–3 years of relationship-building.',
+  },
+  {
+    step:7, title:'Report Back Thoroughly',
+    body:'The fastest path to a second grant is an excellent report on the first. Send impact updates even when not required. Photos, student stories, and data tables all help. Funders who feel informed become multi-year partners.',
+  },
+  {
+    step:8, title:'Use Grants.gov for Federal Opportunities',
+    body:'All federal grants are posted at grants.gov. Set up a free account, create keyword alerts for "youth," "mentoring," and "faith-based," and you\'ll receive automatic notifications when new grants are posted.',
+  },
+]
+
 const ORG_CHART = {
   homeOffice: { name:'Young Life', role:'International Home Office', location:'Colorado Springs, CO', phone:'(719) 381-1800', website:'https://www.younglife.org' },
   regional: { name:'Holly McLean', role:'Regional Director', region:'West Texas Region' },
@@ -139,6 +386,9 @@ export default function Resources({ store }) {
   const [selectedCamp, setSelectedCamp] = useState(null)
   const [selectedUpdate, setSelectedUpdate] = useState(null)
   const [orgModal, setOrgModal] = useState(false)
+  const [selectedGrant, setSelectedGrant] = useState(null)
+  const [grantCategory, setGrantCategory] = useState('All')
+  const [showTips, setShowTips] = useState(false)
 
   const { org } = store
   const directorName = org?.areaDirector || 'Theresa Boydston'
@@ -162,6 +412,7 @@ export default function Resources({ store }) {
           { id:'501c3', label:'⚖️ 501(c)(3) Updates' },
           { id:'orgchart', label:'🏗️ Org Chart' },
           { id:'camps', label:'🏕️ Camp Directory' },
+          { id:'grants', label:'💰 Grants' },
         ].map(t => (
           <button
             key={t.id}
@@ -300,6 +551,104 @@ export default function Resources({ store }) {
             ))}
           </div>
         </div>
+      )}
+
+      {/* GRANTS TAB */}
+      {tab === 'grants' && (
+        <div className="resources-section">
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:10}}>
+            <div className="resources-filter-bar">
+              {['All','Corporate','Faith-Based','Youth & Community','Government'].map(c => (
+                <button key={c} className={`level-chip ${grantCategory===c?'level-chip--active':''}`} onClick={()=>setGrantCategory(c)}>{c}</button>
+              ))}
+            </div>
+            <button className="btn-primary" style={{fontSize:13}} onClick={()=>setShowTips(true)}>📋 How to Apply Guide</button>
+          </div>
+
+          <div className="grants-summary-bar">
+            {[
+              {label:'Total Opportunities', val:GRANTS.length, color:'#1B4FA3'},
+              {label:'Corporate Grants', val:GRANTS.filter(g=>g.category==='Corporate').length, color:'#d97706'},
+              {label:'Faith-Based Grants', val:GRANTS.filter(g=>g.category==='Faith-Based').length, color:'#3AAB35'},
+              {label:'Government Grants', val:GRANTS.filter(g=>g.category==='Government').length, color:'#854883'},
+            ].map(s=>(
+              <div key={s.label} className="grants-summary-card" style={{borderTop:`4px solid ${s.color}`}}>
+                <div className="grants-summary-val" style={{color:s.color}}>{s.val}</div>
+                <div className="grants-summary-lbl">{s.label}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grants-grid">
+            {GRANTS.filter(g=>grantCategory==='All'||g.category===grantCategory).map(g=>(
+              <button key={g.id} className="grant-card" onClick={()=>setSelectedGrant(g)}>
+                <div className="grant-card-header">
+                  <span className={`grant-cat grant-cat--${g.category.toLowerCase().replace(/[^a-z]/g,'-')}`}>{g.category}</span>
+                  <span className={`grant-difficulty grant-difficulty--${g.difficulty.toLowerCase()}`}>{g.difficulty}</span>
+                </div>
+                <div className="grant-name">{g.name}</div>
+                <div className="grant-amount">{g.amount}</div>
+                <div className="grant-focus">{g.focus}</div>
+                <div className="grant-cycle">🗓 {g.cycle}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* GRANT DETAIL MODAL */}
+      {selectedGrant && (
+        <Modal open title={selectedGrant.name} onClose={()=>setSelectedGrant(null)} size="lg">
+          <div style={{display:'flex',flexDirection:'column',gap:14}}>
+            <div style={{display:'flex',gap:10,flexWrap:'wrap',alignItems:'center'}}>
+              <span className={`grant-cat grant-cat--${selectedGrant.category.toLowerCase().replace(/[^a-z]/g,'-')}`}>{selectedGrant.category}</span>
+              <span className={`grant-difficulty grant-difficulty--${selectedGrant.difficulty.toLowerCase()}`}>{selectedGrant.difficulty} Difficulty</span>
+              <span style={{fontWeight:800,color:'#3AAB35',fontSize:15}}>{selectedGrant.amount}</span>
+            </div>
+            <div className="grant-detail-grid">
+              <div><span className="grant-detail-label">Funder</span><span>{selectedGrant.funder}</span></div>
+              <div><span className="grant-detail-label">Cycle</span><span>{selectedGrant.cycle}</span></div>
+              <div><span className="grant-detail-label">Deadline</span><span>{selectedGrant.deadline}</span></div>
+              <div><span className="grant-detail-label">Focus Areas</span><span>{selectedGrant.focus}</span></div>
+            </div>
+            <div>
+              <div className="grant-detail-label" style={{marginBottom:6}}>Eligibility</div>
+              <p style={{fontSize:14,lineHeight:1.6,color:'var(--gray-700)',margin:0}}>{selectedGrant.eligibility}</p>
+            </div>
+            <div style={{background:'#f0f7ff',borderRadius:10,padding:'12px 16px',borderLeft:'4px solid #1B4FA3'}}>
+              <div style={{fontWeight:700,fontSize:13,color:'#1B4FA3',marginBottom:6}}>💡 Application Tips for Young Life</div>
+              <p style={{fontSize:14,lineHeight:1.6,color:'var(--gray-700)',margin:0}}>{selectedGrant.tips}</p>
+            </div>
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={()=>setSelectedGrant(null)}>Close</button>
+              <button className="btn-primary" onClick={()=>window.open(selectedGrant.website,'_blank')}>Visit Funder Website →</button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* HOW TO APPLY GUIDE MODAL */}
+      {showTips && (
+        <Modal open title="How to Apply for Grants — Young Life Guide" onClose={()=>setShowTips(false)} size="lg">
+          <div style={{display:'flex',flexDirection:'column',gap:14}}>
+            <p style={{fontSize:14,color:'var(--gray-600)',margin:0}}>Eight essential steps to successfully find, apply for, and retain grant funding for Johnson County Young Life.</p>
+            {GRANT_TIPS.map(t=>(
+              <div key={t.step} style={{display:'flex',gap:14,alignItems:'flex-start',padding:'12px 0',borderBottom:'1px solid var(--gray-100)'}}>
+                <div style={{minWidth:36,height:36,borderRadius:'50%',background:'#1B4FA3',color:'white',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:900,fontSize:15,flexShrink:0}}>{t.step}</div>
+                <div>
+                  <div style={{fontWeight:700,fontSize:14,color:'var(--gray-900)',marginBottom:4}}>{t.title}</div>
+                  <p style={{fontSize:13,lineHeight:1.7,color:'var(--gray-600)',margin:0}}>{t.body}</p>
+                </div>
+              </div>
+            ))}
+            <div style={{background:'#EDFAEC',borderRadius:10,padding:'12px 16px',borderLeft:'4px solid #3AAB35',marginTop:4}}>
+              <strong style={{color:'#3AAB35'}}>Pro tip:</strong> <span style={{fontSize:13,color:'var(--gray-700)'}}>Young Life national provides grant writing resources and templates through the staff portal at younglife.org/staff. Your regional director Holly McLean may also know of region-specific funding opportunities.</span>
+            </div>
+            <div className="modal-actions">
+              <button className="btn-primary" onClick={()=>setShowTips(false)}>Got It</button>
+            </div>
+          </div>
+        </Modal>
       )}
 
       {/* NEWS DETAIL MODAL */}
