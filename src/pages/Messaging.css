@@ -79,3 +79,5 @@
 .mktg-month-focus { font-size: 12px; color: #1B4FA3; font-weight: 600; }
 .mktg-task-list { margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
 .mktg-task-list li { font-size: 13px; color: var(--gray-600); line-height: 1.5; }
+.mktg-month--clickable { cursor: pointer; text-align: left; transition: box-shadow .15s, transform .15s; }
+.mktg-month--clickable:hover { box-shadow: 0 4px 16px rgba(27,79,163,.15); transform: translateY(-2px); }

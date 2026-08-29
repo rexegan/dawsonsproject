@@ -129,6 +129,83 @@ function ProgramsSection({ store }) {
   )
 }
 
+function LeadersSection({ store }) {
+  const { leaders, addLeader, updateLeader, deleteLeader, addNotification } = store
+  const [adding, setAdding] = useState(false)
+  const [editId, setEditId] = useState(null)
+  const blank = { name:'', role:'', program:'', phone:'', email:'' }
+  const [newL, setNewL] = useState(blank)
+  const [editDraft, setEditDraft] = useState({})
+
+  function handleAdd() {
+    if (!newL.name.trim()) return
+    addLeader({ ...newL, id: 'l' + Date.now() })
+    setNewL(blank); setAdding(false)
+    addNotification('Leader added!')
+  }
+  function startEdit(l) { setEditId(l.id); setEditDraft({ name:l.name, role:l.role||'', program:l.program||'', phone:l.phone||'', email:l.email||'' }) }
+  function saveEdit(id) { updateLeader(id, editDraft); setEditId(null); addNotification('Leader updated!') }
+
+  const leaderFields = [
+    { key:'name', placeholder:'Full name*' },
+    { key:'role', placeholder:'Role (e.g. Area Director)' },
+    { key:'program', placeholder:'Program (YoungLife / WyldLife / Both)' },
+    { key:'phone', placeholder:'Phone' },
+    { key:'email', placeholder:'Email' },
+  ]
+
+  return (
+    <div className="settings-group">
+      <div className="settings-group-header">
+        <div className="settings-group-label">Leadership ({leaders.length})</div>
+        <button className="settings-btn settings-btn--blue" onClick={() => setAdding(true)}>+ Add</button>
+      </div>
+      <div className="settings-card">
+        {leaders.map(l => (
+          <div className="settings-row" key={l.id}>
+            {editId === l.id ? (
+              <div style={{flex:1,display:'flex',flexDirection:'column',gap:6}}>
+                {leaderFields.map(f => (
+                  <input key={f.key} className="settings-input" value={editDraft[f.key]||''} placeholder={f.placeholder}
+                    onChange={e => setEditDraft(d => ({...d, [f.key]: e.target.value}))} />
+                ))}
+                <div style={{display:'flex',gap:8,marginTop:4}}>
+                  <button className="settings-btn settings-btn--blue" onClick={() => saveEdit(l.id)}>Save</button>
+                  <button className="settings-btn settings-btn--ghost" onClick={() => setEditId(null)}>Cancel</button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="settings-row-info" style={{flex:1}}>
+                  <div className="settings-row-title">{l.name}</div>
+                  <div className="settings-row-sub">{[l.role, l.program, l.phone, l.email].filter(Boolean).join(' · ')}</div>
+                </div>
+                <div style={{display:'flex',gap:6,alignItems:'center',flexShrink:0}}>
+                  <button className="settings-btn settings-btn--ghost" onClick={() => startEdit(l)}>Edit</button>
+                  <button className="settings-btn settings-btn--red" onClick={() => { deleteLeader(l.id); addNotification('Leader removed') }}>Delete</button>
+                </div>
+              </>
+            )}
+          </div>
+        ))}
+        {adding && (
+          <div className="settings-row" style={{flexDirection:'column',alignItems:'stretch',gap:8}}>
+            {leaderFields.map(f => (
+              <input key={f.key} className="settings-input" value={newL[f.key]} placeholder={f.placeholder}
+                onChange={e => setNewL(d => ({...d, [f.key]: e.target.value}))} />
+            ))}
+            <div style={{display:'flex',gap:8}}>
+              <button className="settings-btn settings-btn--blue" onClick={handleAdd}>Add Leader</button>
+              <button className="settings-btn settings-btn--ghost" onClick={() => setAdding(false)}>Cancel</button>
+            </div>
+          </div>
+        )}
+        {leaders.length === 0 && !adding && <div className="settings-row"><div className="settings-row-sub">No leaders yet.</div></div>}
+      </div>
+    </div>
+  )
+}
+
 function SchoolsSection({ store }) {
   const { schools, addSchool, deleteSchool, addNotification } = store
   const [newSchool, setNewSchool] = useState('')
@@ -197,6 +274,7 @@ export default function Settings({ store }) {
   return (
     <div className="settings-page">
       <OrgSection store={store} />
+      <LeadersSection store={store} />
       <ProgramsSection store={store} />
       <SchoolsSection store={store} />
 

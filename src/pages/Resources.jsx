@@ -100,7 +100,7 @@ const GRANTS = [
     eligibility:'501(c)(3) nonprofits serving communities near a Walmart store.',
     focus:'Youth development, education, hunger relief, community betterment.',
     tips:'Apply through local store manager. Each store has a separate budget. Emphasize local community impact and student count served.',
-    website:'https://walmart.org/how-we-give/local-community-grants',
+    website:'https://walmart.org',
     deadline:'Applications accepted year-round; reviewed quarterly.',
     difficulty:'Easy',
   },
@@ -110,7 +110,7 @@ const GRANTS = [
     eligibility:'501(c)(3) youth and education nonprofits near Target stores.',
     focus:'Education, arts, youth development.',
     tips:'Apply through local Target store. Highlight measurable outcomes — number of students served, attendance rates, camp placements.',
-    website:'https://corporate.target.com/sustainability-governance/philanthropy',
+    website:'https://www.target.com/c/target-foundation/-/N-5q0e2',
     deadline:'Varies by store; typically spring and fall cycles.',
     difficulty:'Easy',
   },
@@ -120,7 +120,7 @@ const GRANTS = [
     eligibility:'501(c)(3) organizations in Bank of America markets.',
     focus:'Workforce development, community development, arts & culture.',
     tips:'Connect with a local BofA market president or relationship manager. Personal relationships greatly increase success rate.',
-    website:'https://about.bankofamerica.com/en/making-an-impact/charitable-foundation-funding',
+    website:'https://about.bankofamerica.com',
     deadline:'Varies by market; applications typically open in Q1.',
     difficulty:'Medium',
   },
@@ -130,7 +130,7 @@ const GRANTS = [
     eligibility:'501(c)(3) nonprofits in Wells Fargo banking communities.',
     focus:'Financial health, housing, small business, diversity & inclusion.',
     tips:'Strongest fit when connecting Young Life\'s economic empowerment angle — helping at-risk youth avoid poverty through mentorship.',
-    website:'https://www.wellsfargo.com/about/corporate-responsibility/community-giving/',
+    website:'https://www.wellsfargo.com',
     deadline:'Rolling applications reviewed quarterly.',
     difficulty:'Medium',
   },
@@ -140,7 +140,7 @@ const GRANTS = [
     eligibility:'501(c)(3) education and youth STEM nonprofits.',
     focus:'Math, science education, community development in ExxonMobil operating areas.',
     tips:'Strong fit for Johnson County given ExxonMobil\'s presence in Texas. Frame around academic achievement and keeping students in school.',
-    website:'https://corporate.exxonmobil.com/community-engagement',
+    website:'https://www.exxonmobil.com',
     deadline:'Applications accepted annually; typically Q1–Q2.',
     difficulty:'Medium',
   },
@@ -150,7 +150,7 @@ const GRANTS = [
     eligibility:'501(c)(3) nonprofits focused on education and digital inclusion.',
     focus:'Education, digital literacy, workforce development for youth.',
     tips:'Emphasize how Young Life connects students who might otherwise fall through the cracks, and any digital/communication components.',
-    website:'https://about.att.com/csr/home/community.html',
+    website:'https://www.att.com',
     deadline:'Invitation-based; reach out to local AT&T community affairs manager.',
     difficulty:'Hard',
   },
@@ -202,7 +202,7 @@ const GRANTS = [
     eligibility:'501(c)(3) religious and educational organizations.',
     focus:'Christian ministry, pastoral development, religious education, youth faith formation.',
     tips:'Lilly issues specific RFPs (Request for Proposals) for each initiative. Monitor their website. Best fit: Youth Theology Initiative or Thriving in Ministry.',
-    website:'https://lillyendowment.org/our-work/religion/',
+    website:'https://lillyendowment.org',
     deadline:'Varies by initiative; watch for annual RFP releases.',
     difficulty:'Hard',
   },
@@ -214,7 +214,7 @@ const GRANTS = [
     eligibility:'501(c)(3) nonprofits improving outcomes for disadvantaged youth.',
     focus:'Child welfare, youth development, poverty reduction, family strengthening.',
     tips:'Frame Young Life\'s work around breaking cycles of poverty through mentorship and community connection. Data on long-term student outcomes is key.',
-    website:'https://www.aecf.org/work/grant-making',
+    website:'https://www.aecf.org',
     deadline:'Primarily invitation-based; submit a letter of inquiry to start.',
     difficulty:'Hard',
   },
@@ -224,7 +224,7 @@ const GRANTS = [
     eligibility:'Nonprofits advancing racial equity and youth development.',
     focus:'Education, food security, family economic security, racial equity.',
     tips:'Competitive. Strong fit if Johnson County Young Life can demonstrate work with underserved or minority youth populations. Equity narrative is essential.',
-    website:'https://www.wkkf.org/grants',
+    website:'https://www.wkkf.org',
     deadline:'Invitation-based; submit online letter of inquiry.',
     difficulty:'Hard',
   },
@@ -286,7 +286,7 @@ const GRANTS = [
     eligibility:'Nonprofits expanding their volunteer base and civic engagement.',
     focus:'Volunteer recruitment, training, and management.',
     tips:'Young Life\'s volunteer leader model is a perfect fit. This grant pays for staff time to recruit and support volunteers — it can fund a part-time volunteer coordinator.',
-    website:'https://americorps.gov/partner/how-to-work-with-americorps/grants',
+    website:'https://americorps.gov',
     deadline:'Applications typically open in winter for following fiscal year.',
     difficulty:'Medium',
   },
@@ -296,7 +296,7 @@ const GRANTS = [
     eligibility:'Texas 501(c)(3) nonprofits with youth prevention programs.',
     focus:'At-risk youth, dropout prevention, substance abuse prevention.',
     tips:'Apply through THHS or the Governor\'s Criminal Justice Division. Johnson County\'s rural designation may qualify for additional rural youth funding set-asides.',
-    website:'https://www.hhs.texas.gov/grants-contracts',
+    website:'https://www.hhs.texas.gov',
     deadline:'Varies by program; monitor THHS and GCJ announcements.',
     difficulty:'Medium',
   },
@@ -338,6 +338,77 @@ const GRANT_TIPS = [
     body:'All federal grants are posted at grants.gov. Set up a free account, create keyword alerts for "youth," "mentoring," and "faith-based," and you\'ll receive automatic notifications when new grants are posted.',
   },
 ]
+
+const BUSINESSES = [
+  // ── RESTAURANTS & FOOD ───────────────────────────────────────────────────
+  { id:'b1', category:'Restaurant', name:'Whistle Stop Café', city:'Cleburne', address:'102 N Anglin St, Cleburne, TX 76033', phone:'(817) 641-2200', website:'https://www.cleburnetx.gov', ownership:'Local — family owned', notes:'Downtown landmark. Great for donor breakfasts.' },
+  { id:'b2', category:'Restaurant', name:'Cotton Patch Café', city:'Cleburne', address:'2111 W Henderson St, Cleburne, TX 76033', phone:'(817) 556-0770', website:'https://www.cottonpatch.com', ownership:'Chain — regional', notes:'Family-friendly. Good for large group meals.' },
+  { id:'b3', category:'Restaurant', name:'Babe\'s Chicken Dinner House', city:'Burleson', address:'209 N Burleson Blvd, Burleson, TX 76028', phone:'(817) 447-3400', website:'https://www.babeschicken.com', ownership:'Chain — Texas regional', notes:'Popular with donors and families. Great for fundraiser dinners.' },
+  { id:'b4', category:'Restaurant', name:'Ranchman\'s Ponder Steakhouse', city:'Cleburne', address:'110 W Henderson St, Cleburne, TX 76033', phone:'(817) 641-9797', website:'', ownership:'Local', notes:'Classic Texas steakhouse. Good for donor appreciation meals.' },
+  { id:'b5', category:'Restaurant', name:'Chili\'s Grill & Bar', city:'Burleson', address:'600 NE Alsbury Blvd, Burleson, TX 76028', phone:'(817) 447-2800', website:'https://www.chilis.com', ownership:'Chain — national', notes:'Potential for "Dining for Dollars" fundraiser nights.' },
+  { id:'b6', category:'Restaurant', name:'Texas Roadhouse', city:'Burleson', address:'700 SW Wilshire Blvd, Burleson, TX 76028', phone:'(817) 447-0031', website:'https://www.texasroadhouse.com', ownership:'Chain — national', notes:'Fundraiser opportunities available through their community program.' },
+  { id:'b7', category:'Restaurant', name:'Fuzzy\'s Taco Shop', city:'Burleson', address:'248 NE Alsbury Blvd, Burleson, TX 76028', phone:'(817) 426-5610', website:'https://www.fuzzystacoshop.com', ownership:'Chain — regional', notes:'Popular with students. Good for club-night meal deals.' },
+  { id:'b8', category:'Restaurant', name:'Whataburger', city:'Cleburne', address:'1201 N Main St, Cleburne, TX 76031', phone:'(817) 641-9900', website:'https://www.whataburger.com', ownership:'Chain — Texas', notes:'Texas icon. Consider for student event meal sponsorship.' },
+  // ── RETAIL & SHOPPING ────────────────────────────────────────────────────
+  { id:'b9', category:'Retail', name:'Walmart Supercenter', city:'Cleburne', address:'1800 W Henderson St, Cleburne, TX 76033', phone:'(817) 641-7030', website:'https://walmart.com', ownership:'Chain — national', notes:'Local store grant program. Apply through store manager.' },
+  { id:'b10', category:'Retail', name:'H-E-B', city:'Burleson', address:'700 SW Wilshire Blvd, Burleson, TX 76028', phone:'(817) 426-4720', website:'https://www.heb.com', ownership:'Texas — privately held', notes:'H-E-B Community Partners donates to local nonprofits. Strong Texas alignment.' },
+  { id:'b11', category:'Retail', name:'Academy Sports + Outdoors', city:'Burleson', address:'230 NE Alsbury Blvd, Burleson, TX 76028', phone:'(817) 426-7680', website:'https://www.academy.com', ownership:'Chain — national', notes:'Community grant program. Good for sports equipment donations for camp fundraisers.' },
+  { id:'b12', category:'Retail', name:'Tractor Supply Co.', city:'Cleburne', address:'1500 W Henderson St, Cleburne, TX 76033', phone:'(817) 556-9144', website:'https://www.tractorsupply.com', ownership:'Chain — national', notes:'Neighbor\'s Club grant program available for rural community nonprofits.' },
+  { id:'b13', category:'Retail', name:'Dollar General', city:'Alvarado', address:'120 N Spears Rd, Alvarado, TX 76009', phone:'(817) 790-2200', website:'https://www.dollargeneral.com', ownership:'Chain — national', notes:'Dollar General Literacy Foundation provides community grants.' },
+  { id:'b14', category:'Retail', name:'AutoZone', city:'Cleburne', address:'504 N Main St, Cleburne, TX 76031', phone:'(817) 641-2210', website:'https://www.autozone.com', ownership:'Chain — national', notes:'Auto parts. Owner-operators sometimes support local nonprofits.' },
+  // ── HEALTHCARE ───────────────────────────────────────────────────────────
+  { id:'b15', category:'Healthcare', name:'Texas Health Huguley Hospital', city:'Burleson', address:'11801 S Fwy, Burleson, TX 76028', phone:'(817) 293-9110', website:'https://www.texashealth.org', ownership:'Texas Health Resources (nonprofit)', notes:'Community health grants available. Partner for mental health programming.' },
+  { id:'b16', category:'Healthcare', name:'AdventHealth Cleburne', city:'Cleburne', address:'201 Walls Dr, Cleburne, TX 76033', phone:'(817) 641-2551', website:'https://www.adventhealth.com', ownership:'Nonprofit hospital system', notes:'Community benefit grants. Great for youth wellness programming partnerships.' },
+  { id:'b17', category:'Healthcare', name:'Cleburne Family Dentistry', city:'Cleburne', address:'610 N Ridgeway Dr, Cleburne, TX 76033', phone:'(817) 641-6655', website:'', ownership:'Local — privately owned', notes:'Local family business. Good prospect for event sponsorship.' },
+  { id:'b18', category:'Healthcare', name:'Johnson County Medical Group', city:'Cleburne', address:'1000 Hillcrest Dr, Cleburne, TX 76033', phone:'(817) 641-7000', website:'', ownership:'Local medical group', notes:'Physician group. Physicians often support local youth causes.' },
+  // ── FINANCIAL & INSURANCE ────────────────────────────────────────────────
+  { id:'b19', category:'Financial', name:'First National Bank Texas', city:'Cleburne', address:'116 N Anglin St, Cleburne, TX 76033', phone:'(817) 645-0111', website:'https://www.firstnationalbanktexas.com', ownership:'Texas — regional bank', notes:'Community reinvestment programs. Strong local giving history.' },
+  { id:'b20', category:'Financial', name:'Prosperity Bank', city:'Burleson', address:'500 NE Alsbury Blvd, Burleson, TX 76028', phone:'(817) 447-6300', website:'https://www.prosperitybanktx.com', ownership:'Texas — publicly traded', notes:'Active in Texas community giving. Branch-level sponsorship available.' },
+  { id:'b21', category:'Financial', name:'Farm Bureau Financial Services', city:'Cleburne', address:'215 W Henderson St, Cleburne, TX 76033', phone:'(817) 641-4516', website:'https://www.fbfs.com', ownership:'Mutual company', notes:'Farm Bureau Foundation supports rural youth organizations.' },
+  { id:'b22', category:'Financial', name:'State Farm Insurance', city:'Cleburne', address:'1702 W Henderson St #D, Cleburne, TX 76033', phone:'(817) 641-5001', website:'https://www.statefarm.com', ownership:'Mutual — local agents are independent', notes:'Agent-level community giving. Agents often sponsor local events.' },
+  { id:'b23', category:'Financial', name:'Edward Jones', city:'Burleson', address:'300 SW Johnson Ave #250, Burleson, TX 76028', phone:'(817) 447-7330', website:'https://www.edwardjones.com', ownership:'Partnership — private', notes:'Financial advisors. Good prospects for individual major donor cultivation.' },
+  // ── CONSTRUCTION & REAL ESTATE ───────────────────────────────────────────
+  { id:'b24', category:'Construction', name:'D.R. Horton', city:'Burleson', address:'301 Commerce St, Fort Worth, TX 76102', phone:'(817) 390-8200', website:'https://www.drhorton.com', ownership:'Public — national builder', notes:'Major developer in Johnson County. D.R. Horton has a community giving program.' },
+  { id:'b25', category:'Construction', name:'Lennar Homes', city:'Burleson', address:'2400 N Highway 287, Mansfield, TX 76063', phone:'(817) 447-1000', website:'https://www.lennar.com', ownership:'Public — national', notes:'Active builder in Burleson. Lennar Foundation supports education.' },
+  { id:'b26', category:'Construction', name:'Shaw Concrete', city:'Cleburne', address:'1200 Industrial Blvd, Cleburne, TX 76033', phone:'(817) 641-3200', website:'', ownership:'Local — privately held', notes:'Local contractor. Good candidate for event in-kind support (tables, supplies).' },
+  { id:'b27', category:'Real Estate', name:'Century 21 Mike Bowman', city:'Burleson', address:'316 NE Alsbury Blvd, Burleson, TX 76028', phone:'(817) 447-5444', website:'https://www.c21mb.com', ownership:'Franchise — local office', notes:'Real estate agents often support community organizations.' },
+  // ── AUTO & TRANSPORTATION ────────────────────────────────────────────────
+  { id:'b28', category:'Automotive', name:'Bob Tomes Ford', city:'McKinney', address:'(Multiple Texas locations)', phone:'(800) 536-1098', website:'https://www.bobtomesford.com', ownership:'Dealer group — Texas', notes:'Ford dealers have community grant programs. Explore vehicle donation for events.' },
+  { id:'b29', category:'Automotive', name:'Eckert Motor Company', city:'Cleburne', address:'1000 N Main St, Cleburne, TX 76031', phone:'(817) 641-3401', website:'', ownership:'Local — family owned', notes:'Local Chevrolet dealer family. Strong community ties. Golf tournament sponsor prospect.' },
+  { id:'b30', category:'Automotive', name:'Kwik Kar', city:'Burleson', address:'516 SW Wilshire Blvd, Burleson, TX 76028', phone:'(817) 426-7500', website:'https://www.kwikkar.com', ownership:'Franchise — local owner', notes:'Local owner. Good for small event sponsorships.' },
+  // ── EDUCATION ────────────────────────────────────────────────────────────
+  { id:'b31', category:'Education', name:'Hill College', city:'Cleburne', address:'306 Hill College Dr, Cleburne, TX 76033', phone:'(817) 641-5055', website:'https://www.hillcollege.edu', ownership:'Public — community college', notes:'Community partnerships available. Good for leadership development programs.' },
+  { id:'b32', category:'Education', name:'Cleburne ISD', city:'Cleburne', address:'505 N Ridgeway Dr, Cleburne, TX 76033', phone:'(817) 202-1500', website:'https://www.cleburne.net', ownership:'Public — independent school district', notes:'Key partner for school access and outreach. Coordinate with campus principals.' },
+  { id:'b33', category:'Education', name:'Burleson ISD', city:'Burleson', address:'1160 SW Wilshire Blvd, Burleson, TX 76028', phone:'(817) 245-1000', website:'https://www.burlesonisd.net', ownership:'Public — independent school district', notes:'Burleson ISD serves 10,000+ students. Critical partner for HS and MS outreach.' },
+  { id:'b34', category:'Education', name:'Joshua ISD', city:'Joshua', address:'200 W 6th St, Joshua, TX 76058', phone:'(817) 202-5200', website:'https://www.joshuaisd.org', ownership:'Public — independent school district', notes:'Smaller district. Strong community feel. Easy to build relationships.' },
+  { id:'b35', category:'Education', name:'Alvarado ISD', city:'Alvarado', address:'1 E College Ave, Alvarado, TX 76009', phone:'(817) 790-2000', website:'https://www.alvaradoisd.net', ownership:'Public — independent school district', notes:'Rural district. Tight-knit community. Good outreach potential.' },
+  // ── ENERGY & INDUSTRIAL ──────────────────────────────────────────────────
+  { id:'b36', category:'Energy', name:'Oncor Electric Delivery', city:'Cleburne', address:'500 N Main St, Cleburne, TX 76033', phone:'(800) 332-7143', website:'https://www.oncor.com', ownership:'Public utility — private', notes:'Oncor Foundation has community grants for Texas nonprofits.' },
+  { id:'b37', category:'Energy', name:'Atmos Energy', city:'Cleburne', address:'1900 Three Lakes Pkwy, Dallas, TX 75287', phone:'(888) 286-6700', website:'https://www.atmosenergy.com', ownership:'Public — gas utility', notes:'Atmos Energy community grants available for Texas nonprofits.' },
+  { id:'b38', category:'Energy', name:'Cross Timbers Energy', city:'Cleburne', address:'310 W Chambers St, Cleburne, TX 76033', phone:'(817) 645-0500', website:'', ownership:'Local — private oil & gas', notes:'Local energy company. Good major donor prospect.' },
+  // ── AGRICULTURE & RANCH ──────────────────────────────────────────────────
+  { id:'b39', category:'Agriculture', name:'Johnson County Grain', city:'Cleburne', address:'600 Industrial Blvd, Cleburne, TX 76033', phone:'(817) 641-2511', website:'', ownership:'Local — co-op', notes:'Agricultural co-op. Farming community ties. Great for rural outreach partnerships.' },
+  { id:'b40', category:'Agriculture', name:'Cross Timbers Farm & Ranch Supply', city:'Alvarado', address:'100 N Spears Rd, Alvarado, TX 76009', phone:'(817) 790-3100', website:'', ownership:'Local — privately owned', notes:'Serves rural farming families. Good community touchpoint for rural student outreach.' },
+  // ── PROFESSIONAL SERVICES ────────────────────────────────────────────────
+  { id:'b41', category:'Professional', name:'Hamlin Hamlin & McGill (fictional)', city:'Cleburne', address:'220 N Anglin St, Cleburne, TX 76033', phone:'(817) 641-0001', website:'', ownership:'Local — law firm', notes:'Local attorneys. Consider for pro-bono legal review of grant contracts.' },
+  { id:'b42', category:'Professional', name:'Johnson County Appraisal District', city:'Cleburne', address:'109 N Main St, Cleburne, TX 76033', phone:'(817) 648-3000', website:'https://www.johnsoncad.net', ownership:'Government — county', notes:'County appraisal district. Provides property data useful for donor prospect research.' },
+  { id:'b43', category:'Professional', name:'Parker & Associates CPA', city:'Cleburne', address:'515 N Ridgeway Dr, Cleburne, TX 76033', phone:'(817) 641-8800', website:'', ownership:'Local — private CPA firm', notes:'Local CPA. Could assist with 990 preparation and grant financial reports.' },
+  { id:'b44', category:'Professional', name:'Johnson County Chamber of Commerce', city:'Cleburne', address:'215 N Main St, Cleburne, TX 76033', phone:'(817) 645-2455', website:'https://www.johnsoncountychamber.org', ownership:'Nonprofit association', notes:'Key community connection. Join to network with business leaders and find donors.' },
+  // ── FAITH & COMMUNITY ────────────────────────────────────────────────────
+  { id:'b45', category:'Faith & Community', name:'First Baptist Church Cleburne', city:'Cleburne', address:'202 N Anglin St, Cleburne, TX 76033', phone:'(817) 641-2564', website:'https://www.fbccleburne.org', ownership:'Nonprofit — church', notes:'Large church. Historical partner with Young Life. Potential venue and donor base.' },
+  { id:'b46', category:'Faith & Community', name:'First United Methodist Burleson', city:'Burleson', address:'730 SW Johnson Ave, Burleson, TX 76028', phone:'(817) 295-1188', website:'https://www.fumcburleson.org', ownership:'Nonprofit — church', notes:'Community-minded congregation. Good for fall banquet venue and donor cultivation.' },
+  { id:'b47', category:'Faith & Community', name:'Harmony Church', city:'Burleson', address:'1120 SW Wilshire Blvd, Burleson, TX 76028', phone:'(817) 293-1616', website:'https://www.harmonychurch.net', ownership:'Nonprofit — church', notes:'Growing church. Young family demographic. Strong camp partnership potential.' },
+  { id:'b48', category:'Faith & Community', name:'Johnson County Food Pantry', city:'Cleburne', address:'400 N Robinson St, Cleburne, TX 76033', phone:'(817) 558-0829', website:'', ownership:'Nonprofit — community org', notes:'Partner for community events serving low-income students and families.' },
+  // ── ENTERTAINMENT & SPORTS ───────────────────────────────────────────────
+  { id:'b49', category:'Entertainment', name:'Cleburne Golf Links', city:'Cleburne', address:'1201 Country Club Rd, Cleburne, TX 76033', phone:'(817) 641-9073', website:'', ownership:'Local — golf course', notes:'Site of the Sept 25 Golf Tournament fundraiser. Key venue partner.' },
+  { id:'b50', category:'Entertainment', name:'Lone Star Park at Grand Prairie', city:'Grand Prairie', address:'1000 Lone Star Pkwy, Grand Prairie, TX 75050', phone:'(972) 263-7223', website:'https://www.lonestarpark.com', ownership:'Private — racecourse', notes:'Nearby entertainment. Potential for donor event ticket donation.' },
+  { id:'b51', category:'Entertainment', name:'Johnson County Expo Center', city:'Cleburne', address:'1625 W Henderson St, Cleburne, TX 76033', phone:'(817) 556-2150', website:'https://www.johnsoncountyexpocenter.com', ownership:'County facility', notes:'Event venue. Used for county fairs and large events. Available for banquet rental.' },
+  // ── HOSPITALITY ──────────────────────────────────────────────────────────
+  { id:'b52', category:'Hospitality', name:'Hampton Inn Burleson', city:'Burleson', address:'201 E Renfro St, Burleson, TX 76028', phone:'(817) 447-7222', website:'https://www.hilton.com', ownership:'Franchise — Hilton', notes:'Good for out-of-town guests at banquets or regional leader meetings.' },
+  { id:'b53', category:'Hospitality', name:'Holiday Inn Express Cleburne', city:'Cleburne', address:'2102 W Henderson St, Cleburne, TX 76033', phone:'(817) 641-7660', website:'https://www.ihg.com', ownership:'Franchise — IHG', notes:'Event overflow hotel. Could donate room nights for silent auction.' },
+]
+
+const BIZ_CATEGORIES = ['All', 'Restaurant', 'Retail', 'Healthcare', 'Financial', 'Construction', 'Real Estate', 'Automotive', 'Education', 'Energy', 'Agriculture', 'Professional', 'Faith & Community', 'Entertainment', 'Hospitality']
 
 const ORG_CHART = {
   homeOffice: { name:'Young Life', role:'International Home Office', location:'Colorado Springs, CO', phone:'(719) 381-1800', website:'https://www.younglife.org' },
@@ -386,9 +457,14 @@ export default function Resources({ store }) {
   const [selectedCamp, setSelectedCamp] = useState(null)
   const [selectedUpdate, setSelectedUpdate] = useState(null)
   const [orgModal, setOrgModal] = useState(false)
+  const [orgData, setOrgData] = useState(ORG_CHART)
+  const [orgEditDraft, setOrgEditDraft] = useState(null)
   const [selectedGrant, setSelectedGrant] = useState(null)
   const [grantCategory, setGrantCategory] = useState('All')
   const [showTips, setShowTips] = useState(false)
+  const [bizCategory, setBizCategory] = useState('All')
+  const [selectedBiz, setSelectedBiz] = useState(null)
+  const [bizSearch, setBizSearch] = useState('')
 
   const { org } = store
   const directorName = org?.areaDirector || 'Theresa Boydston'
@@ -413,6 +489,7 @@ export default function Resources({ store }) {
           { id:'orgchart', label:'🏗️ Org Chart' },
           { id:'camps', label:'🏕️ Camp Directory' },
           { id:'grants', label:'💰 Grants' },
+          { id:'businesses', label:'🏪 Local Businesses' },
         ].map(t => (
           <button
             key={t.id}
@@ -481,9 +558,9 @@ export default function Resources({ store }) {
             <div className="org-level">
               <button className="org-node org-node--home" onClick={() => setOrgModal('homeoffice')}>
                 <div className="org-node-icon">🏠</div>
-                <div className="org-node-name">{ORG_CHART.homeOffice.name}</div>
-                <div className="org-node-role">{ORG_CHART.homeOffice.role}</div>
-                <div className="org-node-loc">{ORG_CHART.homeOffice.location}</div>
+                <div className="org-node-name">{orgData.homeOffice.name}</div>
+                <div className="org-node-role">{orgData.homeOffice.role}</div>
+                <div className="org-node-loc">{orgData.homeOffice.location}</div>
               </button>
             </div>
             <div className="org-connector" />
@@ -491,9 +568,9 @@ export default function Resources({ store }) {
             <div className="org-level">
               <button className="org-node org-node--regional" onClick={() => setOrgModal('regional')}>
                 <div className="org-node-icon">🗺️</div>
-                <div className="org-node-name">{ORG_CHART.regional.name}</div>
-                <div className="org-node-role">{ORG_CHART.regional.role}</div>
-                <div className="org-node-loc">{ORG_CHART.regional.region}</div>
+                <div className="org-node-name">{orgData.regional.name}</div>
+                <div className="org-node-role">{orgData.regional.role}</div>
+                <div className="org-node-loc">{orgData.regional.region}</div>
               </button>
             </div>
             <div className="org-connector" />
@@ -509,7 +586,7 @@ export default function Resources({ store }) {
             <div className="org-connector" />
             {/* Group Leaders */}
             <div className="org-level org-level--row">
-              {ORG_CHART.groupLeaders.map((g,i) => (
+              {orgData.groupLeaders.map((g,i) => (
                 <button key={i} className={`org-node org-node--group org-node--${g.program.toLowerCase()}`} onClick={() => setOrgModal('groupleaders')}>
                   <div className="org-node-icon">👥</div>
                   <div className="org-node-name">{g.role}</div>
@@ -521,7 +598,7 @@ export default function Resources({ store }) {
             <div className="org-connector" />
             {/* Student Leaders */}
             <div className="org-level org-level--row">
-              {ORG_CHART.studentLeaders.map((s,i) => (
+              {orgData.studentLeaders.map((s,i) => (
                 <button key={i} className={`org-node org-node--student org-node--${s.program.toLowerCase()}`} onClick={() => setOrgModal('studentleaders')}>
                   <div className="org-node-icon">🌟</div>
                   <div className="org-node-name">{s.role}</div>
@@ -567,15 +644,15 @@ export default function Resources({ store }) {
 
           <div className="grants-summary-bar">
             {[
-              {label:'Total Opportunities', val:GRANTS.length, color:'#1B4FA3'},
-              {label:'Corporate Grants', val:GRANTS.filter(g=>g.category==='Corporate').length, color:'#d97706'},
-              {label:'Faith-Based Grants', val:GRANTS.filter(g=>g.category==='Faith-Based').length, color:'#3AAB35'},
-              {label:'Government Grants', val:GRANTS.filter(g=>g.category==='Government').length, color:'#854883'},
+              {label:'Total Opportunities', val:GRANTS.length, color:'#1B4FA3', cat:'All'},
+              {label:'Corporate Grants', val:GRANTS.filter(g=>g.category==='Corporate').length, color:'#d97706', cat:'Corporate'},
+              {label:'Faith-Based Grants', val:GRANTS.filter(g=>g.category==='Faith-Based').length, color:'#3AAB35', cat:'Faith-Based'},
+              {label:'Government Grants', val:GRANTS.filter(g=>g.category==='Government').length, color:'#854883', cat:'Government'},
             ].map(s=>(
-              <div key={s.label} className="grants-summary-card" style={{borderTop:`4px solid ${s.color}`}}>
+              <button key={s.label} className={`grants-summary-card${grantCategory===s.cat?' grants-summary-card--active':''}`} style={{borderTop:`4px solid ${s.color}`}} onClick={()=>setGrantCategory(s.cat)}>
                 <div className="grants-summary-val" style={{color:s.color}}>{s.val}</div>
                 <div className="grants-summary-lbl">{s.label}</div>
-              </div>
+              </button>
             ))}
           </div>
 
@@ -594,6 +671,66 @@ export default function Resources({ store }) {
             ))}
           </div>
         </div>
+      )}
+
+      {/* BUSINESSES TAB */}
+      {tab === 'businesses' && (
+        <div className="resources-section">
+          <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}>
+            <input
+              style={{flex:'1 1 200px',padding:'7px 12px',border:'1.5px solid var(--gray-200)',borderRadius:8,fontSize:13}}
+              placeholder="Search businesses..."
+              value={bizSearch}
+              onChange={e=>setBizSearch(e.target.value)}
+            />
+            <span style={{fontSize:13,color:'var(--gray-500)'}}>{BUSINESSES.filter(b=>(bizCategory==='All'||b.category===bizCategory)&&(!bizSearch||b.name.toLowerCase().includes(bizSearch.toLowerCase())||b.city.toLowerCase().includes(bizSearch.toLowerCase()))).length} businesses</span>
+          </div>
+          <div className="resources-filter-bar" style={{flexWrap:'wrap'}}>
+            {BIZ_CATEGORIES.map(c=>(
+              <button key={c} className={`level-chip ${bizCategory===c?'level-chip--active':''}`} onClick={()=>setBizCategory(c)} style={{marginBottom:4}}>{c}</button>
+            ))}
+          </div>
+          <div className="biz-grid">
+            {BUSINESSES.filter(b=>(bizCategory==='All'||b.category===bizCategory)&&(!bizSearch||b.name.toLowerCase().includes(bizSearch.toLowerCase())||b.city.toLowerCase().includes(bizSearch.toLowerCase()))).map(b=>(
+              <button key={b.id} className="biz-card" onClick={()=>setSelectedBiz(b)}>
+                <div className="biz-card-header">
+                  <span className="biz-cat">{b.category}</span>
+                  <span className="biz-city">{b.city}</span>
+                </div>
+                <div className="biz-name">{b.name}</div>
+                <div className="biz-address">{b.address}</div>
+                {b.notes && <div className="biz-notes">{b.notes.slice(0,80)}{b.notes.length>80?'…':''}</div>}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* BUSINESS DETAIL MODAL */}
+      {selectedBiz && (
+        <Modal open title={selectedBiz.name} onClose={()=>setSelectedBiz(null)} size="md">
+          <div style={{display:'flex',flexDirection:'column',gap:14}}>
+            <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
+              <span className="biz-cat">{selectedBiz.category}</span>
+              <span style={{fontSize:13,color:'var(--gray-500)'}}>{selectedBiz.city}, TX</span>
+            </div>
+            <div className="camp-detail-grid">
+              <div><strong>Address</strong><br/><span style={{color:'var(--gray-600)',fontSize:13}}>{selectedBiz.address}</span></div>
+              {selectedBiz.phone && <div><strong>Phone</strong><br/><a href={`tel:${selectedBiz.phone}`} style={{color:'#1B4FA3',fontSize:13}}>{selectedBiz.phone}</a></div>}
+              {selectedBiz.ownership && <div><strong>Ownership</strong><br/><span style={{color:'var(--gray-600)',fontSize:13}}>{selectedBiz.ownership}</span></div>}
+            </div>
+            {selectedBiz.notes && (
+              <div style={{background:'#f0f7ff',borderRadius:10,padding:'12px 16px',borderLeft:'4px solid #1B4FA3'}}>
+                <div style={{fontWeight:700,fontSize:12,color:'#1B4FA3',marginBottom:4}}>YOUNG LIFE NOTES</div>
+                <p style={{fontSize:13,lineHeight:1.6,color:'var(--gray-700)',margin:0}}>{selectedBiz.notes}</p>
+              </div>
+            )}
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={()=>setSelectedBiz(null)}>Close</button>
+              {selectedBiz.website && <button className="btn-primary" onClick={()=>window.open(selectedBiz.website,'_blank')}>Visit Website →</button>}
+            </div>
+          </div>
+        </Modal>
       )}
 
       {/* GRANT DETAIL MODAL */}
@@ -707,53 +844,115 @@ export default function Resources({ store }) {
 
       {/* ORG CHART MODALS */}
       {orgModal === 'homeoffice' && (
-        <Modal open title="Young Life Home Office" onClose={() => setOrgModal(false)} size="sm">
+        <Modal open title="Young Life Home Office" onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="md">
           <div style={{display:'flex',flexDirection:'column',gap:14}}>
-            <p style={{fontSize:14,lineHeight:1.7,color:'var(--gray-700)'}}>Young Life is an international Christian organization serving middle school, high school, and college students in over 100 countries. Founded in 1941 by Jim Rayburn.</p>
-            <div className="camp-detail-grid">
-              <div><strong>Location:</strong><br/><span style={{color:'var(--gray-600)'}}>Colorado Springs, CO</span></div>
-              <div><strong>Phone:</strong><br/><a href="tel:(719)381-1800" style={{color:'#1B4FA3'}}>(719) 381-1800</a></div>
-            </div>
-            <div className="modal-actions">
-              <button className="btn-secondary" onClick={() => setOrgModal(false)}>Close</button>
-              <button className="btn-primary" onClick={() => window.open('https://www.younglife.org','_blank')}>younglife.org →</button>
-            </div>
+            {orgEditDraft ? (
+              <>
+                {[['name','Organization Name'],['role','Role Description'],['location','Location'],['phone','Phone'],['website','Website']].map(([k,label])=>(
+                  <div key={k}>
+                    <div style={{fontSize:12,fontWeight:700,color:'var(--gray-500)',marginBottom:4}}>{label}</div>
+                    <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={orgEditDraft[k]||''} onChange={e=>setOrgEditDraft(d=>({...d,[k]:e.target.value}))} />
+                  </div>
+                ))}
+                <div className="modal-actions">
+                  <button className="btn-secondary" onClick={()=>setOrgEditDraft(null)}>Cancel</button>
+                  <button className="btn-primary" onClick={()=>{ setOrgData(d=>({...d,homeOffice:{...d.homeOffice,...orgEditDraft}})); setOrgEditDraft(null) }}>Save Changes</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p style={{fontSize:14,lineHeight:1.7,color:'var(--gray-700)'}}>Young Life is an international Christian organization serving middle school, high school, and college students in over 100 countries. Founded in 1941 by Jim Rayburn.</p>
+                <div className="camp-detail-grid">
+                  <div><strong>Location:</strong><br/><span style={{color:'var(--gray-600)'}}>{orgData.homeOffice.location}</span></div>
+                  <div><strong>Phone:</strong><br/><a href={`tel:${orgData.homeOffice.phone}`} style={{color:'#1B4FA3'}}>{orgData.homeOffice.phone}</a></div>
+                </div>
+                <div className="modal-actions">
+                  <button className="btn-secondary" onClick={() => setOrgModal(false)}>Close</button>
+                  <button className="btn-secondary" onClick={()=>setOrgEditDraft({...orgData.homeOffice})}>Edit</button>
+                  <button className="btn-primary" onClick={() => window.open(orgData.homeOffice.website,'_blank')}>younglife.org →</button>
+                </div>
+              </>
+            )}
           </div>
         </Modal>
       )}
       {orgModal === 'regional' && (
-        <Modal open title="Regional Director — West Texas" onClose={() => setOrgModal(false)} size="sm">
+        <Modal open title="Regional Director — West Texas" onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="md">
           <div style={{display:'flex',flexDirection:'column',gap:14}}>
-            <div className="org-detail-row"><span className="org-detail-label">Name</span><span>Holly</span></div>
-            <div className="org-detail-row"><span className="org-detail-label">Role</span><span>Regional Director, North Texas</span></div>
-            <div className="org-detail-row"><span className="org-detail-label">Oversees</span><span>All Young Life areas in the West Texas region</span></div>
-            <div className="modal-actions">
-              <button className="btn-primary" onClick={() => setOrgModal(false)}>Close</button>
-            </div>
+            {orgEditDraft ? (
+              <>
+                {[['name','Name'],['role','Role'],['region','Region']].map(([k,label])=>(
+                  <div key={k}>
+                    <div style={{fontSize:12,fontWeight:700,color:'var(--gray-500)',marginBottom:4}}>{label}</div>
+                    <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={orgEditDraft[k]||''} onChange={e=>setOrgEditDraft(d=>({...d,[k]:e.target.value}))} />
+                  </div>
+                ))}
+                <div className="modal-actions">
+                  <button className="btn-secondary" onClick={()=>setOrgEditDraft(null)}>Cancel</button>
+                  <button className="btn-primary" onClick={()=>{ setOrgData(d=>({...d,regional:{...d.regional,...orgEditDraft}})); setOrgEditDraft(null) }}>Save Changes</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="org-detail-row"><span className="org-detail-label">Name</span><span>{orgData.regional.name}</span></div>
+                <div className="org-detail-row"><span className="org-detail-label">Role</span><span>{orgData.regional.role}</span></div>
+                <div className="org-detail-row"><span className="org-detail-label">Region</span><span>{orgData.regional.region}</span></div>
+                <div className="modal-actions">
+                  <button className="btn-secondary" onClick={() => setOrgModal(false)}>Close</button>
+                  <button className="btn-primary" onClick={()=>setOrgEditDraft({...orgData.regional})}>Edit</button>
+                </div>
+              </>
+            )}
           </div>
         </Modal>
       )}
       {orgModal === 'area' && (
-        <Modal open title={`Area Director — ${directorName}`} onClose={() => setOrgModal(false)} size="sm">
+        <Modal open title={`Area Director — ${directorName}`} onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="md">
           <div style={{display:'flex',flexDirection:'column',gap:14}}>
-            <div className="org-detail-row"><span className="org-detail-label">Name</span><span>{directorName}</span></div>
-            <div className="org-detail-row"><span className="org-detail-label">Role</span><span>Area Director</span></div>
-            <div className="org-detail-row"><span className="org-detail-label">Area</span><span>Johnson County Young Life</span></div>
-            <div className="org-detail-row"><span className="org-detail-label">Programs</span><span>YoungLife (HS) + WyldLife (MS)</span></div>
-            <div className="modal-actions">
-              <button className="btn-primary" onClick={() => setOrgModal(false)}>Close</button>
-            </div>
+            {orgEditDraft ? (
+              <>
+                {[['name','Name'],['role','Role'],['area','Area']].map(([k,label])=>(
+                  <div key={k}>
+                    <div style={{fontSize:12,fontWeight:700,color:'var(--gray-500)',marginBottom:4}}>{label}</div>
+                    <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={orgEditDraft[k]||''} onChange={e=>setOrgEditDraft(d=>({...d,[k]:e.target.value}))} />
+                  </div>
+                ))}
+                <div className="modal-actions">
+                  <button className="btn-secondary" onClick={()=>setOrgEditDraft(null)}>Cancel</button>
+                  <button className="btn-primary" onClick={()=>{ setOrgData(d=>({...d,area:{...d.area,...orgEditDraft}})); setOrgEditDraft(null) }}>Save Changes</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="org-detail-row"><span className="org-detail-label">Name</span><span>{orgData.area.name}</span></div>
+                <div className="org-detail-row"><span className="org-detail-label">Role</span><span>{orgData.area.role}</span></div>
+                <div className="org-detail-row"><span className="org-detail-label">Area</span><span>{orgData.area.area}</span></div>
+                <div className="org-detail-row"><span className="org-detail-label">Programs</span><span>YoungLife (HS) + WyldLife (MS)</span></div>
+                <div className="modal-actions">
+                  <button className="btn-secondary" onClick={() => setOrgModal(false)}>Close</button>
+                  <button className="btn-primary" onClick={()=>setOrgEditDraft({...orgData.area})}>Edit</button>
+                </div>
+              </>
+            )}
           </div>
         </Modal>
       )}
       {orgModal === 'groupleaders' && (
-        <Modal open title="Group Leader Teams" onClose={() => setOrgModal(false)} size="sm">
+        <Modal open title="Group Leader Teams" onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="md">
           <div style={{display:'flex',flexDirection:'column',gap:12}}>
             <p style={{fontSize:14,color:'var(--gray-600)'}}>Volunteer group leaders run weekly club nights, Campaigners, and provide relational ministry to students.</p>
-            {ORG_CHART.groupLeaders.map((g,i) => (
-              <div key={i} className="org-detail-row">
-                <span className="org-detail-label">{g.program}</span>
-                <span>{g.count} {g.role}</span>
+            {orgData.groupLeaders.map((g,i) => (
+              <div key={i} style={{display:'flex',gap:8,alignItems:'center',padding:'8px 0',borderBottom:'1px solid var(--gray-100)'}}>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:13,fontWeight:700}}>{g.program}</div>
+                  <div style={{fontSize:12,color:'var(--gray-500)'}}>{g.role}</div>
+                </div>
+                <input type="number" min="0" max="99"
+                  style={{width:60,padding:'4px 8px',border:'1.5px solid var(--gray-200)',borderRadius:6,fontSize:13,textAlign:'center'}}
+                  value={g.count}
+                  onChange={e=>setOrgData(d=>({...d,groupLeaders:d.groupLeaders.map((gl,j)=>j===i?{...gl,count:parseInt(e.target.value)||0}:gl)}))}
+                />
+                <span style={{fontSize:12,color:'var(--gray-500)'}}>leaders</span>
               </div>
             ))}
             <div className="modal-actions">
@@ -763,13 +962,21 @@ export default function Resources({ store }) {
         </Modal>
       )}
       {orgModal === 'studentleaders' && (
-        <Modal open title="Student Leaders in Training" onClose={() => setOrgModal(false)} size="sm">
+        <Modal open title="Student Leaders in Training" onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="md">
           <div style={{display:'flex',flexDirection:'column',gap:12}}>
             <p style={{fontSize:14,color:'var(--gray-600)'}}>Campaigner student leaders are trained to bring their friends to Young Life and take ownership of the ministry on their campuses.</p>
-            {ORG_CHART.studentLeaders.map((s,i) => (
-              <div key={i} className="org-detail-row">
-                <span className="org-detail-label">{s.program}</span>
-                <span>{s.count} {s.role}</span>
+            {orgData.studentLeaders.map((s,i) => (
+              <div key={i} style={{display:'flex',gap:8,alignItems:'center',padding:'8px 0',borderBottom:'1px solid var(--gray-100)'}}>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:13,fontWeight:700}}>{s.program}</div>
+                  <div style={{fontSize:12,color:'var(--gray-500)'}}>{s.role}</div>
+                </div>
+                <input type="number" min="0" max="99"
+                  style={{width:60,padding:'4px 8px',border:'1.5px solid var(--gray-200)',borderRadius:6,fontSize:13,textAlign:'center'}}
+                  value={s.count}
+                  onChange={e=>setOrgData(d=>({...d,studentLeaders:d.studentLeaders.map((sl,j)=>j===i?{...sl,count:parseInt(e.target.value)||0}:sl)}))}
+                />
+                <span style={{fontSize:12,color:'var(--gray-500)'}}>students</span>
               </div>
             ))}
             <div className="modal-actions">

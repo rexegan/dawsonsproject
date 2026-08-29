@@ -235,12 +235,32 @@ const BRAND = {
 const CHANNELS = ['All','Text','Email','Instagram/Facebook']
 const CATEGORIES = ['All','Club Invite','Camp','Fundraising','Follow-Up','Social Media']
 
+const MONTHS_DATA = [
+  { month:'August', icon:'🏫', focus:'Back to School', tasks:['Introduce yourself to new students at school events','Post back-to-school hype on social','Send parent intro texts within 2 weeks of first contact','Update club locations and post flyers'] },
+  { month:'September', icon:'⛳', focus:'Golf Tournament + Club Launch', tasks:['Golf Tournament Sept 25 — send invites 6 weeks out','Club launch week — all hands on deck for outreach','Social posts 3x/week promoting club nights','Send parent welcome emails to all new students'] },
+  { month:'October', icon:'🎃', focus:'Fall Events + Donor Cultivation', tasks:['Clay Shoot fundraiser — final push for sponsorships','Fall Banquet prep — finalize tables and program','Mid-semester check-in texts to all students','Donor thank-you calls for summer/fall gifts'] },
+  { month:'November', icon:'🍂', focus:'Banquet + Year-End Prep', tasks:['Fall Banquet — send invites 4 weeks out','Year-end giving appeal draft due Nov 15','Thank every donor who came to banquet by Nov 30','Review student roster for camp scholarship candidates'] },
+  { month:'December', icon:'🎄', focus:'Year-End Giving', tasks:['Year-end giving appeal email Dec 1–10','Follow-up reminder Dec 26–29','Post impact stats on social (students reached, camp #s)','Personal calls to top 10 donors before Dec 31'] },
+  { month:'January', icon:'🆕', focus:'New Year + Spring Planning', tasks:['Spring Banquet planning begins — lock venue and date','New student outreach push — second semester fresh start','Send ministry update email to donor list','Set camp goal for summer — begin student conversations'] },
+  { month:'February', icon:'❤️', focus:'Camp Hype Begins', tasks:["Camp registration opens — send hype texts to all students","JCCF grant application due Feb 15","Valentine's club night — great first-timer event","Begin scholarship fund outreach to major donors"] },
+  { month:'March', icon:'🌱', focus:'Spring Banquet', tasks:['Spring Banquet — send invites 5 weeks out','Camp deadline push — text every uncommitted student','Spring break outreach events','Leader appreciation — recognize volunteers publicly'] },
+  { month:'April', icon:'🌸', focus:'Camp Final Push', tasks:['Final camp registration push — last call texts and emails','Spring Banquet follow-up thank-yous','Post camp countdown on social media','Connect with families of first-time campers'] },
+  { month:'May', icon:'🎓', focus:'Senior Celebration', tasks:['Senior recognition at last club of year','Senior parent thank-you notes','Summer camp departure logistics communicated to all families','Recruit and train summer volunteer leaders'] },
+  { month:'June', icon:'☀️', focus:'Camp Season Begins', tasks:['Camp departure day logistics and social posts','Camp week prayer coverage — post updates for supporters','Camp return celebration event','Begin summer club schedule for active students'] },
+  { month:'July', icon:'🏕️', focus:'Camp + Summer Ministry', tasks:['WyldLife camp week — same logistics as June','Post camp stories and photos (with permission) on social','Begin fall planning and leader recruitment','Preview back-to-school outreach strategy'] },
+]
+
 export default function Messaging() {
   const [tab, setTab] = useState('templates')
   const [chanFilter, setChanFilter] = useState('All')
   const [catFilter, setCatFilter] = useState('All')
   const [selected, setSelected] = useState(null)
   const [copied, setCopied] = useState(false)
+  const [months, setMonths] = useState(MONTHS_DATA)
+  const [selectedMonth, setSelectedMonth] = useState(null)
+  const [editingTask, setEditingTask] = useState(null)
+  const [newTaskText, setNewTaskText] = useState('')
+  const [addingTask, setAddingTask] = useState(false)
 
   const filtered = TEMPLATES.filter(t =>
     (chanFilter === 'All' || t.channel === chanFilter) &&
@@ -401,23 +421,10 @@ export default function Messaging() {
       {/* MARKETING CALENDAR TAB */}
       {tab === 'calendar' && (
         <div className="msg-section">
-          <p style={{fontSize:14,color:'var(--gray-500)',marginBottom:4}}>Annual marketing rhythm for Johnson County Young Life. Click any month for detail.</p>
+          <p style={{fontSize:14,color:'var(--gray-500)',marginBottom:4}}>Annual marketing rhythm for Johnson County Young Life. Click any month to view, edit, or add tasks.</p>
           <div className="mktg-calendar">
-            {[
-              { month:'August', icon:'🏫', focus:'Back to School', tasks:['Introduce yourself to new students at school events','Post back-to-school hype on social','Send parent intro texts within 2 weeks of first contact','Update club locations and post flyers'] },
-              { month:'September', icon:'⛳', focus:'Golf Tournament + Club Launch', tasks:['Golf Tournament Sept 25 — send invites 6 weeks out','Club launch week — all hands on deck for outreach','Social posts 3x/week promoting club nights','Send parent welcome emails to all new students'] },
-              { month:'October', icon:'🎃', focus:'Fall Events + Donor Cultivation', tasks:['Clay Shoot fundraiser — final push for sponsorships','Fall Banquet prep — finalize tables and program','Mid-semester check-in texts to all students','Donor thank-you calls for summer/fall gifts'] },
-              { month:'November', icon:'🍂', focus:'Banquet + Year-End Prep', tasks:['Fall Banquet — send invites 4 weeks out','Year-end giving appeal draft due Nov 15','Thank every donor who came to banquet by Nov 30','Review student roster for camp scholarship candidates'] },
-              { month:'December', icon:'🎄', focus:'Year-End Giving', tasks:['Year-end giving appeal email Dec 1–10','Follow-up reminder Dec 26–29','Post impact stats on social (students reached, camp #s)','Personal calls to top 10 donors before Dec 31'] },
-              { month:'January', icon:'🆕', focus:'New Year + Spring Planning', tasks:['Spring Banquet planning begins — lock venue and date','New student outreach push — second semester fresh start','Send ministry update email to donor list','Set camp goal for summer — begin student conversations'] },
-              { month:'February', icon:'❤️', focus:'Camp Hype Begins', tasks:['Camp registration opens — send hype texts to all students','JCCF grant application due Feb 15','Valentine\'s club night — great first-timer event','Begin scholarship fund outreach to major donors'] },
-              { month:'March', icon:'🌱', focus:'Spring Banquet', tasks:['Spring Banquet — send invites 5 weeks out','Camp deadline push — text every uncommitted student','Spring break outreach events','Leader appreciation — recognize volunteers publicly'] },
-              { month:'April', icon:'🌸', focus:'Camp Final Push', tasks:['Final camp registration push — last call texts and emails','Spring Banquet follow-up thank-yous','Post camp countdown on social media','Connect with families of first-time campers'] },
-              { month:'May', icon:'🎓', focus:'Senior Celebration', tasks:['Senior recognition at last club of year','Senior parent thank-you notes','Summer camp departure logistics communicated to all families','Recruit and train summer volunteer leaders'] },
-              { month:'June', icon:'☀️', focus:'Camp Season Begins', tasks:['Camp departure day logistics and social posts','Camp week prayer coverage — post updates for supporters','Camp return celebration event','Begin summer club schedule for active students'] },
-              { month:'July', icon:'🏕️', focus:'Camp + Summer Ministry', tasks:['WyldLife camp week — same logistics as June','Post camp stories and photos (with permission) on social','Begin fall planning and leader recruitment','Preview back-to-school outreach strategy'] },
-            ].map((m,i) => (
-              <div key={i} className="mktg-month">
+            {months.map((m,i) => (
+              <button key={i} className="mktg-month mktg-month--clickable" onClick={()=>{ setSelectedMonth(i); setAddingTask(false); setEditingTask(null); setNewTaskText('') }}>
                 <div className="mktg-month-header">
                   <span className="mktg-month-icon">{m.icon}</span>
                   <div>
@@ -428,10 +435,64 @@ export default function Messaging() {
                 <ul className="mktg-task-list">
                   {m.tasks.map((task,j) => <li key={j}>{task}</li>)}
                 </ul>
-              </div>
+              </button>
             ))}
           </div>
         </div>
+      )}
+
+      {/* MONTH DETAIL MODAL */}
+      {selectedMonth !== null && (
+        <Modal open title={`${months[selectedMonth].icon} ${months[selectedMonth].month} — ${months[selectedMonth].focus}`} onClose={()=>setSelectedMonth(null)} size="lg">
+          <div style={{display:'flex',flexDirection:'column',gap:14}}>
+            <div style={{display:'flex',flexDirection:'column',gap:8}}>
+              {months[selectedMonth].tasks.map((task,j) => (
+                <div key={j} style={{display:'flex',gap:8,alignItems:'center'}}>
+                  {editingTask === j ? (
+                    <>
+                      <input
+                        style={{flex:1,padding:'6px 10px',border:'1.5px solid #1B4FA3',borderRadius:6,fontSize:13}}
+                        value={newTaskText}
+                        onChange={e=>setNewTaskText(e.target.value)}
+                        onKeyDown={e=>{ if(e.key==='Enter'){ setMonths(ms=>ms.map((m,i)=>i===selectedMonth?{...m,tasks:m.tasks.map((t,k)=>k===j?newTaskText:t)}:m)); setEditingTask(null) } }}
+                        autoFocus
+                      />
+                      <button className="btn-primary" style={{fontSize:12,padding:'5px 10px'}} onClick={()=>{ setMonths(ms=>ms.map((m,i)=>i===selectedMonth?{...m,tasks:m.tasks.map((t,k)=>k===j?newTaskText:t)}:m)); setEditingTask(null) }}>Save</button>
+                      <button className="btn-secondary" style={{fontSize:12,padding:'5px 10px'}} onClick={()=>setEditingTask(null)}>Cancel</button>
+                    </>
+                  ) : (
+                    <>
+                      <span style={{flex:1,fontSize:13,color:'var(--gray-700)'}}>• {task}</span>
+                      <button style={{fontSize:12,padding:'3px 8px',border:'1px solid var(--gray-200)',borderRadius:4,background:'white',cursor:'pointer',color:'var(--gray-600)'}} onClick={()=>{ setEditingTask(j); setNewTaskText(task) }}>Edit</button>
+                      <button style={{fontSize:12,padding:'3px 8px',border:'1px solid #fee2e2',borderRadius:4,background:'#fff5f5',cursor:'pointer',color:'#dc2626'}} onClick={()=>setMonths(ms=>ms.map((m,i)=>i===selectedMonth?{...m,tasks:m.tasks.filter((_,k)=>k!==j)}:m))}>✕</button>
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {addingTask ? (
+              <div style={{display:'flex',gap:8}}>
+                <input
+                  style={{flex:1,padding:'6px 10px',border:'1.5px solid #1B4FA3',borderRadius:6,fontSize:13}}
+                  placeholder="New task..."
+                  value={newTaskText}
+                  onChange={e=>setNewTaskText(e.target.value)}
+                  onKeyDown={e=>{ if(e.key==='Enter'&&newTaskText.trim()){ setMonths(ms=>ms.map((m,i)=>i===selectedMonth?{...m,tasks:[...m.tasks,newTaskText.trim()]}:m)); setNewTaskText(''); setAddingTask(false) } }}
+                  autoFocus
+                />
+                <button className="btn-primary" style={{fontSize:12,padding:'5px 10px'}} onClick={()=>{ if(newTaskText.trim()){ setMonths(ms=>ms.map((m,i)=>i===selectedMonth?{...m,tasks:[...m.tasks,newTaskText.trim()]}:m)); setNewTaskText(''); setAddingTask(false) } }}>Add</button>
+                <button className="btn-secondary" style={{fontSize:12,padding:'5px 10px'}} onClick={()=>{ setAddingTask(false); setNewTaskText('') }}>Cancel</button>
+              </div>
+            ) : (
+              <button className="btn-secondary" style={{alignSelf:'flex-start'}} onClick={()=>{ setAddingTask(true); setNewTaskText('') }}>+ Add Task</button>
+            )}
+
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={()=>setSelectedMonth(null)}>Close</button>
+            </div>
+          </div>
+        </Modal>
       )}
 
       {/* TEMPLATE DETAIL MODAL */}

@@ -43,7 +43,7 @@ export default function Sidebar({ page, setPage, mobileOpen, setMobileOpen, stor
             <button
               key={item.id}
               className={`sidebar-item ${page === item.id ? 'sidebar-item--active' : ''}`}
-              onClick={() => { setPage(item.id); setMobileOpen(false) }}
+              onClick={() => { setPage(item.id); setMobileOpen(false); window.scrollTo(0,0) }}
             >
               <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
                 <path d={item.icon} />
