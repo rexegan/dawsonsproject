@@ -34,7 +34,7 @@ export default function Header({ page, onMenuClick }) {
           </div>
         )}
         {page === 'attendance' && (
-          <div className="header-verse">
+          <div className="header-verse header-verse--wrap">
             <span className="header-verse-text">"And let us consider how we may spur one another on toward love and good deeds, not giving up meeting together… but encouraging one another."</span>
             <span className="header-verse-ref">Hebrews 10:24–25 NIV</span>
           </div>
