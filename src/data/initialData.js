@@ -98,6 +98,7 @@ export const initialEvents = [
   { id:'e8', title:'Clay Shoot Fundraiser',        type:'special',     program:'Both',      date:'2026-10-04', time:'08:00', location:'Cleburne Shooting Complex',              description:'Annual fundraiser — all supporters welcome.',                    leaderId:'l1' },
   { id:'e9', title:'Frontier Ranch — Departs',     type:'camp',        program:'YoungLife', date:'2026-07-14', time:'05:30', location:'Cleburne HS Parking Lot',                description:'Summer camp at Frontier Ranch, Buena Vista CO.',                 leaderId:'l2' },
   { id:'e10',title:'Crooked Creek — Departs',      type:'camp',        program:'WyldLife',  date:'2026-07-21', time:'06:00', location:'Burleson Centennial Parking Lot',        description:'WyldLife summer camp — Crooked Creek Ranch, CO.',                leaderId:'l3' },
+  { id:'e11',title:'Golf Tournament Fundraiser',   type:'special',     program:'Both',      date:'2026-09-25', time:'07:30', location:'Cleburne Golf Links, Cleburne TX',        description:'Johnson County Young Life Annual Golf Tournament fundraiser. All proceeds support student camp scholarships and local programming.', leaderId:'l1' },
 ];
 
 export const initialAttendance = [

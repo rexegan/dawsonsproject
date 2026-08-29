@@ -23,7 +23,7 @@ const initialPrograms = [
 // ── Finance seed data ──────────────────────────────────────────────
 const initialFundraisers = [
   { id:'fr1', name:'Clay Shoot', type:'event', date:'2025-10-11', goal:25000, raised:18500, status:'active', notes:'Annual clay shoot at Cleburne Gun Club. Sponsorships open.', contacts:[] },
-  { id:'fr2', name:'Golf Tournament', type:'event', date:'2025-05-03', goal:30000, raised:30000, status:'complete', notes:'Sold out. Net raised after expenses.', contacts:[] },
+  { id:'fr2', name:'Golf Tournament', type:'event', date:'2026-09-25', goal:30000, raised:0, status:'active', notes:'Annual golf tournament at Cleburne Golf Links. September 25, 2026. Tee time 7:30am. Sponsorships and foursomes available.', contacts:[] },
   { id:'fr3', name:'Fall Banquet', type:'event', date:'2025-11-08', goal:20000, raised:5200, status:'active', notes:'Annual fundraising dinner. Tables available.', contacts:[] },
   { id:'fr4', name:'Spring Banquet', type:'event', date:'2026-03-14', goal:20000, raised:0, status:'planning', notes:'Save the date set. Venue TBD.', contacts:[] },
 ]
