@@ -458,7 +458,7 @@ export default function Finances({ store }) {
             <button className="fin-stat fin-stat--purple fin-stat--btn" onClick={() => setStatModal('followups')}>
               <div className="fin-stat-icon">📞</div>
               <div className="fin-stat-val">{pendingFU}</div>
-              <div className="fin-stat-label">Pending Follow-ups</div>
+              <div className="fin-stat-label">Fundraising Follow-ups</div>
               <div className="fin-stat-sub">Donor outreach needed · tap for details</div>
             </button>
           </div>
@@ -532,7 +532,7 @@ export default function Finances({ store }) {
             {/* Pending follow-ups */}
             <div className="fin-ov-card">
               <div className="fin-ov-card-header">
-                <h3>Pending Follow-ups</h3>
+                <h3>Fundraising Follow-ups</h3>
                 <button className="fin-link-btn" onClick={() => setTab('Follow-ups')}>View all →</button>
               </div>
               {financeFollowUps.filter(f=>!f.completed).slice(0,6).map(f => {

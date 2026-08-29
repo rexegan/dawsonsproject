@@ -56,3 +56,25 @@
 .leader-report-table td { padding: 10px 10px; border-bottom: 1px solid var(--gray-100); }
 .leader-report-table tr:last-child td { border-bottom: none; }
 .leader-avatar-sm { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 800; flex-shrink: 0; }
+
+/* Deep-dive modal styles */
+.rpt-dive-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(130px,1fr)); gap: 10px; }
+.rpt-dive-card { background: var(--gray-50); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 4px; }
+.rpt-dive-num { font-size: 28px; font-weight: 900; line-height: 1; }
+.rpt-dive-lbl { font-size: 12px; font-weight: 600; color: var(--gray-700); }
+.rpt-dive-sub { font-size: 11px; color: var(--gray-500); }
+.rpt-dive-section-title { font-size: 13px; font-weight: 700; color: var(--gray-700); margin-bottom: 6px; }
+.rpt-student-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.rpt-student-chip { background: #EEF3FB; color: #1B4FA3; border: 1px solid #c7d8f5; border-radius: 20px; padding: 3px 10px; font-size: 12px; font-weight: 600; }
+.rpt-student-chip--green { background: #EDFAEC; color: #3AAB35; border-color: #b5e5b3; }
+.rpt-drill-row { padding: 8px 0; border-bottom: 1px solid var(--gray-100); }
+.rpt-drill-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.rpt-drill-label { font-size: 13px; font-weight: 700; }
+.rpt-drill-count { font-size: 12px; font-weight: 600; }
+.rpt-click-hint { font-size: 11px; color: var(--gray-400); font-style: italic; }
+
+/* Clickable report cards */
+.report-card--clickable { cursor: pointer; transition: box-shadow .15s, transform .15s; }
+.report-card--clickable:hover { box-shadow: 0 4px 16px rgba(27,79,163,.15); transform: translateY(-1px); }
+.ov-card--clickable { cursor: pointer; text-align: left; background: white; border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 4px; border-top: 4px solid var(--gray-200); transition: box-shadow .15s, transform .15s; }
+.ov-card--clickable:hover { box-shadow: 0 4px 16px rgba(27,79,163,.15); transform: translateY(-2px); }

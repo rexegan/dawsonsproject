@@ -90,32 +90,74 @@ export default function FollowUp({ store }) {
   }
 
   const [detailFU, setDetailFU] = useState(null)
+  const [statDive, setStatDive] = useState(null) // 'pending'|'completed'|'call'|'email'|'text'
   const pendingCount = followUps.filter(f => !f.completed).length
+
+  function StatDiveModal() {
+    if (!statDive) return null
+    let title, items
+    if (statDive === 'pending') {
+      title = 'Pending Follow-ups'
+      items = followUps.filter(f => !f.completed)
+    } else if (statDive === 'completed') {
+      title = 'Completed Follow-ups'
+      items = followUps.filter(f => f.completed)
+    } else {
+      title = statDive === 'call' ? 'All Calls' : statDive === 'email' ? 'All Emails' : 'All Texts'
+      items = followUps.filter(f => f.type === statDive)
+    }
+    return (
+      <Modal open title={title} onClose={() => setStatDive(null)} size="lg">
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {items.length === 0 && <div style={{color:'var(--gray-500)',fontSize:14}}>No follow-ups in this category.</div>}
+          {items.map(f => {
+            const s = students.find(st => st.id === f.studentId)
+            const l = leaders.find(ld => ld.id === f.leaderId)
+            if (!s) return null
+            return (
+              <div key={f.id} className="fu-card" style={{cursor:'pointer',margin:0}} onClick={() => { setStatDive(null); setDetailFU(f) }}>
+                <div className="fu-type-icon" style={{background:TYPE_COLORS[f.type]+'18',color:TYPE_COLORS[f.type]}}>{TYPE_ICONS[f.type]}</div>
+                <div className="fu-body">
+                  <div className="fu-student">{s.firstName} {s.lastName} <span className="fu-grade">{s.grade} · {s.school}</span></div>
+                  <div className="fu-note">{f.note}</div>
+                  <div className="fu-meta">{f.date} · {l ? `${l.firstName} ${l.lastName}` : 'No leader'} · {f.completed ? '✓ Done' : '⏳ Pending'}</div>
+                </div>
+              </div>
+            )
+          })}
+          <div className="modal-actions" style={{marginTop:8}}>
+            <button className="btn-primary" onClick={() => setStatDive(null)}>Close</button>
+          </div>
+        </div>
+      </Modal>
+    )
+  }
 
   return (
     <div className="followup-page">
+      <StatDiveModal />
       {/* Summary bar */}
       <div className="fu-summary">
-        <div className="fu-stat">
+        <button className="fu-stat fu-stat--clickable" onClick={() => setStatDive('pending')}>
           <div className="fu-stat-val fu-stat-val--red">{pendingCount}</div>
           <div className="fu-stat-label">Pending</div>
-        </div>
-        <div className="fu-stat">
+        </button>
+        <button className="fu-stat fu-stat--clickable" onClick={() => setStatDive('completed')}>
           <div className="fu-stat-val">{followUps.filter(f=>f.completed).length}</div>
           <div className="fu-stat-label">Completed</div>
-        </div>
-        <div className="fu-stat">
+        </button>
+        <button className="fu-stat fu-stat--clickable" onClick={() => setStatDive('call')}>
           <div className="fu-stat-val">{followUps.filter(f=>f.type==='call').length}</div>
           <div className="fu-stat-label">Calls</div>
-        </div>
-        <div className="fu-stat">
+        </button>
+        <button className="fu-stat fu-stat--clickable" onClick={() => setStatDive('email')}>
           <div className="fu-stat-val">{followUps.filter(f=>f.type==='email').length}</div>
           <div className="fu-stat-label">Emails</div>
-        </div>
-        <div className="fu-stat">
+        </button>
+        <button className="fu-stat fu-stat--clickable" onClick={() => setStatDive('text')}>
           <div className="fu-stat-val">{followUps.filter(f=>f.type==='text').length}</div>
           <div className="fu-stat-label">Texts</div>
-        </div>
+        </button>
       </div>
 
       {/* Toolbar */}

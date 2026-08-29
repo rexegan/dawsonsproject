@@ -12,6 +12,8 @@
 .fu-stat-val { font-size: 26px; font-weight: 800; color: var(--gray-800); }
 .fu-stat-val--red { color: var(--red); }
 .fu-stat-label { font-size: 12px; color: var(--gray-500); font-weight: 500; }
+.fu-stat--clickable { cursor: pointer; text-align: left; transition: box-shadow .15s, transform .15s; }
+.fu-stat--clickable:hover { box-shadow: 0 4px 16px rgba(27,79,163,.15); transform: translateY(-2px); }
 
 .fu-list { display: flex; flex-direction: column; gap: 10px; }
 

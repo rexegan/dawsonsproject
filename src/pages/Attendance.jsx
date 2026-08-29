@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './Attendance.css'
 
 export default function Attendance({ store }) {
@@ -9,6 +9,18 @@ export default function Attendance({ store }) {
   const [viewEvent, setViewEvent] = useState('')
 
   const sortedEvents = [...events].sort((a,b) => b.date.localeCompare(a.date))
+
+  // Auto-select most recent event on mount
+  useEffect(() => {
+    if (events.length && !selectedEvent) {
+      const most = [...events].sort((a,b) => b.date.localeCompare(a.date))[0]
+      if (most) {
+        loadEvent(most.id)
+        setViewEvent(most.id)
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   function loadEvent(eventId) {
     setSelectedEvent(eventId)

@@ -31,7 +31,7 @@ export default function Students({ store }) {
     return true
   }).sort((a,b) => a.lastName.localeCompare(b.lastName))
 
-  const schools = [...new Set(students.map(s => s.school))].sort()
+  const schools = storeSchools && storeSchools.length ? storeSchools : [...new Set(students.map(s => s.school))].sort()
 
   function openAdd() { setForm(EMPTY_STUDENT); setModal('add') }
   function openEdit(s) { setSelected(s); setForm({ ...s }); setModal('edit') }
@@ -156,7 +156,6 @@ export default function Students({ store }) {
                 </td>
                 <td>
                   <div className="row-actions">
-                    <button className="icon-btn" title="View" onClick={() => openView(s)}>👁</button>
                     <button className="icon-btn" title="Edit" onClick={() => openEdit(s)}>✏️</button>
                     <button className="icon-btn icon-btn--danger" title="Delete" onClick={() => setConfirmDelete(s)}>🗑</button>
                   </div>

@@ -13,7 +13,7 @@ function fmtDate(d) {
 
 export default function Events({ store }) {
   const { events, leaders, students, getEventAttendance, addEvent, updateEvent, deleteEvent, addNotification } = store
-  const [filter, setFilter] = useState('upcoming')
+  const [filter, setFilter] = useState('all')
   const [filterType, setFilterType] = useState('All')
   const [modal, setModal] = useState(null)
   const [form, setForm] = useState(EMPTY_EVENT)
