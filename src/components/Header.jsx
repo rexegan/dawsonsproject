@@ -28,9 +28,8 @@ export default function Header({ page, onMenuClick }) {
           </div>
         )}
         {page === 'followup' && (
-          <div className="header-verse">
-            <span className="header-verse-text">"Suppose one of you has a hundred sheep and loses one of them. Doesn't he leave the ninety-nine and go after the lost sheep until he finds it?"</span>
-            <span className="header-verse-ref">Luke 15:4 NIV</span>
+          <div className="header-verse header-verse--wrap header-verse--center">
+            <span className="header-verse-text">"Suppose one of you has a hundred sheep and loses one of them. Doesn't he leave the ninety-nine and go after the lost sheep until he finds it?" <span className="header-verse-ref">Luke 15:4 NIV</span></span>
           </div>
         )}
         {page === 'attendance' && (
