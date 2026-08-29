@@ -11,6 +11,9 @@
   border-radius: var(--radius-lg); padding: 18px 16px;
   color: white; display: flex; flex-direction: column; gap: 4px;
 }
+.stat-card--clickable { cursor: pointer; transition: transform .15s, box-shadow .15s; text-align: left; width: 100%; }
+.stat-card--clickable:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+
 .stat-card--blue   { background: linear-gradient(135deg, #1B4FA3, #153e85); }
 .stat-card--green  { background: linear-gradient(135deg, #3AAB35, #2d8a29); }
 .stat-card--amber  { background: linear-gradient(135deg, #1B88C4, #1570a4); }

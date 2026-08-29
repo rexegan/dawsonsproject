@@ -29,30 +29,30 @@ export default function Dashboard({ store, setPage }) {
     <div className="dashboard">
       {/* Stats */}
       <div className="stats-grid">
-        <div className="stat-card stat-card--blue">
+        <button className="stat-card stat-card--blue stat-card--clickable" onClick={() => setPage('students')}>
           <div className="stat-icon">👥</div>
           <div className="stat-val">{students.length}</div>
           <div className="stat-label">Total Students</div>
           <div className="stat-sub">{wyldlife} MS · {younglife} HS</div>
-        </div>
-        <div className="stat-card stat-card--green">
+        </button>
+        <button className="stat-card stat-card--green stat-card--clickable" onClick={() => setPage('followup')}>
           <div className="stat-icon">📋</div>
           <div className="stat-val">{pendingFollowUps.length}</div>
           <div className="stat-label">Pending Follow-ups</div>
           <div className="stat-sub">Need attention</div>
-        </div>
-        <div className="stat-card stat-card--amber">
+        </button>
+        <button className="stat-card stat-card--amber stat-card--clickable" onClick={() => setPage('events')}>
           <div className="stat-icon">📅</div>
           <div className="stat-val">{upcoming.length}</div>
           <div className="stat-label">Upcoming Events</div>
           <div className="stat-sub">Next 30 days</div>
-        </div>
-        <div className="stat-card stat-card--purple">
+        </button>
+        <button className="stat-card stat-card--purple stat-card--clickable" onClick={() => setPage('attendance')}>
           <div className="stat-icon">✅</div>
           <div className="stat-val">{thisWeekAttendance}</div>
           <div className="stat-label">Roll Call</div>
           <div className="stat-sub">Total logged</div>
-        </div>
+        </button>
       </div>
 
       <div className="dash-cols">
