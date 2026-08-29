@@ -172,3 +172,50 @@
 
 /* Empty state */
 .fin-empty { font-size: 13px; color: var(--gray-400); text-align: center; padding: 20px 0; }
+
+/* Stat card as button */
+.fin-stat--btn { cursor: pointer; border: none; text-align: left; transition: transform .15s, box-shadow .15s; }
+.fin-stat--btn:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+
+/* Clickable overview rows */
+.fin-ov-row--clickable { cursor: pointer; border-radius: 6px; padding: 4px 6px; margin: -4px -6px; transition: background .12s; }
+.fin-ov-row--clickable:hover { background: var(--gray-50); }
+
+/* Overview card header */
+.fin-ov-card-header { display: flex; align-items: center; justify-content: space-between; }
+.fin-ov-card-header h3 { font-size: 14px; font-weight: 700; color: var(--gray-900); }
+.fin-link-btn { font-size: 12px; color: #1B4FA3; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: transparent; cursor: pointer; border: none; }
+.fin-link-btn:hover { background: #eff6ff; }
+
+/* Detail hero banner */
+.fin-detail-hero {
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg,#1B4FA3,#153e85);
+  border-radius: 12px; padding: 20px; margin-bottom: 16px; color: white;
+}
+.fin-detail-hero-left { display: flex; flex-direction: column; gap: 4px; }
+.fin-detail-amount { font-size: 28px; font-weight: 800; color: white; line-height: 1; }
+.fin-detail-amount span { font-size: 14px; font-weight: 400; opacity: .8; margin-left: 4px; }
+.fin-detail-goal { font-size: 13px; opacity: .8; }
+
+/* Detail grid of key-value cells */
+.fin-detail-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 12px 0; }
+@media (max-width: 500px) { .fin-detail-grid { grid-template-columns: repeat(2,1fr); } }
+.fin-detail-cell { background: var(--gray-50); border-radius: 8px; padding: 10px 12px; }
+.fin-dc-label { font-size: 10px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .5px; }
+.fin-dc-val   { font-size: 14px; font-weight: 700; color: var(--gray-900); margin-top: 2px; }
+
+/* Pct circle (CSS-only, approximate) */
+.fin-detail-pct-circle {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: conic-gradient(white calc(var(--pct) * 1%), rgba(255,255,255,.2) 0);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 0 0 8px rgba(255,255,255,.15);
+}
+.fin-detail-pct-circle span { font-size: 13px; font-weight: 800; color: white; }
+
+/* Inline log form */
+.fin-inline-log {
+  background: var(--gray-50); border-radius: 10px; padding: 14px; margin-top: 8px;
+  display: flex; flex-direction: column; gap: 10px;
+}
