@@ -1,105 +1,240 @@
+import { useState } from 'react'
+import Modal from '../components/Modal'
+import { SCHOOLS } from '../data/initialData'
 import './Leaders.css'
 
-const LEADERS = [
-  {
-    id: 1,
-    name: 'Tyler Brooks',
-    role: 'Area Director',
-    program: 'Johnson County YL',
-    initials: 'TB',
-    color: '#E8392A',
-    bio: 'Tyler has been with Young Life for 12 years and is passionate about every kid knowing they are loved. Father of 3, huge Chiefs fan.',
-    email: 'tyler.brooks@younglife.org',
-    phone: '(913) 555-0101',
-  },
-  {
-    id: 2,
-    name: 'Megan Carter',
-    role: 'WyldLife Leader',
-    program: 'Middle School',
-    initials: 'MC',
-    color: '#1d4ed8',
-    bio: 'Megan leads WyldLife and loves helping 6th-8th graders discover who they are and whose they are. She teaches at Blue Valley Middle.',
-    email: 'megan.carter@younglife.org',
-    phone: '(913) 555-0102',
-  },
-  {
-    id: 3,
-    name: 'Josh & Kayla Nguyen',
-    role: 'YoungLife Leaders',
-    program: 'High School',
-    initials: 'JN',
-    color: '#059669',
-    bio: 'Josh and Kayla are a husband-wife team who pour into high schoolers across Johnson County. They met at YoungLife camp back in the day!',
-    email: 'josh.nguyen@younglife.org',
-    phone: '(913) 555-0103',
-  },
-  {
-    id: 4,
-    name: 'Danielle Moore',
-    role: 'WyldLife Leader',
-    program: 'Middle School',
-    initials: 'DM',
-    color: '#7c3aed',
-    bio: 'Danielle brings incredible energy to every club night. She volunteers 20+ hours a week because she believes every middle schooler deserves a caring adult in their corner.',
-    email: 'danielle.moore@younglife.org',
-    phone: '(913) 555-0104',
-  },
-  {
-    id: 5,
-    name: 'Marcus & Tiffany Hill',
-    role: 'YoungLife Leaders',
-    program: 'High School',
-    initials: 'MH',
-    color: '#d97706',
-    bio: 'Marcus coaches soccer at BVNW and Tiffany is in education. Together they reach high school kids through sports and authentic friendship.',
-    email: 'marcus.hill@younglife.org',
-    phone: '(913) 555-0105',
-  },
-]
+const ROLES = ['Area Director','YoungLife Leader','WyldLife Leader','Campaigners Leader','Volunteer','Staff']
+const COLORS = ['#E8392A','#1B4FA3','#3AAB35','#854883','#d97706','#0891b2','#FF837D','#F3C546']
+const EMPTY = { firstName:'', lastName:'', role:'YoungLife Leader', program:'YoungLife', phone:'', email:'', bio:'', schools:[], initials:'', color:'#1B4FA3' }
 
-export default function Leaders() {
+export default function Leaders({ store }) {
+  const { leaders, students, followUps, getStudentAttendance, addLeader, updateLeader, deleteLeader, addNotification } = store
+  const [modal, setModal] = useState(null)
+  const [form, setForm] = useState(EMPTY)
+  const [editId, setEditId] = useState(null)
+  const [viewLeader, setViewLeader] = useState(null)
+  const [confirmDelete, setConfirmDelete] = useState(null)
+  const [filterProgram, setFilterProgram] = useState('All')
+
+  const filtered = leaders.filter(l => filterProgram === 'All' || l.program === filterProgram || l.program === 'Both')
+
+  function openAdd() { setForm(EMPTY); setEditId(null); setModal('form') }
+  function openEdit(l) { setForm({...l, schools: l.schools||[]}); setEditId(l.id); setModal('form') }
+  function openView(l) { setViewLeader(l); setModal('view') }
+
+  function handleChange(e) {
+    const { name, value } = e.target
+    setForm(f => ({ ...f, [name]: value }))
+  }
+
+  function toggleSchool(school) {
+    setForm(f => ({
+      ...f,
+      schools: f.schools.includes(school) ? f.schools.filter(s=>s!==school) : [...f.schools, school]
+    }))
+  }
+
+  function handleSave() {
+    if (!form.firstName || !form.lastName) return
+    const initials = (form.firstName[0]||'') + (form.lastName[0]||'')
+    const payload = { ...form, initials }
+    if (editId) {
+      updateLeader(editId, payload)
+      addNotification('Leader updated!')
+    } else {
+      addLeader(payload)
+      addNotification('Leader added!')
+    }
+    setModal(null)
+  }
+
+  function handleDelete(id) {
+    deleteLeader(id)
+    setConfirmDelete(null)
+    setModal(null)
+    addNotification('Leader removed','error')
+  }
+
+  function leaderStudents(leaderId) {
+    return students.filter(s => s.leaderId === leaderId)
+  }
+
+  function leaderFollowUps(leaderId) {
+    return followUps.filter(f => f.leaderId === leaderId)
+  }
+
   return (
-    <div className="leaders">
-      <div className="leaders-hero">
-        <p className="leaders-sub">The People Behind It All</p>
-        <h2 className="leaders-heading">Our Leaders</h2>
-        <p className="leaders-desc">Volunteers and staff who show up for every kid, every week.</p>
+    <div className="leaders-page">
+      <div className="page-toolbar">
+        <div className="toolbar-left">
+          <select className="filter-select" value={filterProgram} onChange={e => setFilterProgram(e.target.value)}>
+            <option value="All">All Programs</option>
+            <option>YoungLife</option>
+            <option>WyldLife</option>
+          </select>
+        </div>
+        <button className="btn-primary" onClick={openAdd}>+ Add Leader</button>
       </div>
 
-      <div className="leaders-list">
-        {LEADERS.map((l) => (
-          <div className="leader-card" key={l.id}>
-            <div className="leader-top">
-              <div className="leader-avatar" style={{ background: l.color }}>
-                {l.initials}
+      <div className="leaders-grid">
+        {filtered.map(l => {
+          const myStudents = leaderStudents(l.id)
+          const myFU = leaderFollowUps(l.id)
+          return (
+            <div key={l.id} className="leader-card" onClick={() => openView(l)}>
+              <div className="leader-card-top">
+                <div className="leader-avatar-lg" style={{background: l.color}}>{l.initials}</div>
+                <div>
+                  <h4 className="leader-card-name">{l.firstName} {l.lastName}</h4>
+                  <p className="leader-card-role">{l.role}</p>
+                  <span className={`program-pill program-pill--${l.program==='YoungLife'?'yl':l.program==='WyldLife'?'wl':'both'}`}>{l.program}</span>
+                </div>
               </div>
-              <div className="leader-info">
-                <h4 className="leader-name">{l.name}</h4>
-                <p className="leader-role">{l.role}</p>
-                <span className="leader-program" style={{ color: l.color, background: l.color + '18' }}>
-                  {l.program}
-                </span>
+              {l.bio && <p className="leader-card-bio">{l.bio}</p>}
+              <div className="leader-card-stats">
+                <div className="leader-stat"><span className="ls-val">{myStudents.length}</span><span className="ls-lbl">Students</span></div>
+                <div className="leader-stat"><span className="ls-val">{myFU.filter(f=>!f.completed).length}</span><span className="ls-lbl">Pending FU</span></div>
+                <div className="leader-stat"><span className="ls-val">{(l.schools||[]).length}</span><span className="ls-lbl">Schools</span></div>
+              </div>
+              <div className="leader-card-contact">
+                {l.phone && <a href={`tel:${l.phone}`} className="contact-link" onClick={e=>e.stopPropagation()}>📞 {l.phone}</a>}
+                {l.email && <a href={`mailto:${l.email}`} className="contact-link" onClick={e=>e.stopPropagation()}>✉️ {l.email}</a>}
               </div>
             </div>
-            <p className="leader-bio">{l.bio}</p>
-            <div className="leader-contact">
-              <a href={`mailto:${l.email}`} className="leader-btn">
-                <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
-                  <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                </svg>
-                Email
-              </a>
-              <a href={`tel:${l.phone}`} className="leader-btn">
-                <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
-                  <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
-                </svg>
-                Call
-              </a>
+          )
+        })}
+      </div>
+
+      {/* Add/Edit Modal */}
+      {modal === 'form' && (
+        <Modal title={editId ? 'Edit Leader' : 'Add Leader'} onClose={() => setModal(null)} size="lg">
+          <div className="form-grid">
+            <div className="form-row-2">
+              <div className="form-group">
+                <label>First Name *</label>
+                <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First name" />
+              </div>
+              <div className="form-group">
+                <label>Last Name *</label>
+                <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last name" />
+              </div>
+            </div>
+            <div className="form-row-2">
+              <div className="form-group">
+                <label>Role</label>
+                <select name="role" value={form.role} onChange={handleChange}>
+                  {ROLES.map(r => <option key={r}>{r}</option>)}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Program</label>
+                <select name="program" value={form.program} onChange={handleChange}>
+                  <option>YoungLife</option>
+                  <option>WyldLife</option>
+                  <option>Both</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-row-2">
+              <div className="form-group">
+                <label>Phone</label>
+                <input name="phone" value={form.phone} onChange={handleChange} placeholder="(913) 555-0000" />
+              </div>
+              <div className="form-group">
+                <label>Email</label>
+                <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="leader@younglife.org" />
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Avatar Color</label>
+              <div className="color-picker">
+                {COLORS.map(c => (
+                  <button key={c} type="button" className={`color-swatch ${form.color===c?'color-swatch--on':''}`}
+                    style={{background:c}} onClick={() => setForm(f => ({...f, color:c}))} />
+                ))}
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Schools</label>
+              <div className="school-selector">
+                {SCHOOLS.map(s => (
+                  <button key={s} type="button"
+                    className={`tag-sel-btn ${(form.schools||[]).includes(s)?'tag-sel-btn--on':''}`}
+                    onClick={() => toggleSchool(s)}
+                  >{s}</button>
+                ))}
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Bio</label>
+              <textarea name="bio" value={form.bio} onChange={handleChange} rows={3} placeholder="A short bio…" />
+            </div>
+            <div className="modal-actions">
+              {editId && <button className="btn-danger" onClick={() => setConfirmDelete({id:editId})}>Delete</button>}
+              <button className="btn-secondary" onClick={() => setModal(null)}>Cancel</button>
+              <button className="btn-primary" onClick={handleSave}>{editId?'Save':'Add Leader'}</button>
             </div>
           </div>
-        ))}
-      </div>
+        </Modal>
+      )}
+
+      {/* View Modal */}
+      {modal === 'view' && viewLeader && (
+        <Modal title="Leader Profile" onClose={() => setModal(null)} size="lg">
+          <div className="leader-profile">
+            <div className="profile-header">
+              <div className="leader-avatar-lg" style={{background: viewLeader.color}}>{viewLeader.initials}</div>
+              <div>
+                <h2 className="profile-name">{viewLeader.firstName} {viewLeader.lastName}</h2>
+                <p style={{color:'var(--gray-500)',marginBottom:6}}>{viewLeader.role}</p>
+                <span className={`program-pill program-pill--${viewLeader.program==='YoungLife'?'yl':viewLeader.program==='WyldLife'?'wl':'both'}`}>{viewLeader.program}</span>
+              </div>
+            </div>
+            {viewLeader.bio && <p style={{fontSize:14,color:'var(--gray-600)',lineHeight:1.6}}>{viewLeader.bio}</p>}
+            <div className="profile-grid">
+              <div className="profile-section">
+                <div className="profile-section-title">Contact</div>
+                <div className="profile-field"><span>📞</span><a href={`tel:${viewLeader.phone}`}>{viewLeader.phone||'—'}</a></div>
+                <div className="profile-field"><span>✉️</span><a href={`mailto:${viewLeader.email}`}>{viewLeader.email||'—'}</a></div>
+              </div>
+              <div className="profile-section">
+                <div className="profile-section-title">Schools</div>
+                <div className="tag-list" style={{gap:6}}>
+                  {(viewLeader.schools||[]).map(s => <span key={s} className="school-chip-sm">{s}</span>)}
+                  {(viewLeader.schools||[]).length===0 && <span style={{color:'var(--gray-400)',fontSize:13}}>None assigned</span>}
+                </div>
+              </div>
+            </div>
+            <div className="profile-section">
+              <div className="profile-section-title">Assigned Students ({leaderStudents(viewLeader.id).length})</div>
+              {leaderStudents(viewLeader.id).map(s => (
+                <div key={s.id} className="leader-student-row">
+                  <div className="student-avatar" style={{background:s.program==='YoungLife'?'#1B4FA3':'#3AAB35',width:28,height:28,fontSize:10}}>
+                    {s.firstName[0]}{s.lastName[0]}
+                  </div>
+                  <span>{s.firstName} {s.lastName}</span>
+                  <span style={{color:'var(--gray-400)',fontSize:12}}>{s.grade} · {s.school}</span>
+                </div>
+              ))}
+              {leaderStudents(viewLeader.id).length === 0 && <p className="empty-msg-sm">No students assigned</p>}
+            </div>
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={() => setModal(null)}>Close</button>
+              <button className="btn-primary" onClick={() => openEdit(viewLeader)}>Edit</button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {confirmDelete && (
+        <Modal title="Delete Leader" onClose={() => setConfirmDelete(null)} size="sm">
+          <p style={{marginBottom:20}}>Delete this leader? Their student assignments will remain but they'll be unlinked.</p>
+          <div className="modal-actions">
+            <button className="btn-secondary" onClick={() => setConfirmDelete(null)}>Cancel</button>
+            <button className="btn-danger" onClick={() => handleDelete(confirmDelete.id)}>Delete</button>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }

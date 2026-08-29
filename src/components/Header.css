@@ -1,57 +1,33 @@
 .header {
-  background: var(--yl-red);
-  color: white;
-  padding: 16px 20px;
-  box-shadow: var(--shadow);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.header--home {
-  padding: 20px 20px;
-}
-
-.header-brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.header-logo {
-  width: 48px;
-  height: 48px;
+  height: var(--header-h);
   background: white;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex; align-items: center; gap: 14px;
+  padding: 0 20px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: var(--shadow-sm);
 }
 
-.logo-yl {
-  color: var(--yl-red);
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -1px;
+.header-menu {
+  color: var(--gray-500); display: flex;
+  padding: 4px; border-radius: 6px;
+  transition: background .15s;
 }
+.header-menu:hover { background: var(--gray-100); }
+
+@media (min-width: 769px) { .header-menu { display: none; } }
 
 .header-title {
-  font-size: 13px;
-  font-weight: 500;
-  opacity: 0.85;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  font-size: 18px; font-weight: 700;
+  color: var(--gray-900); flex: 1;
 }
 
-.header-subtitle {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
+.header-right { display: flex; align-items: center; gap: 10px; }
 
-.header-page-title {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
+.header-badge {
+  background: var(--yl-green);
+  color: white;
+  font-size: 11px; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px;
+  letter-spacing: .3px;
 }

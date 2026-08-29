@@ -1,0 +1,76 @@
+.followup-page { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+
+.fu-summary {
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+
+.fu-stat {
+  background: white; border-radius: var(--radius-lg);
+  padding: 14px 20px; box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 80px;
+}
+.fu-stat-val { font-size: 26px; font-weight: 800; color: var(--gray-800); }
+.fu-stat-val--red { color: var(--red); }
+.fu-stat-label { font-size: 12px; color: var(--gray-500); font-weight: 500; }
+
+.fu-list { display: flex; flex-direction: column; gap: 10px; }
+
+.fu-card {
+  background: white; border-radius: var(--radius-lg);
+  padding: 16px; box-shadow: var(--shadow-sm);
+  display: flex; gap: 14px; align-items: flex-start;
+  border-left: 4px solid transparent;
+  transition: border-color .15s;
+}
+.fu-card:hover { border-left-color: #1B4FA3; }
+.fu-card--done { opacity: .65; }
+
+.fu-type-icon {
+  width: 42px; height: 42px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+
+.fu-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+
+.fu-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.fu-student { font-size: 15px; font-weight: 700; color: var(--gray-900); }
+.fu-type-badge {
+  font-size: 11px; font-weight: 700; text-transform: capitalize;
+  padding: 2px 8px; border-radius: 20px;
+}
+.fu-done-badge {
+  font-size: 11px; font-weight: 700;
+  background: #dcfce7; color: #15803d;
+  padding: 2px 8px; border-radius: 20px;
+}
+
+.fu-note { font-size: 14px; color: var(--gray-600); line-height: 1.5; }
+.fu-meta { display: flex; gap: 14px; font-size: 12px; color: var(--gray-400); flex-wrap: wrap; }
+
+.fu-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+@media (min-width: 600px) { .fu-actions { flex-direction: row; align-items: flex-start; } }
+
+.fu-action-btn {
+  width: 34px; height: 34px; border-radius: 8px; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--gray-200); background: white;
+  cursor: pointer; transition: all .15s; text-decoration: none;
+}
+.fu-action-btn:hover { background: var(--gray-100); }
+.fu-action-btn--call  { background: #dbeafe; border-color: #93c5fd; }
+.fu-action-btn--email { background: #dcfce7; border-color: #86efac; }
+.fu-action-btn--text  { background: #f3e8ff; border-color: #d8b4fe; }
+.fu-action-btn--done  { background: #f0fdf4; border-color: #86efac; color: #15803d; font-weight: 800; }
+.fu-action-btn--del:hover { background: #fee2e2; border-color: #fca5a5; }
+
+.fu-empty { text-align: center; color: var(--gray-400); padding: 60px; font-size: 15px; }
+
+.email-note { font-size: 12px; color: var(--gray-500); font-style: italic; }
+
+.form-group--check label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 500; color: var(--gray-700);
+  text-transform: none; letter-spacing: 0; cursor: pointer;
+}
+.form-group--check input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }

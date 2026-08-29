@@ -1,48 +1,53 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --yl-red: #E8392A;
-  --yl-red-dark: #c42e1f;
-  --yl-red-light: #ff5a4a;
-  --white: #ffffff;
-  --gray-50: #f9fafb;
+  /* Official Young Life colors — blue + green only */
+  --yl-blue: #1B4FA3;
+  --yl-blue-dark: #153e85;
+  --yl-blue-light: #dbeafe;
+  --yl-green: #3AAB35;
+  --yl-green-dark: #2d8a29;
+  --yl-green-light: #dcfce7;
+
+  /* Accent — used sparingly for warnings/alerts only */
+  --amber: #d97706;
+  --red-alert: #dc2626;
+  --red-alert-light: #fee2e2;
+
+  --white: #fff;
+  --gray-50:  #f9fafb;
   --gray-100: #f3f4f6;
   --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
   --gray-400: #9ca3af;
+  --gray-500: #6b7280;
   --gray-600: #4b5563;
+  --gray-700: #374151;
   --gray-800: #1f2937;
-  --shadow: 0 2px 8px rgba(0,0,0,0.10);
-  --shadow-lg: 0 4px 20px rgba(0,0,0,0.15);
+  --gray-900: #111827;
+
+  --sidebar-w: 240px;
+  --header-h: 60px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+  --shadow:    0 2px 8px rgba(0,0,0,.10);
+  --shadow-lg: 0 4px 20px rgba(0,0,0,.14);
+  --radius:    10px;
+  --radius-lg: 14px;
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--gray-50);
+  background: var(--gray-100);
   color: var(--gray-800);
-  min-height: 100vh;
-  max-width: 480px;
-  margin: 0 auto;
+  font-size: 14px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+button { cursor: pointer; border: none; background: none; font-family: inherit; font-size: inherit; }
+input, select, textarea { font-family: inherit; font-size: inherit; }
+a { color: inherit; text-decoration: none; }
 
-button {
-  cursor: pointer;
-  border: none;
-  background: none;
-  font-family: inherit;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }

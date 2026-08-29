@@ -1,0 +1,22 @@
+.toast-container {
+  position: fixed; bottom: 24px; right: 24px;
+  display: flex; flex-direction: column; gap: 8px;
+  z-index: 2000; pointer-events: none;
+}
+
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 18px; border-radius: 10px;
+  color: white; font-weight: 600; font-size: 14px;
+  box-shadow: var(--shadow-lg);
+  animation: toastIn .2s ease;
+  transition: opacity .3s, transform .3s;
+  pointer-events: auto;
+}
+
+.toast--success { background: #059669; }
+.toast--error   { background: var(--red); }
+.toast--info    { background: var(--blue); }
+.toast--out     { opacity: 0; transform: translateX(20px); }
+
+@keyframes toastIn { from { opacity:0; transform: translateX(20px) } to { opacity:1; transform:none } }
