@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Modal from '../components/Modal'
-import { SCHOOLS } from '../data/initialData'
 import './Leaders.css'
 
 const ROLES = ['Area Director','YoungLife Leader','WyldLife Leader','Campaigners Leader','Volunteer','Staff']
@@ -8,7 +7,7 @@ const COLORS = ['#E8392A','#1B4FA3','#3AAB35','#854883','#d97706','#0891b2','#FF
 const EMPTY = { firstName:'', lastName:'', role:'YoungLife Leader', program:'YoungLife', phone:'', email:'', bio:'', schools:[], initials:'', color:'#1B4FA3' }
 
 export default function Leaders({ store }) {
-  const { leaders, students, followUps, getStudentAttendance, addLeader, updateLeader, deleteLeader, addNotification } = store
+  const { leaders, students, followUps, schools: storeSchools, getStudentAttendance, addLeader, updateLeader, deleteLeader, addNotification } = store
   const [modal, setModal] = useState(null)
   const [form, setForm] = useState(EMPTY)
   const [editId, setEditId] = useState(null)
@@ -157,7 +156,7 @@ export default function Leaders({ store }) {
             <div className="form-group">
               <label>Schools</label>
               <div className="school-selector">
-                {SCHOOLS.map(s => (
+                {(storeSchools || []).map(s => (
                   <button key={s} type="button"
                     className={`tag-sel-btn ${(form.schools||[]).includes(s)?'tag-sel-btn--on':''}`}
                     onClick={() => toggleSchool(s)}

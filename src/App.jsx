@@ -35,7 +35,7 @@ export default function App() {
 
   return (
     <div className="app-layout">
-      <Sidebar page={page} setPage={setPage} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
+      <Sidebar page={page} setPage={setPage} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} store={storeWithToast} />
       <div className="app-main">
         <Header page={page} onMenuClick={() => setMobileOpen(o => !o)} />
         <div className="app-content">

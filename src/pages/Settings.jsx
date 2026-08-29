@@ -1,6 +1,174 @@
 import { useState } from 'react'
 import './Settings.css'
 
+function OrgSection({ store }) {
+  const { org, updateOrg, addNotification } = store
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(org)
+
+  function save() {
+    updateOrg(draft)
+    setEditing(false)
+    addNotification('Organization info saved!')
+  }
+  function cancel() { setDraft(org); setEditing(false) }
+
+  const fields = [
+    { key: 'areaName', label: 'Area Name' },
+    { key: 'areaDirector', label: 'Area Director' },
+    { key: 'region', label: 'Region' },
+    { key: 'website', label: 'Website' },
+    { key: 'phone', label: 'Phone' },
+    { key: 'email', label: 'Email' },
+  ]
+
+  return (
+    <div className="settings-group">
+      <div className="settings-group-header">
+        <div className="settings-group-label">Organization Info</div>
+        {!editing
+          ? <button className="settings-btn settings-btn--blue" onClick={() => { setDraft(org); setEditing(true) }}>Edit</button>
+          : <div style={{display:'flex',gap:8}}>
+              <button className="settings-btn settings-btn--blue" onClick={save}>Save</button>
+              <button className="settings-btn settings-btn--ghost" onClick={cancel}>Cancel</button>
+            </div>
+        }
+      </div>
+      <div className="settings-card">
+        {fields.map(f => (
+          <div className="settings-row" key={f.key}>
+            <div className="settings-row-info">
+              <div className="settings-row-title">{f.label}</div>
+              {!editing && <div className="settings-row-sub">{org[f.key] || '—'}</div>}
+            </div>
+            {editing && (
+              <input
+                className="settings-input"
+                value={draft[f.key] || ''}
+                onChange={e => setDraft(d => ({ ...d, [f.key]: e.target.value }))}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function ProgramsSection({ store }) {
+  const { programs, addProgram, updateProgram, deleteProgram, addNotification } = store
+  const [adding, setAdding] = useState(false)
+  const [editId, setEditId] = useState(null)
+  const [newProg, setNewProg] = useState({ name: '', grade: '', description: '' })
+  const [editDraft, setEditDraft] = useState({})
+
+  function handleAdd() {
+    if (!newProg.name.trim()) return
+    addProgram(newProg)
+    setNewProg({ name: '', grade: '', description: '' })
+    setAdding(false)
+    addNotification('Program added!')
+  }
+
+  function startEdit(p) { setEditId(p.id); setEditDraft({ name: p.name, grade: p.grade, description: p.description }) }
+  function saveEdit(id) { updateProgram(id, editDraft); setEditId(null); addNotification('Program updated!') }
+
+  return (
+    <div className="settings-group">
+      <div className="settings-group-header">
+        <div className="settings-group-label">Programs</div>
+        <button className="settings-btn settings-btn--blue" onClick={() => setAdding(true)}>+ Add</button>
+      </div>
+      <div className="settings-card">
+        {programs.map(p => (
+          <div className="settings-row" key={p.id}>
+            {editId === p.id ? (
+              <div style={{flex:1,display:'flex',flexDirection:'column',gap:6}}>
+                <input className="settings-input" value={editDraft.name} placeholder="Program name" onChange={e => setEditDraft(d => ({...d, name: e.target.value}))} />
+                <input className="settings-input" value={editDraft.grade} placeholder="Grade range" onChange={e => setEditDraft(d => ({...d, grade: e.target.value}))} />
+                <input className="settings-input" value={editDraft.description} placeholder="Description" onChange={e => setEditDraft(d => ({...d, description: e.target.value}))} />
+                <div style={{display:'flex',gap:8,marginTop:4}}>
+                  <button className="settings-btn settings-btn--blue" onClick={() => saveEdit(p.id)}>Save</button>
+                  <button className="settings-btn settings-btn--ghost" onClick={() => setEditId(null)}>Cancel</button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="settings-row-info" style={{flex:1}}>
+                  <div className="settings-row-title">{p.name}</div>
+                  <div className="settings-row-sub">{p.grade}{p.description ? ' · ' + p.description : ''}</div>
+                </div>
+                <div style={{display:'flex',gap:6,alignItems:'center',flexShrink:0}}>
+                  <button
+                    className={`settings-badge ${p.active ? 'settings-badge--green' : 'settings-badge--amber'}`}
+                    style={{cursor:'pointer',border:'none'}}
+                    onClick={() => { updateProgram(p.id, { active: !p.active }); addNotification(p.active ? 'Program deactivated' : 'Program activated') }}
+                    title="Toggle active"
+                  >{p.active ? 'Active' : 'Inactive'}</button>
+                  <button className="settings-btn settings-btn--ghost" onClick={() => startEdit(p)}>Edit</button>
+                  <button className="settings-btn settings-btn--red" onClick={() => { deleteProgram(p.id); addNotification('Program removed') }}>Delete</button>
+                </div>
+              </>
+            )}
+          </div>
+        ))}
+        {adding && (
+          <div className="settings-row" style={{flexDirection:'column',alignItems:'stretch',gap:8}}>
+            <input className="settings-input" value={newProg.name} placeholder="Program name*" onChange={e => setNewProg(d => ({...d, name: e.target.value}))} />
+            <input className="settings-input" value={newProg.grade} placeholder="Grade range (e.g. High School 9th–12th)" onChange={e => setNewProg(d => ({...d, grade: e.target.value}))} />
+            <input className="settings-input" value={newProg.description} placeholder="Description (optional)" onChange={e => setNewProg(d => ({...d, description: e.target.value}))} />
+            <div style={{display:'flex',gap:8}}>
+              <button className="settings-btn settings-btn--blue" onClick={handleAdd}>Add Program</button>
+              <button className="settings-btn settings-btn--ghost" onClick={() => setAdding(false)}>Cancel</button>
+            </div>
+          </div>
+        )}
+        {programs.length === 0 && !adding && <div className="settings-row"><div className="settings-row-sub">No programs yet. Add one above.</div></div>}
+      </div>
+    </div>
+  )
+}
+
+function SchoolsSection({ store }) {
+  const { schools, addSchool, deleteSchool, addNotification } = store
+  const [newSchool, setNewSchool] = useState('')
+
+  function handleAdd() {
+    const name = newSchool.trim()
+    if (!name || schools.includes(name)) return
+    addSchool(name)
+    setNewSchool('')
+    addNotification('School added!')
+  }
+
+  return (
+    <div className="settings-group">
+      <div className="settings-group-header">
+        <div className="settings-group-label">Schools ({schools.length})</div>
+      </div>
+      <div className="settings-card">
+        <div className="settings-row" style={{gap:8}}>
+          <input
+            className="settings-input"
+            style={{flex:1}}
+            value={newSchool}
+            placeholder="Add a school name…"
+            onChange={e => setNewSchool(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleAdd()}
+          />
+          <button className="settings-btn settings-btn--blue" onClick={handleAdd}>+ Add</button>
+        </div>
+        {schools.map(s => (
+          <div className="settings-row" key={s}>
+            <div className="settings-row-title" style={{flex:1}}>{s}</div>
+            <button className="settings-btn settings-btn--red" onClick={() => { deleteSchool(s); addNotification('School removed') }}>Remove</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function Settings({ store }) {
   const { resetData, addNotification } = store
   const [showConfirmReset, setShowConfirmReset] = useState(false)
@@ -13,11 +181,9 @@ export default function Settings({ store }) {
 
   const exportData = () => {
     const data = {
-      students: store.students,
-      leaders: store.leaders,
-      events: store.events,
-      attendance: store.attendance,
-      followUps: store.followUps,
+      students: store.students, leaders: store.leaders, events: store.events,
+      attendance: store.attendance, followUps: store.followUps,
+      org: store.org, programs: store.programs, schools: store.schools,
       exportedAt: new Date().toISOString(),
     }
     const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'})
@@ -30,77 +196,23 @@ export default function Settings({ store }) {
 
   return (
     <div className="settings-page">
-      <div className="settings-group">
-        <div className="settings-group-label">Organization</div>
-        <div className="settings-card">
-          <div className="settings-row">
-            <div className="settings-row-info">
-              <div className="settings-row-title">Area Name</div>
-              <div className="settings-row-sub">Johnson County Young Life</div>
-            </div>
-          </div>
-          <div className="settings-row">
-            <div className="settings-row-info">
-              <div className="settings-row-title">Area Director</div>
-              <div className="settings-row-sub">Tyler Brooks</div>
-            </div>
-          </div>
-          <div className="settings-row">
-            <div className="settings-row-info">
-              <div className="settings-row-title">Region</div>
-              <div className="settings-row-sub">Kansas City Metro</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <OrgSection store={store} />
+      <ProgramsSection store={store} />
+      <SchoolsSection store={store} />
 
       <div className="settings-group">
-        <div className="settings-group-label">Programs</div>
-        <div className="settings-card">
-          <div className="settings-row">
-            <div className="settings-row-info">
-              <div className="settings-row-title">YoungLife Club</div>
-              <div className="settings-row-sub">High School (9th–12th grade)</div>
-            </div>
-            <span className="settings-badge settings-badge--blue">Active</span>
-          </div>
-          <div className="settings-row">
-            <div className="settings-row-info">
-              <div className="settings-row-title">WyldLife</div>
-              <div className="settings-row-sub">Middle School (6th–8th grade)</div>
-            </div>
-            <span className="settings-badge settings-badge--green">Active</span>
-          </div>
-          <div className="settings-row">
-            <div className="settings-row-info">
-              <div className="settings-row-title">Campaigners</div>
-              <div className="settings-row-sub">Weekly Bible study for all students</div>
-            </div>
-            <span className="settings-badge settings-badge--green">Active</span>
-          </div>
-          <div className="settings-row">
-            <div className="settings-row-info">
-              <div className="settings-row-title">Summer Camp</div>
-              <div className="settings-row-sub">Malibu Club (HS) · Silver Cliff Ranch (MS)</div>
-            </div>
-            <span className="settings-badge settings-badge--amber">Seasonal</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="settings-group">
-        <div className="settings-group-label">Data</div>
+        <div className="settings-group-label">Data & Stats</div>
         <div className="settings-card">
           <div className="settings-row">
             <div className="settings-row-info">
               <div className="settings-row-title">Total Students</div>
-              <div className="settings-row-sub">{store.students.length} students in database</div>
+              <div className="settings-row-sub">{store.students.length} in database</div>
             </div>
           </div>
           <div className="settings-row">
             <div className="settings-row-info">
-              <div className="settings-row-title">Total Events</div>
-              <div className="settings-row-sub">{store.events.length} events logged</div>
+              <div className="settings-row-title">Events Logged</div>
+              <div className="settings-row-sub">{store.events.length} total</div>
             </div>
           </div>
           <div className="settings-row">
@@ -131,7 +243,7 @@ export default function Settings({ store }) {
           <div className="settings-row">
             <div className="settings-row-info">
               <div className="settings-row-title">Reset to Sample Data</div>
-              <div className="settings-row-sub">Replace all data with the default seed records</div>
+              <div className="settings-row-sub">Replace all data with default seed records</div>
             </div>
             <button className="settings-btn settings-btn--red" onClick={() => setShowConfirmReset(true)}>Reset</button>
           </div>
@@ -142,8 +254,8 @@ export default function Settings({ store }) {
         <div className="settings-about-logo">YL</div>
         <div>
           <div className="settings-about-name">Johnson County Young Life</div>
-          <div className="settings-about-version">Leader App · v2.0</div>
-          <div className="settings-about-mission">"Reaching every junior high and high school kid in Johnson County, Kansas"</div>
+          <div className="settings-about-version">Leader App · v2.0 · Johnson County, Texas</div>
+          <div className="settings-about-mission">"Reaching every junior high and high school kid in Johnson County, Texas"</div>
         </div>
       </div>
 

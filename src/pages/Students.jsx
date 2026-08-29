@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Modal from '../components/Modal'
-import { SCHOOLS, GRADES } from '../data/initialData'
+import { GRADES } from '../data/initialData'
 import './Students.css'
 
 const EMPTY_STUDENT = {
@@ -12,7 +12,7 @@ const EMPTY_STUDENT = {
 const TAGS = ['interested','campaigners','camp','leadership','multiplier','new','follow-up']
 
 export default function Students({ store }) {
-  const { students, leaders, addStudent, updateStudent, deleteStudent, addNotification } = store
+  const { students, leaders, schools: storeSchools, addStudent, updateStudent, deleteStudent, addNotification } = store
   const [search, setSearch] = useState('')
   const [filterProgram, setFilterProgram] = useState('All')
   const [filterGrade, setFilterGrade] = useState('All')
@@ -201,7 +201,7 @@ export default function Students({ store }) {
               <label>School</label>
               <select name="school" value={form.school} onChange={handleChange}>
                 <option value="">— Select School —</option>
-                {SCHOOLS.map(s => <option key={s}>{s}</option>)}
+                {(storeSchools || []).map(s => <option key={s}>{s}</option>)}
               </select>
             </div>
             <div className="form-row-2">
