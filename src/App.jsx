@@ -12,10 +12,11 @@ import Leaders from './pages/Leaders'
 import Reports from './pages/Reports'
 import Finances from './pages/Finances'
 import Resources from './pages/Resources'
+import Messaging from './pages/Messaging'
 import Settings from './pages/Settings'
 import './App.css'
 
-const PAGES = { dashboard: Dashboard, students: Students, attendance: Attendance, followup: FollowUp, events: Events, leaders: Leaders, reports: Reports, finances: Finances, resources: Resources, settings: Settings }
+const PAGES = { dashboard: Dashboard, students: Students, attendance: Attendance, followup: FollowUp, events: Events, leaders: Leaders, reports: Reports, finances: Finances, resources: Resources, messaging: Messaging, settings: Settings }
 
 export default function App() {
   const [page, setPage] = useState('dashboard')
