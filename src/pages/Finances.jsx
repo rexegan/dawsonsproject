@@ -357,6 +357,8 @@ export default function Finances({ store }) {
   const [delFR, setDelFR] = useState(null)
   const [delDonor, setDelDonor] = useState(null)
   const [delGrant, setDelGrant] = useState(null)
+  // Overview stat-card deep-dive modals
+  const [statModal, setStatModal] = useState(null) // 'raised' | 'monthly' | 'grants' | 'followups'
   // Finance FU form
   const [showFUForm, setShowFUForm] = useState(false)
   const [fuForm, setFuForm] = useState({ donorId:'', type:'call', date: new Date().toISOString().slice(0,10), note:'' })
@@ -432,32 +434,32 @@ export default function Finances({ store }) {
       {/* ════ OVERVIEW ════════════════════════════════════════════════════════ */}
       {tab === 'Overview' && (
         <div className="fin-tab-content">
-          {/* Stat cards — click to jump to tab */}
+          {/* Stat cards — click for deep-dive modal */}
           <div className="fin-overview">
-            <button className="fin-stat fin-stat--blue fin-stat--btn" onClick={() => setTab('Fundraisers')}>
+            <button className="fin-stat fin-stat--blue fin-stat--btn" onClick={() => setStatModal('raised')}>
               <div className="fin-stat-icon">🎯</div>
               <div className="fin-stat-val">{fmt$(totalRaised)}</div>
               <div className="fin-stat-label">Raised of {fmt$(totalGoal)} Goal</div>
               <div className="fin-stat-bar"><div style={{width: totalGoal ? Math.min(100,Math.round(totalRaised/totalGoal*100))+'%' : '0%'}} /></div>
-              <div className="fin-stat-sub">Click to view fundraisers →</div>
+              <div className="fin-stat-sub">{Math.round(totalRaised/totalGoal*100)||0}% to goal · tap for details</div>
             </button>
-            <button className="fin-stat fin-stat--green fin-stat--btn" onClick={() => setTab('Donors')}>
+            <button className="fin-stat fin-stat--green fin-stat--btn" onClick={() => setStatModal('monthly')}>
               <div className="fin-stat-icon">🔁</div>
               <div className="fin-stat-val">{fmt$(monthlyRecurring)}</div>
-              <div className="fin-stat-label">Monthly Recurring</div>
-              <div className="fin-stat-sub">{donors.filter(d=>d.status==='active'&&d.monthlyAmt>0).length} monthly donors — click to view →</div>
+              <div className="fin-stat-label">Monthly Recurring Income</div>
+              <div className="fin-stat-sub">{donors.filter(d=>d.status==='active'&&d.monthlyAmt>0).length} active monthly donors · tap for details</div>
             </button>
-            <button className="fin-stat fin-stat--amber fin-stat--btn" onClick={() => setTab('Grants')}>
+            <button className="fin-stat fin-stat--amber fin-stat--btn" onClick={() => setStatModal('grants')}>
               <div className="fin-stat-icon">🏆</div>
               <div className="fin-stat-val">{fmt$(awardsTotal)}</div>
               <div className="fin-stat-label">Grants Awarded</div>
-              <div className="fin-stat-sub">{grants.filter(g=>g.status==='awarded').length} active grants — click to view →</div>
+              <div className="fin-stat-sub">{grants.filter(g=>g.status==='awarded').length} awarded · {grants.filter(g=>g.status==='submitted').length} pending · tap for details</div>
             </button>
-            <button className="fin-stat fin-stat--purple fin-stat--btn" onClick={() => setTab('Follow-ups')}>
+            <button className="fin-stat fin-stat--purple fin-stat--btn" onClick={() => setStatModal('followups')}>
               <div className="fin-stat-icon">📞</div>
               <div className="fin-stat-val">{pendingFU}</div>
               <div className="fin-stat-label">Pending Follow-ups</div>
-              <div className="fin-stat-sub">Donor outreach needed — click →</div>
+              <div className="fin-stat-sub">Donor outreach needed · tap for details</div>
             </button>
           </div>
 
@@ -629,13 +631,13 @@ export default function Finances({ store }) {
               </tbody>
               <tfoot>
                 <tr className="fin-table-totals">
-                  <td colSpan={2}>Total ({filteredDonors.length} donors)</td>
+                  <td colSpan={2}>Totals — {filteredDonors.length} donor{filteredDonors.length!==1?'s':''}</td>
                   <td>
                     <div className="fin-total-label">Monthly Total</div>
                     <div className="fin-total-val">{fmt$(filteredDonors.reduce((s,d)=>s+Number(d.monthlyAmt||0),0))}</div>
                   </td>
                   <td>
-                    <div className="fin-total-label">All-Time Total</div>
+                    <div className="fin-total-label">Total</div>
                     <div className="fin-total-val">{fmt$(filteredDonors.reduce((s,d)=>s+Number(d.totalGiven||0),0))}</div>
                   </td>
                   <td colSpan={3}></td>
@@ -706,6 +708,173 @@ export default function Finances({ store }) {
       )}
 
       {/* ════ GLOBAL MODALS ═══════════════════════════════════════════════════ */}
+
+      {/* ════ STAT-CARD DEEP-DIVE MODALS ════════════════════════════════════ */}
+
+      {/* Raised / Fundraiser breakdown */}
+      {statModal === 'raised' && (
+        <Modal open title="Fundraiser Progress — Full Breakdown" onClose={() => setStatModal(null)} size="lg">
+          <div className="fin-detail">
+            <div className="fin-statdive-summary">
+              <div className="fin-sds-item"><div className="fin-sds-label">Total Goal</div><div className="fin-sds-val">{fmt$(totalGoal)}</div></div>
+              <div className="fin-sds-item fin-sds-item--blue"><div className="fin-sds-label">Total Raised</div><div className="fin-sds-val">{fmt$(totalRaised)}</div></div>
+              <div className="fin-sds-item"><div className="fin-sds-label">Remaining</div><div className="fin-sds-val">{fmt$(totalGoal - totalRaised)}</div></div>
+              <div className="fin-sds-item fin-sds-item--green"><div className="fin-sds-label">Overall %</div><div className="fin-sds-val">{totalGoal ? Math.round(totalRaised/totalGoal*100) : 0}%</div></div>
+            </div>
+            {fundraisers.map(f => {
+              const p = pct(f); const color = STATUS_COLOR_FR[f.status]
+              return (
+                <div key={f.id} className="fin-sds-row" onClick={() => { setStatModal(null); setViewFR(f) }}>
+                  <div className="fin-sds-row-top">
+                    <div>
+                      <div className="fin-sds-row-name">{f.name}</div>
+                      <div className="fin-sds-row-meta">{f.type} · {fmtDate(f.date)}</div>
+                    </div>
+                    <div style={{textAlign:'right'}}>
+                      <span className="fin-status-badge" style={{background:color+'22',color}}>{f.status}</span>
+                      <div style={{fontSize:12,marginTop:4,color:'var(--gray-500)'}}>{fmt$(f.raised)} of {fmt$(f.goal)}</div>
+                    </div>
+                  </div>
+                  <div className="fin-progress-bar" style={{height:10}}>
+                    <div className="fin-progress-fill" style={{width:p+'%',background:color}} />
+                  </div>
+                  <div style={{display:'flex',justifyContent:'space-between',fontSize:11,color:'var(--gray-400)',marginTop:2}}>
+                    <span>{p}% of goal</span>
+                    <span>Remaining: {fmt$(Number(f.goal||0)-Number(f.raised||0))}</span>
+                  </div>
+                </div>
+              )
+            })}
+            <div className="modal-actions" style={{marginTop:16}}>
+              <button className="btn-secondary" onClick={() => setStatModal(null)}>Close</button>
+              <button className="btn-primary" onClick={() => { setStatModal(null); setTab('Fundraisers') }}>Open Fundraisers Tab →</button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* Monthly recurring deep-dive */}
+      {statModal === 'monthly' && (
+        <Modal open title="Monthly Recurring Income — Donor Breakdown" onClose={() => setStatModal(null)} size="lg">
+          <div className="fin-detail">
+            <div className="fin-statdive-summary">
+              <div className="fin-sds-item fin-sds-item--blue"><div className="fin-sds-label">Monthly Total</div><div className="fin-sds-val">{fmt$(monthlyRecurring)}</div></div>
+              <div className="fin-sds-item fin-sds-item--green"><div className="fin-sds-label">Annual Projection</div><div className="fin-sds-val">{fmt$(monthlyRecurring * 12)}</div></div>
+              <div className="fin-sds-item"><div className="fin-sds-label">Monthly Donors</div><div className="fin-sds-val">{donors.filter(d=>d.status==='active'&&d.monthlyAmt>0).length}</div></div>
+              <div className="fin-sds-item"><div className="fin-sds-label">All Donors</div><div className="fin-sds-val">{donors.length}</div></div>
+            </div>
+            {[...donors].filter(d=>Number(d.monthlyAmt||0)>0).sort((a,b)=>Number(b.monthlyAmt)-Number(a.monthlyAmt)).map(d => (
+              <div key={d.id} className="fin-sds-row" onClick={() => { setStatModal(null); setViewDonor(d) }}>
+                <div className="fin-sds-row-top">
+                  <div>
+                    <div className="fin-sds-row-name">{TYPE_ICON_D[d.type]||'📌'} {d.name}</div>
+                    <div className="fin-sds-row-meta">{d.type} · Last gift {fmtDate(d.lastGift)}</div>
+                  </div>
+                  <div style={{textAlign:'right'}}>
+                    <div style={{fontSize:18,fontWeight:800,color:'#1B4FA3'}}>{fmt$(d.monthlyAmt)}<span style={{fontSize:11,fontWeight:400,color:'var(--gray-400)'}}>/mo</span></div>
+                    <div style={{fontSize:11,color:'var(--gray-400)'}}>= {fmt$(d.monthlyAmt*12)}/yr · {fmt$(d.totalGiven)} lifetime</div>
+                  </div>
+                </div>
+                <div className="fin-progress-bar" style={{height:6}}>
+                  <div className="fin-progress-fill" style={{width: monthlyRecurring ? Math.round(d.monthlyAmt/monthlyRecurring*100)+'%' : '0%', background:'#3AAB35'}} />
+                </div>
+                <div style={{fontSize:11,color:'var(--gray-400)',marginTop:2}}>{monthlyRecurring ? Math.round(d.monthlyAmt/monthlyRecurring*100) : 0}% of monthly total</div>
+              </div>
+            ))}
+            {donors.filter(d=>Number(d.monthlyAmt||0)>0).length===0 && <div className="fin-empty">No monthly donors yet.</div>}
+            <div className="modal-actions" style={{marginTop:16}}>
+              <button className="btn-secondary" onClick={() => setStatModal(null)}>Close</button>
+              <button className="btn-primary" onClick={() => { setStatModal(null); setTab('Donors') }}>Open Donors Tab →</button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* Grants deep-dive */}
+      {statModal === 'grants' && (
+        <Modal open title="Grants — Full Pipeline" onClose={() => setStatModal(null)} size="lg">
+          <div className="fin-detail">
+            <div className="fin-statdive-summary">
+              <div className="fin-sds-item fin-sds-item--green"><div className="fin-sds-label">Awarded</div><div className="fin-sds-val">{fmt$(awardsTotal)}</div></div>
+              <div className="fin-sds-item fin-sds-item--blue"><div className="fin-sds-label">Submitted / Pending</div><div className="fin-sds-val">{fmt$(grants.filter(g=>g.status==='submitted').reduce((s,g)=>s+Number(g.amount||0),0))}</div></div>
+              <div className="fin-sds-item"><div className="fin-sds-label">In Planning</div><div className="fin-sds-val">{fmt$(grants.filter(g=>g.status==='planning').reduce((s,g)=>s+Number(g.amount||0),0))}</div></div>
+              <div className="fin-sds-item"><div className="fin-sds-label">Total Tracked</div><div className="fin-sds-val">{grants.length}</div></div>
+            </div>
+            {['awarded','submitted','planning','declined'].map(status => {
+              const group = grants.filter(g=>g.status===status)
+              if (!group.length) return null
+              return (
+                <div key={status} style={{marginBottom:12}}>
+                  <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.5px',color:'var(--gray-400)',marginBottom:6}}>{STATUS_ICON_GR[status]} {status} ({group.length})</div>
+                  {group.map(g => (
+                    <div key={g.id} className="fin-sds-row" onClick={() => { setStatModal(null); setViewGrant(g) }}>
+                      <div className="fin-sds-row-top">
+                        <div>
+                          <div className="fin-sds-row-name">{g.name}</div>
+                          <div className="fin-sds-row-meta">
+                            {g.deadline ? 'Deadline: ' + fmtDate(g.deadline) : ''}
+                            {g.submitted ? ' · Submitted: ' + fmtDate(g.submitted) : ''}
+                            {g.awarded ? ' · Awarded: ' + fmtDate(g.awarded) : ''}
+                          </div>
+                          {g.notes && <div className="fin-sds-row-meta" style={{marginTop:2,fontStyle:'italic'}}>{g.notes.slice(0,100)}{g.notes.length>100?'…':''}</div>}
+                        </div>
+                        <div style={{fontSize:18,fontWeight:800,color:STATUS_COLOR_GR[status],flexShrink:0}}>{fmt$(g.amount)}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            })}
+            <div className="modal-actions" style={{marginTop:16}}>
+              <button className="btn-secondary" onClick={() => setStatModal(null)}>Close</button>
+              <button className="btn-primary" onClick={() => { setStatModal(null); setTab('Grants') }}>Open Grants Tab →</button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* Pending follow-ups deep-dive */}
+      {statModal === 'followups' && (
+        <Modal open title="Pending Donor Follow-ups" onClose={() => setStatModal(null)} size="lg">
+          <div className="fin-detail">
+            <div className="fin-statdive-summary">
+              <div className="fin-sds-item fin-sds-item--blue"><div className="fin-sds-label">Pending</div><div className="fin-sds-val">{pendingFU}</div></div>
+              <div className="fin-sds-item fin-sds-item--green"><div className="fin-sds-label">Completed</div><div className="fin-sds-val">{financeFollowUps.filter(f=>f.completed).length}</div></div>
+              <div className="fin-sds-item"><div className="fin-sds-label">Total Logged</div><div className="fin-sds-val">{financeFollowUps.length}</div></div>
+              <div className="fin-sds-item"><div className="fin-sds-label">Completion Rate</div><div className="fin-sds-val">{financeFollowUps.length ? Math.round(financeFollowUps.filter(f=>f.completed).length/financeFollowUps.length*100) : 0}%</div></div>
+            </div>
+            {financeFollowUps.filter(f=>!f.completed).sort((a,b)=>a.date.localeCompare(b.date)).map(f => {
+              const donor = donors.find(d=>d.id===f.donorId)
+              return (
+                <div key={f.id} className="fin-sds-row" onClick={() => { setStatModal(null); setViewFU(f) }}>
+                  <div className="fin-sds-row-top">
+                    <div style={{display:'flex',gap:10,alignItems:'flex-start'}}>
+                      <span style={{fontSize:24}}>{FU_ICON[f.type]||'📌'}</span>
+                      <div>
+                        <div className="fin-sds-row-name">{donor?.name || 'Unknown Donor'}</div>
+                        <div className="fin-sds-row-meta">{f.type} · {fmtDate(f.date)}</div>
+                        <div style={{fontSize:13,color:'var(--gray-700)',marginTop:4,lineHeight:1.4}}>{f.note}</div>
+                        {donor?.phone && <div style={{fontSize:12,color:'var(--gray-500)',marginTop:4}}>📞 {donor.phone}{donor.email ? ' · ✉️ '+donor.email : ''}</div>}
+                      </div>
+                    </div>
+                    <div style={{display:'flex',flexDirection:'column',gap:6,flexShrink:0}}>
+                      {donor?.phone && f.type==='call' && <a className="fin-btn fin-btn--primary" href={`tel:${donor.phone}`} onClick={e=>e.stopPropagation()} style={{fontSize:12}}>📞 Call</a>}
+                      {donor?.email && f.type==='email' && <a className="fin-btn fin-btn--primary" href={`mailto:${donor.email}`} onClick={e=>e.stopPropagation()} style={{fontSize:12}}>✉️ Email</a>}
+                      {donor?.phone && f.type==='text' && <a className="fin-btn fin-btn--primary" href={`sms:${donor.phone}`} onClick={e=>e.stopPropagation()} style={{fontSize:12}}>💬 Text</a>}
+                      <button className="fin-btn fin-btn--ghost" style={{fontSize:12}} onClick={e=>{e.stopPropagation();updateFinanceFollowUp(f.id,{completed:true});addNotification('Marked done!')}}>✓ Done</button>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+            {pendingFU === 0 && <div className="fin-empty">All caught up! No pending follow-ups. 🎉</div>}
+            <div className="modal-actions" style={{marginTop:16}}>
+              <button className="btn-secondary" onClick={() => setStatModal(null)}>Close</button>
+              <button className="btn-primary" onClick={() => { setStatModal(null); setTab('Follow-ups') }}>Open Follow-ups Tab →</button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {viewFR && <FundraiserModal f={viewFR} onClose={() => setViewFR(null)} onEdit={f=>{setEditFR(f);setViewFR(null)}} onDelete={f=>{setDelFR(f);setViewFR(null)}} store={store} />}
       {viewDonor && <DonorModal d={viewDonor} onClose={() => setViewDonor(null)} onEdit={d=>{setEditDonor(d);setViewDonor(null)}} onDelete={d=>{setDelDonor(d);setViewDonor(null)}} store={store} />}

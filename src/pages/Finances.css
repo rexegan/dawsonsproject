@@ -222,6 +222,32 @@
 }
 .fin-detail-pct-circle span { font-size: 13px; font-weight: 800; color: white; }
 
+/* Stat-card deep-dive modal */
+.fin-statdive-summary {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 16px;
+}
+@media (max-width: 600px) { .fin-statdive-summary { grid-template-columns: repeat(2,1fr); } }
+.fin-sds-item {
+  background: var(--gray-50); border-radius: 10px; padding: 12px 14px;
+}
+.fin-sds-item--blue { background: #eff6ff; }
+.fin-sds-item--green { background: #f0fdf4; }
+.fin-sds-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--gray-400); margin-bottom: 4px; }
+.fin-sds-val   { font-size: 20px; font-weight: 800; color: var(--gray-900); }
+.fin-sds-item--blue .fin-sds-val  { color: #1B4FA3; }
+.fin-sds-item--green .fin-sds-val { color: #3AAB35; }
+
+.fin-sds-row {
+  background: white; border: 1.5px solid var(--gray-100); border-radius: 10px;
+  padding: 14px; margin-bottom: 8px; cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.fin-sds-row:hover { border-color: #1B4FA3; box-shadow: 0 2px 10px rgba(27,79,163,.1); }
+.fin-sds-row-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.fin-sds-row-name { font-size: 14px; font-weight: 700; color: var(--gray-900); }
+.fin-sds-row-meta { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
 /* Inline log form */
 .fin-inline-log {
   background: var(--gray-50); border-radius: 10px; padding: 14px; margin-top: 8px;

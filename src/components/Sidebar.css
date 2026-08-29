@@ -34,6 +34,7 @@
 
 .sidebar-org { font-size: 10px; font-weight: 600; opacity: .6; text-transform: uppercase; letter-spacing: .8px; }
 .sidebar-name { font-size: 15px; font-weight: 700; }
+.sidebar-director { font-size: 11px; opacity: .65; margin-top: 2px; font-style: italic; }
 
 .sidebar-nav {
   flex: 1; padding: 12px 8px;

@@ -23,6 +23,7 @@ export default function Sidebar({ page, setPage, mobileOpen, setMobileOpen, stor
           <div>
             <div className="sidebar-org">Johnson County</div>
             <div className="sidebar-name">Young Life</div>
+            <div className="sidebar-director">{org.areaDirector || 'Theresa Boydston'}</div>
           </div>
         </div>
 
