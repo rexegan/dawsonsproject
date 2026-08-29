@@ -20,6 +20,33 @@ const initialPrograms = [
   { id: 'p4', name: 'Summer Camp', grade: 'All Students', active: true, description: 'Malibu Club (HS) · Crooked Creek Ranch (MS)' },
 ]
 
+// ── Finance seed data ──────────────────────────────────────────────
+const initialFundraisers = [
+  { id:'fr1', name:'Clay Shoot', type:'event', date:'2025-10-11', goal:25000, raised:18500, status:'active', notes:'Annual clay shoot at Cleburne Gun Club. Sponsorships open.', contacts:[] },
+  { id:'fr2', name:'Golf Tournament', type:'event', date:'2025-05-03', goal:30000, raised:30000, status:'complete', notes:'Sold out. Net raised after expenses.', contacts:[] },
+  { id:'fr3', name:'Fall Banquet', type:'event', date:'2025-11-08', goal:20000, raised:5200, status:'active', notes:'Annual fundraising dinner. Tables available.', contacts:[] },
+  { id:'fr4', name:'Spring Banquet', type:'event', date:'2026-03-14', goal:20000, raised:0, status:'planning', notes:'Save the date set. Venue TBD.', contacts:[] },
+]
+
+const initialDonors = [
+  { id:'d1', name:'First Baptist Cleburne', type:'church', phone:'(817)555-0301', email:'office@fbcleburne.org', monthlyAmt:500, totalGiven:6000, lastGift:'2025-08-01', notes:'Monthly supporter since 2022.', status:'active' },
+  { id:'d2', name:'Rick & Cindy Dawson', type:'individual', phone:'(817)555-0302', email:'rdawson@email.com', monthlyAmt:250, totalGiven:3000, lastGift:'2025-08-01', notes:'Board members.', status:'active' },
+  { id:'d3', name:'Johnson County Community Foundation', type:'foundation', phone:'(817)555-0310', email:'grants@jccf.org', monthlyAmt:0, totalGiven:10000, lastGift:'2025-01-15', notes:'Annual grant. Next cycle Feb 2026.', status:'active' },
+  { id:'d4', name:'Burleson Area Chamber', type:'business', phone:'(817)555-0320', email:'info@burlesonchamber.com', monthlyAmt:0, totalGiven:2500, lastGift:'2024-10-01', notes:'Golf tournament sponsor.', status:'active' },
+]
+
+const initialGrants = [
+  { id:'g1', name:'Johnson County Community Foundation', amount:10000, deadline:'2026-02-15', status:'planning', notes:'Annual general operating grant. Application opens Dec.', submitted:'', awarded:'' },
+  { id:'g2', name:'Tarrant Area Food Bank Youth Fund', amount:5000, deadline:'2025-09-30', status:'submitted', notes:'Youth programming grant.', submitted:'2025-08-10', awarded:'' },
+  { id:'g3', name:'Young Life National Ministry Fund', amount:8000, deadline:'2025-07-01', status:'awarded', notes:'National matching grant for new area directors.', submitted:'2025-05-15', awarded:'2025-07-20' },
+]
+
+const initialFinanceFollowUps = [
+  { id:'ff1', donorId:'d1', type:'call', date:'2025-08-20', note:'Thank you call for August gift. Discuss Fall Banquet table.', completed:false },
+  { id:'ff2', donorId:'d3', type:'email', date:'2025-09-01', note:'Send impact report ahead of next grant cycle.', completed:false },
+  { id:'ff3', donorId:'d2', type:'meeting', date:'2025-09-15', note:'Board member quarterly check-in.', completed:true },
+]
+
 const initialSchools = [
   'Cleburne High School', 'Cleburne Middle School', 'Burleson High School',
   'Burleson Centennial High School', 'Burleson Middle School', 'Alvarado High School',
@@ -53,6 +80,10 @@ export function useStore() {
   const [org, setOrg] = useState(() => load('yl_org', initialOrg))
   const [programs, setPrograms] = useState(() => load('yl_programs', initialPrograms))
   const [schools, setSchools] = useState(() => load('yl_schools', initialSchools))
+  const [fundraisers, setFundraisers] = useState(() => load('yl_fundraisers', initialFundraisers))
+  const [donors, setDonors] = useState(() => load('yl_donors', initialDonors))
+  const [grants, setGrants] = useState(() => load('yl_grants', initialGrants))
+  const [financeFollowUps, setFinanceFollowUps] = useState(() => load('yl_financeFollowUps', initialFinanceFollowUps))
 
   useEffect(() => { save('yl_students', students) }, [students])
   useEffect(() => { save('yl_leaders', leaders) }, [leaders])
@@ -63,6 +94,10 @@ export function useStore() {
   useEffect(() => { save('yl_org', org) }, [org])
   useEffect(() => { save('yl_programs', programs) }, [programs])
   useEffect(() => { save('yl_schools', schools) }, [schools])
+  useEffect(() => { save('yl_fundraisers', fundraisers) }, [fundraisers])
+  useEffect(() => { save('yl_donors', donors) }, [donors])
+  useEffect(() => { save('yl_grants', grants) }, [grants])
+  useEffect(() => { save('yl_financeFollowUps', financeFollowUps) }, [financeFollowUps])
 
   // Students
   const addStudent = (s) => setStudents(p => [...p, { ...s, id: 's' + uid(), dateAdded: new Date().toISOString().slice(0,10) }])
@@ -120,6 +155,26 @@ export function useStore() {
   const deleteSchool = (name) => setSchools(p => p.filter(s => s !== name))
   const reorderSchools = (list) => setSchools(list)
 
+  // Fundraisers
+  const addFundraiser = (f) => setFundraisers(p => [...p, { ...f, id: 'fr' + uid(), contacts: [] }])
+  const updateFundraiser = (id, patch) => setFundraisers(p => p.map(x => x.id === id ? { ...x, ...patch } : x))
+  const deleteFundraiser = (id) => setFundraisers(p => p.filter(x => x.id !== id))
+
+  // Donors
+  const addDonor = (d) => setDonors(p => [...p, { ...d, id: 'd' + uid(), totalGiven: d.totalGiven || 0 }])
+  const updateDonor = (id, patch) => setDonors(p => p.map(x => x.id === id ? { ...x, ...patch } : x))
+  const deleteDonor = (id) => setDonors(p => p.filter(x => x.id !== id))
+
+  // Grants
+  const addGrant = (g) => setGrants(p => [...p, { ...g, id: 'g' + uid() }])
+  const updateGrant = (id, patch) => setGrants(p => p.map(x => x.id === id ? { ...x, ...patch } : x))
+  const deleteGrant = (id) => setGrants(p => p.filter(x => x.id !== id))
+
+  // Finance Follow-ups
+  const addFinanceFollowUp = (f) => setFinanceFollowUps(p => [{ ...f, id: 'ff' + uid(), completed: false }, ...p])
+  const updateFinanceFollowUp = (id, patch) => setFinanceFollowUps(p => p.map(x => x.id === id ? { ...x, ...patch } : x))
+  const deleteFinanceFollowUp = (id) => setFinanceFollowUps(p => p.filter(x => x.id !== id))
+
   // Reset to seed data
   const resetData = () => {
     setStudents(initialStudents)
@@ -130,6 +185,10 @@ export function useStore() {
     setOrg(initialOrg)
     setPrograms(initialPrograms)
     setSchools(initialSchools)
+    setFundraisers(initialFundraisers)
+    setDonors(initialDonors)
+    setGrants(initialGrants)
+    setFinanceFollowUps(initialFinanceFollowUps)
   }
 
   return {
@@ -143,5 +202,10 @@ export function useStore() {
     addNotification, resetData,
     updateOrg, addProgram, updateProgram, deleteProgram,
     addSchool, deleteSchool, reorderSchools,
+    fundraisers, donors, grants, financeFollowUps,
+    addFundraiser, updateFundraiser, deleteFundraiser,
+    addDonor, updateDonor, deleteDonor,
+    addGrant, updateGrant, deleteGrant,
+    addFinanceFollowUp, updateFinanceFollowUp, deleteFinanceFollowUp,
   }
 }

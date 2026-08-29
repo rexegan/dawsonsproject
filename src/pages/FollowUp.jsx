@@ -89,6 +89,7 @@ export default function FollowUp({ store }) {
     return s ? `${s.firstName} ${s.lastName}` : '—'
   }
 
+  const [detailFU, setDetailFU] = useState(null)
   const pendingCount = followUps.filter(f => !f.completed).length
 
   return (
@@ -151,7 +152,8 @@ export default function FollowUp({ store }) {
           const leader = leaders.find(l => l.id === f.leaderId)
           if (!student) return null
           return (
-            <div key={f.id} className={`fu-card ${f.completed ? 'fu-card--done' : ''}`}>
+            <div key={f.id} className={`fu-card ${f.completed ? 'fu-card--done' : ''}`}
+              onClick={() => setDetailFU(f)} style={{cursor:'pointer'}}>
               <div className="fu-type-icon" style={{background: TYPE_COLORS[f.type]+'18', color: TYPE_COLORS[f.type]}}>
                 {TYPE_ICONS[f.type]}
               </div>
@@ -170,7 +172,7 @@ export default function FollowUp({ store }) {
                   <span>📱 {student.phone || '—'}</span>
                 </div>
               </div>
-              <div className="fu-actions">
+              <div className="fu-actions" onClick={e => e.stopPropagation()}>
                 {!f.completed && (
                   <>
                     {f.type === 'call' && student.phone && (
@@ -249,6 +251,54 @@ export default function FollowUp({ store }) {
           </div>
         </Modal>
       )}
+
+      {/* Detail Modal */}
+      {detailFU && (() => {
+        const s = students.find(x => x.id === detailFU.studentId)
+        const l = leaders.find(x => x.id === detailFU.leaderId)
+        if (!s) { setDetailFU(null); return null }
+        return (
+          <Modal title="Follow-up Detail" onClose={() => setDetailFU(null)} size="md">
+            <div style={{display:'flex',flexDirection:'column',gap:6}}>
+              <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:8}}>
+                <span style={{fontSize:32}}>{TYPE_ICONS[detailFU.type]}</span>
+                <div>
+                  <div style={{fontSize:16,fontWeight:700,color:'var(--gray-900)'}}>{s.firstName} {s.lastName}</div>
+                  <div style={{fontSize:12,color:'var(--gray-500)'}}>{s.grade} · {s.school}</div>
+                </div>
+                <span className="fu-type-badge" style={{background:TYPE_COLORS[detailFU.type]+'18',color:TYPE_COLORS[detailFU.type],marginLeft:'auto'}}>{detailFU.type}</span>
+                {detailFU.completed && <span className="fu-done-badge">✓ Done</span>}
+              </div>
+              {[
+                ['Date', detailFU.date],
+                ['Leader', l ? l.firstName + ' ' + l.lastName : '—'],
+                ['Student Phone', s.phone || '—'],
+                ['Student Email', s.email || '—'],
+                ['Parent', s.parentName || '—'],
+                ['Parent Phone', s.parentPhone || '—'],
+                ['Parent Email', s.parentEmail || '—'],
+              ].map(([label, val]) => (
+                <div key={label} style={{display:'flex',justifyContent:'space-between',padding:'7px 0',borderBottom:'1px solid var(--gray-100)',fontSize:13}}>
+                  <span style={{color:'var(--gray-500)',fontWeight:600}}>{label}</span>
+                  <span style={{color:'var(--gray-800)'}}>{val}</span>
+                </div>
+              ))}
+              <div style={{background:'var(--gray-50)',borderRadius:8,padding:'10px 12px',fontSize:13,color:'var(--gray-700)',lineHeight:1.5,marginTop:4}}>
+                {detailFU.note}
+              </div>
+              <div className="modal-actions" style={{marginTop:12}}>
+                <button className="btn-secondary" onClick={() => { setDetailFU(null); openEdit(detailFU) }}>Edit</button>
+                {!detailFU.completed && (
+                  <button className="btn-secondary" onClick={() => { updateFollowUp(detailFU.id,{completed:true}); addNotification('Marked complete!'); setDetailFU(null) }}>Mark Complete</button>
+                )}
+                {detailFU.type==='call' && s.phone && <a className="btn-primary" href={`tel:${s.phone}`}>📞 Call</a>}
+                {detailFU.type==='email' && <button className="btn-primary" onClick={() => { setDetailFU(null); openEmail(detailFU) }}>✉️ Email</button>}
+                {detailFU.type==='text' && s.phone && <a className="btn-primary" href={`sms:${s.phone}`}>💬 Text</a>}
+              </div>
+            </div>
+          </Modal>
+        )
+      })()}
 
       {/* Email Compose Modal */}
       {emailModal && (
