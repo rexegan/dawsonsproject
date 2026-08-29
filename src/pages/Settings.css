@@ -1,4 +1,56 @@
-.settings-page { padding: 20px; display: flex; flex-direction: column; gap: 20px; max-width: 680px; }
+.settings-layout { padding: 20px; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.5fr); gap: 20px; align-items: start; }
+.settings-page { display: flex; flex-direction: column; gap: 20px; }
+
+/* File Workroom */
+.workroom { display: flex; flex-direction: column; gap: 14px; }
+.workroom-title { font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: .8px; }
+
+.drop-zone {
+  border: 2px dashed var(--gray-300); border-radius: var(--radius-lg);
+  background: white; padding: 28px 20px; text-align: center;
+  cursor: pointer; transition: border-color .15s, background .15s;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.drop-zone:hover, .drop-zone--over { border-color: #1B4FA3; background: #f0f7ff; }
+.drop-zone-icon { font-size: 32px; }
+.drop-zone-label { font-size: 14px; font-weight: 700; color: var(--gray-700); }
+.drop-zone-sub { font-size: 12px; color: var(--gray-400); }
+.drop-zone-btn { margin-top: 4px; padding: 7px 18px; background: #1B4FA3; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.drop-zone-btn:hover { background: #153e85; }
+
+.workroom-toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.workroom-search { flex: 1; min-width: 120px; padding: 7px 10px; border: 1.5px solid var(--gray-200); border-radius: 8px; font-size: 13px; }
+.workroom-search:focus { outline: none; border-color: #1B4FA3; }
+.workroom-cat-chip { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--gray-200); background: white; color: var(--gray-600); transition: all .15s; }
+.workroom-cat-chip:hover { border-color: #1B4FA3; color: #1B4FA3; }
+.workroom-cat-chip--active { background: #1B4FA3; color: white; border-color: #1B4FA3; }
+
+.file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 10px; }
+.file-card {
+  background: white; border-radius: 10px; padding: 14px 12px;
+  box-shadow: var(--shadow-sm); cursor: pointer; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  border: 1.5px solid transparent; transition: box-shadow .15s, border-color .15s;
+  position: relative;
+}
+.file-card:hover { box-shadow: 0 4px 14px rgba(27,79,163,.15); border-color: #1B4FA3; }
+.file-icon { font-size: 30px; line-height: 1; }
+.file-name { font-size: 11px; font-weight: 700; color: var(--gray-800); word-break: break-word; line-height: 1.3; }
+.file-meta { font-size: 10px; color: var(--gray-400); }
+.file-delete { position: absolute; top: 5px; right: 5px; width: 18px; height: 18px; border-radius: 50%; background: #fee2e2; border: none; cursor: pointer; font-size: 10px; color: #dc2626; display: none; align-items: center; justify-content: center; }
+.file-card:hover .file-delete { display: flex; }
+
+.workroom-empty { text-align: center; padding: 30px 20px; color: var(--gray-400); font-size: 13px; }
+
+/* CSV preview table */
+.csv-table-wrap { overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid var(--gray-200); border-radius: 8px; }
+.csv-table { border-collapse: collapse; font-size: 12px; width: 100%; }
+.csv-table th { background: #1B4FA3; color: white; padding: 7px 10px; text-align: left; white-space: nowrap; position: sticky; top: 0; }
+.csv-table td { padding: 6px 10px; border-bottom: 1px solid var(--gray-100); color: var(--gray-700); white-space: nowrap; }
+.csv-table tr:last-child td { border-bottom: none; }
+.csv-table tr:nth-child(even) td { background: var(--gray-50); }
+
+@media (max-width: 900px) { .settings-layout { grid-template-columns: 1fr; } }
 
 .settings-group-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .settings-group-header .settings-group-label { margin-bottom: 0; }

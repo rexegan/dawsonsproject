@@ -1,5 +1,196 @@
-import { useState } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
+import Modal from '../components/Modal'
 import './Settings.css'
+
+const FILE_STORAGE_KEY = 'yl_workroom_files'
+
+function fileIcon(type, name) {
+  const ext = name.split('.').pop().toLowerCase()
+  if (['jpg','jpeg','png','gif','webp','svg'].includes(ext)) return '🖼️'
+  if (['csv'].includes(ext)) return '📊'
+  if (['xlsx','xls'].includes(ext)) return '📗'
+  if (['docx','doc'].includes(ext)) return '📘'
+  if (['pdf'].includes(ext)) return '📕'
+  if (['pptx','ppt'].includes(ext)) return '📙'
+  if (['txt','md'].includes(ext)) return '📄'
+  return '📎'
+}
+
+function fileCategory(name) {
+  const ext = name.split('.').pop().toLowerCase()
+  if (['csv','xlsx','xls'].includes(ext)) return 'Spreadsheets'
+  if (['docx','doc','txt','md'].includes(ext)) return 'Documents'
+  if (['pdf'].includes(ext)) return 'PDFs'
+  if (['jpg','jpeg','png','gif','webp','svg'].includes(ext)) return 'Images'
+  if (['pptx','ppt'].includes(ext)) return 'Presentations'
+  return 'Other'
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B'
+  if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB'
+  return (bytes/1048576).toFixed(1) + ' MB'
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n')
+  return lines.map(l => {
+    const row = []; let cur = ''; let inQ = false
+    for (let i = 0; i < l.length; i++) {
+      if (l[i] === '"') { inQ = !inQ }
+      else if (l[i] === ',' && !inQ) { row.push(cur); cur = '' }
+      else cur += l[i]
+    }
+    row.push(cur)
+    return row
+  })
+}
+
+function FileLibrary() {
+  const [files, setFiles] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(FILE_STORAGE_KEY) || '[]') } catch { return [] }
+  })
+  const [catFilter, setCatFilter] = useState('All')
+  const [search, setSearch] = useState('')
+  const [dragOver, setDragOver] = useState(false)
+  const [preview, setPreview] = useState(null)
+  const [csvData, setCsvData] = useState(null)
+  const inputRef = useRef()
+
+  useEffect(() => {
+    try { localStorage.setItem(FILE_STORAGE_KEY, JSON.stringify(files)) } catch { alert('Storage full — delete some files to free space.') }
+  }, [files])
+
+  const addFiles = useCallback((fileList) => {
+    Array.from(fileList).forEach(f => {
+      if (f.size > 5 * 1024 * 1024) { alert(`${f.name} is over 5 MB and cannot be stored.`); return }
+      const reader = new FileReader()
+      reader.onload = e => {
+        const entry = {
+          id: Date.now() + Math.random().toString(36).slice(2),
+          name: f.name, size: f.size, type: f.type,
+          category: fileCategory(f.name),
+          date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+          data: e.target.result,
+        }
+        setFiles(prev => [entry, ...prev])
+      }
+      reader.readAsDataURL(f)
+    })
+  }, [])
+
+  function openPreview(file) {
+    const ext = file.name.split('.').pop().toLowerCase()
+    if (ext === 'csv') {
+      const reader = new FileReader()
+      // data is already base64, decode it
+      fetch(file.data).then(r=>r.text()).then(text => { setCsvData(parseCSV(text)); setPreview(file) })
+      return
+    }
+    setPreview(file); setCsvData(null)
+  }
+
+  function deleteFile(id, e) {
+    e.stopPropagation()
+    setFiles(prev => prev.filter(f => f.id !== id))
+  }
+
+  function downloadFile(file) {
+    const a = document.createElement('a')
+    a.href = file.data; a.download = file.name; a.click()
+  }
+
+  const CATS = ['All', 'Spreadsheets', 'Documents', 'PDFs', 'Images', 'Presentations', 'Other']
+  const displayed = files.filter(f =>
+    (catFilter === 'All' || f.category === catFilter) &&
+    (!search || f.name.toLowerCase().includes(search.toLowerCase()))
+  )
+  const ext = preview ? preview.name.split('.').pop().toLowerCase() : ''
+  const isImage = ['jpg','jpeg','png','gif','webp','svg'].includes(ext)
+  const isPDF = ext === 'pdf'
+  const isCSV = ext === 'csv'
+  const isText = ['txt','md'].includes(ext)
+
+  return (
+    <div className="workroom">
+      <div className="workroom-title">📁 Document Workroom ({files.length} files)</div>
+
+      {/* Drop zone */}
+      <div
+        className={`drop-zone ${dragOver ? 'drop-zone--over' : ''}`}
+        onClick={() => inputRef.current.click()}
+        onDragOver={e => { e.preventDefault(); setDragOver(true) }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={e => { e.preventDefault(); setDragOver(false); addFiles(e.dataTransfer.files) }}
+      >
+        <div className="drop-zone-icon">📂</div>
+        <div className="drop-zone-label">Drop files here or click to upload</div>
+        <div className="drop-zone-sub">CSV, Excel, Word, PDF, PowerPoint, images · Max 5 MB each</div>
+        <button className="drop-zone-btn" onClick={e => { e.stopPropagation(); inputRef.current.click() }}>Choose Files</button>
+        <input ref={inputRef} type="file" multiple hidden accept=".csv,.xlsx,.xls,.docx,.doc,.pdf,.pptx,.ppt,.txt,.md,.jpg,.jpeg,.png,.gif,.webp,.svg" onChange={e => addFiles(e.target.files)} />
+      </div>
+
+      {/* Search + category filter */}
+      <div className="workroom-toolbar">
+        <input className="workroom-search" placeholder="Search files…" value={search} onChange={e=>setSearch(e.target.value)} />
+      </div>
+      <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+        {CATS.map(c => (
+          <button key={c} className={`workroom-cat-chip ${catFilter===c?'workroom-cat-chip--active':''}`} onClick={()=>setCatFilter(c)}>{c}</button>
+        ))}
+      </div>
+
+      {/* File grid */}
+      {displayed.length === 0
+        ? <div className="workroom-empty">No files yet. Upload spreadsheets, flyers, documents, and more.</div>
+        : <div className="file-grid">
+            {displayed.map(f => (
+              <div key={f.id} className="file-card" onClick={() => openPreview(f)}>
+                <button className="file-delete" onClick={e => deleteFile(f.id, e)} title="Delete">✕</button>
+                <div className="file-icon">{fileIcon(f.type, f.name)}</div>
+                <div className="file-name">{f.name}</div>
+                <div className="file-meta">{formatSize(f.size)}</div>
+                <div className="file-meta">{f.date}</div>
+              </div>
+            ))}
+          </div>
+      }
+
+      {/* Preview modal */}
+      {preview && (
+        <Modal open title={preview.name} onClose={() => { setPreview(null); setCsvData(null) }} size="xl">
+          <div style={{display:'flex',flexDirection:'column',gap:14}}>
+            <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
+              <span style={{fontSize:12,color:'var(--gray-500)'}}>{preview.category} · {formatSize(preview.size)} · Uploaded {preview.date}</span>
+            </div>
+
+            {isImage && <img src={preview.data} alt={preview.name} style={{maxWidth:'100%',borderRadius:8,border:'1px solid var(--gray-200)'}} />}
+            {isPDF && <iframe src={preview.data} style={{width:'100%',height:500,border:'1px solid var(--gray-200)',borderRadius:8}} title={preview.name} />}
+            {isCSV && csvData && (
+              <div className="csv-table-wrap">
+                <table className="csv-table">
+                  <thead><tr>{csvData[0].map((h,i)=><th key={i}>{h}</th>)}</tr></thead>
+                  <tbody>{csvData.slice(1).map((row,i)=><tr key={i}>{row.map((cell,j)=><td key={j}>{cell}</td>)}</tr>)}</tbody>
+                </table>
+              </div>
+            )}
+            {isText && <pre style={{fontSize:12,lineHeight:1.6,color:'var(--gray-700)',background:'var(--gray-50)',padding:14,borderRadius:8,overflow:'auto',maxHeight:400}}>{atob(preview.data.split(',')[1])}</pre>}
+            {!isImage && !isPDF && !isCSV && !isText && (
+              <div style={{textAlign:'center',padding:30,background:'var(--gray-50)',borderRadius:10,color:'var(--gray-500)',fontSize:14}}>
+                Preview not available for this file type. Download to open it.
+              </div>
+            )}
+
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={() => { setPreview(null); setCsvData(null) }}>Close</button>
+              <button className="btn-primary" onClick={() => downloadFile(preview)}>⬇ Download</button>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </div>
+  )
+}
 
 function OrgSection({ store }) {
   const { org, updateOrg, addNotification } = store
@@ -272,6 +463,7 @@ export default function Settings({ store }) {
   }
 
   return (
+    <div className="settings-layout">
     <div className="settings-page">
       <OrgSection store={store} />
       <LeadersSection store={store} />
@@ -349,6 +541,11 @@ export default function Settings({ store }) {
           </div>
         </div>
       )}
+    </div>
+
+    {/* RIGHT COLUMN — Document Workroom */}
+    <FileLibrary />
+
     </div>
   )
 }
