@@ -2,8 +2,8 @@
   height: var(--header-h);
   background: white;
   border-bottom: 1px solid var(--gray-200);
-  display: flex; align-items: center; gap: 14px;
-  padding: 0 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding: 0 28px;
   position: sticky; top: 0; z-index: 100;
   box-shadow: var(--shadow-sm);
 }
@@ -18,29 +18,37 @@
 @media (min-width: 769px) { .header-menu { display: none; } }
 
 .header-title {
-  font-size: 18px; font-weight: 700;
+  font-size: 22px; font-weight: 800;
   color: var(--gray-900); flex-shrink: 0;
 }
 
 .header-right { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
 
 .header-verse {
-  display: flex; flex-direction: row; align-items: center; gap: 6px;
-  flex: 1; min-width: 0;
+  display: flex; flex-direction: row; align-items: center; justify-content: center;
+  gap: 8px; flex: 1; min-width: 0; text-align: center;
 }
 .header-verse-text {
-  font-size: 14px; font-weight: 700; font-style: italic; color: var(--gray-700);
+  font-size: 15px; font-weight: 700; font-style: italic; color: var(--gray-700);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .header-verse-ref {
-  font-size: 14px; font-weight: 800; color: var(--yl-blue);
+  font-size: 15px; font-weight: 800; color: var(--yl-blue);
   white-space: nowrap; flex-shrink: 0;
 }
 
-.header-verse--wrap { flex-direction: column; gap: 0; }
-.header-verse--wrap .header-verse-text { font-size: 11px; white-space: normal; line-height: 1.4; text-align: center; }
-.header-verse--wrap .header-verse-ref { font-size: 11px; display: inline; }
-.header-verse--center { align-items: center; justify-content: center; text-align: center; }
+/* Wrapping variant (Roll Call, Follow-ups) */
+.header-verse--wrap {
+  flex-direction: column; gap: 2px;
+  align-items: center; justify-content: center;
+}
+.header-verse--wrap .header-verse-text {
+  font-size: 13px; white-space: normal; line-height: 1.45;
+  text-align: center; overflow: visible; text-overflow: unset;
+}
+.header-verse--wrap .header-verse-ref {
+  font-size: 13px; display: inline;
+}
 
 @media (max-width: 900px) { .header-verse { display: none; } }
 
