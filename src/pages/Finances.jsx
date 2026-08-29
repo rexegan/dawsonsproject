@@ -627,6 +627,20 @@ export default function Finances({ store }) {
                   </tr>
                 ))}
               </tbody>
+              <tfoot>
+                <tr className="fin-table-totals">
+                  <td colSpan={2}>Total ({filteredDonors.length} donors)</td>
+                  <td>
+                    <div className="fin-total-label">Monthly Total</div>
+                    <div className="fin-total-val">{fmt$(filteredDonors.reduce((s,d)=>s+Number(d.monthlyAmt||0),0))}</div>
+                  </td>
+                  <td>
+                    <div className="fin-total-label">All-Time Total</div>
+                    <div className="fin-total-val">{fmt$(filteredDonors.reduce((s,d)=>s+Number(d.totalGiven||0),0))}</div>
+                  </td>
+                  <td colSpan={3}></td>
+                </tr>
+              </tfoot>
             </table>
             {filteredDonors.length===0 && <div className="fin-empty">No donors found.</div>}
           </div>

@@ -110,6 +110,14 @@
 .fin-row-btn { font-size: 12px; font-weight: 600; color: #1B4FA3; padding: 3px 8px; border-radius: 6px; border: 1px solid #1B4FA3; background: transparent; cursor: pointer; }
 .fin-row-btn:hover { background: #eff6ff; }
 
+.fin-table-totals td {
+  padding: 12px 14px; border-top: 2px solid var(--gray-200);
+  background: var(--gray-50); font-size: 13px; font-weight: 700; color: var(--gray-800);
+}
+.fin-table-totals td:first-child { color: var(--gray-500); font-weight: 600; }
+.fin-total-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--gray-400); margin-bottom: 2px; }
+.fin-total-val   { font-size: 16px; font-weight: 800; color: #1B4FA3; }
+
 /* Detail modal */
 .fin-detail { display: flex; flex-direction: column; gap: 6px; }
 .fin-detail-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
