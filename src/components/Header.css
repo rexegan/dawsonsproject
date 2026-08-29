@@ -37,9 +37,10 @@
   white-space: nowrap; flex-shrink: 0;
 }
 
-.header-verse--wrap { flex-direction: column; align-items: flex-start; gap: 1px; }
-.header-verse--wrap .header-verse-text { font-size: 11px; white-space: normal; line-height: 1.35; }
-.header-verse--wrap .header-verse-ref { font-size: 11px; }
+.header-verse--wrap { flex-direction: column; gap: 0; }
+.header-verse--wrap .header-verse-text { font-size: 11px; white-space: normal; line-height: 1.4; text-align: center; }
+.header-verse--wrap .header-verse-ref { font-size: 11px; display: inline; }
+.header-verse--center { align-items: center; justify-content: center; text-align: center; }
 
 @media (max-width: 900px) { .header-verse { display: none; } }
 
