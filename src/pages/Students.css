@@ -40,6 +40,9 @@
   border-bottom: 1px solid var(--gray-200);
   white-space: nowrap;
 }
+.th-sortable { cursor: pointer; user-select: none; }
+.th-sortable:hover { background: var(--gray-100); color: var(--gray-700); }
+.sort-arrow { font-size: 11px; opacity: .6; margin-left: 3px; }
 .students-table tbody tr {
   border-bottom: 1px solid var(--gray-100);
   transition: background .12s;

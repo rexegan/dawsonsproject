@@ -22,6 +22,21 @@ export default function Students({ store }) {
   const [form, setForm] = useState(EMPTY_STUDENT)
   const [confirmDelete, setConfirmDelete] = useState(null)
 
+  const [sortCol, setSortCol] = useState('name')
+  const [sortDir, setSortDir] = useState('asc')
+
+  const leaderName = (id) => {
+    const l = leaders.find(l => l.id === id)
+    return l ? `${l.firstName} ${l.lastName}` : '—'
+  }
+
+  function handleSort(col) {
+    if (sortCol === col) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
+    else { setSortCol(col); setSortDir('asc') }
+  }
+
+  const GRADE_ORDER = ['6th','7th','8th','9th','10th','11th','12th']
+
   const filtered = students.filter(s => {
     const name = `${s.firstName} ${s.lastName}`.toLowerCase()
     if (search && !name.includes(search.toLowerCase()) && !s.school.toLowerCase().includes(search.toLowerCase())) return false
@@ -29,7 +44,18 @@ export default function Students({ store }) {
     if (filterGrade !== 'All' && s.grade !== filterGrade) return false
     if (filterSchool !== 'All' && s.school !== filterSchool) return false
     return true
-  }).sort((a,b) => a.lastName.localeCompare(b.lastName))
+  }).sort((a, b) => {
+    let av, bv
+    if (sortCol === 'name')    { av = `${a.lastName}${a.firstName}`; bv = `${b.lastName}${b.firstName}` }
+    else if (sortCol === 'grade')   { av = GRADE_ORDER.indexOf(a.grade); bv = GRADE_ORDER.indexOf(b.grade) }
+    else if (sortCol === 'school')  { av = a.school;   bv = b.school }
+    else if (sortCol === 'program') { av = a.program;  bv = b.program }
+    else if (sortCol === 'leader')  { av = leaderName(a.leaderId); bv = leaderName(b.leaderId) }
+    else if (sortCol === 'tags')    { av = (a.tags||[]).join(','); bv = (b.tags||[]).join(',') }
+    else { av = av||''; bv = bv||'' }
+    const cmp = typeof av === 'number' ? av - bv : String(av).localeCompare(String(bv))
+    return sortDir === 'asc' ? cmp : -cmp
+  })
 
   const schools = storeSchools && storeSchools.length ? storeSchools : [...new Set(students.map(s => s.school))].sort()
 
@@ -66,11 +92,6 @@ export default function Students({ store }) {
     setConfirmDelete(null)
     setModal(null)
     addNotification('Student removed', 'error')
-  }
-
-  const leaderName = (id) => {
-    const l = leaders.find(l => l.id === id)
-    return l ? `${l.firstName} ${l.lastName}` : '—'
   }
 
   const TAG_COLORS = {
@@ -113,12 +134,11 @@ export default function Students({ store }) {
         <table className="students-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Grade</th>
-              <th>School</th>
-              <th>Program</th>
-              <th>Leader</th>
-              <th>Tags</th>
+              {[['name','Name'],['grade','Grade'],['school','School'],['program','Program'],['leader','Leader'],['tags','Tags']].map(([col,label])=>(
+                <th key={col} className="th-sortable" onClick={()=>handleSort(col)}>
+                  {label} <span className="sort-arrow">{sortCol===col ? (sortDir==='asc'?'↑':'↓') : '↕'}</span>
+                </th>
+              ))}
               <th>Actions</th>
             </tr>
           </thead>
