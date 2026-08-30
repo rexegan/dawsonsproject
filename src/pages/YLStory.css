@@ -41,6 +41,7 @@
 
 /* ── Section ── */
 .ylstory-section { padding: 28px 24px; display: flex; flex-direction: column; gap: 28px; max-width: 960px; margin: 0 auto; width: 100%; }
+.ylstory-section-intro { text-align: center; }
 .ylstory-section-intro h2 { font-size: 24px; font-weight: 800; color: var(--gray-900); margin-bottom: 10px; }
 .ylstory-section-intro p { font-size: 15px; line-height: 1.7; color: var(--gray-600); margin-bottom: 8px; }
 
