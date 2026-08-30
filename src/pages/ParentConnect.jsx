@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import Modal from '../components/Modal'
 import { FORM_DOCS } from './FormDocuments'
+import { formatPhone } from '../utils/phone'
 import './ParentConnect.css'
 
 const BLANK_PARENT = {
@@ -81,6 +82,8 @@ const PERMISSION_FORMS = [
 
 const CONTACT_PREFS = ['Cell', 'Email', 'Text', 'Work Phone']
 
+const PHONE_KEYS = ['cell','workPhone','spouseCell','emergencyPhone','doctorPhone']
+
 function ParentForm({ data, onChange }) {
   const fields = [
     ['First Name', 'firstName'], ['Last Name', 'lastName'],
@@ -110,7 +113,7 @@ function ParentForm({ data, onChange }) {
             ) : isWide ? (
               <textarea className="settings-input" rows={2} style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical' }} value={data[key] || ''} onChange={e => onChange(key, e.target.value)} />
             ) : (
-              <input className="settings-input" style={{ width: '100%', boxSizing: 'border-box' }} value={data[key] || ''} onChange={e => onChange(key, e.target.value)} />
+              <input className="settings-input" style={{ width: '100%', boxSizing: 'border-box' }} value={data[key] || ''} onChange={e => onChange(key, PHONE_KEYS.includes(key) ? formatPhone(e.target.value) : e.target.value)} />
             )}
           </div>
         )
@@ -255,7 +258,7 @@ export default function ParentConnect({ store }) {
                   </div>
                   {p.studentName && <div className="parent-card-student">Student: {p.studentName}</div>}
                   <div className="parent-card-contact">
-                    {p.cell && <span>📱 {p.cell}</span>}
+                    {p.cell && <span>📱 {formatPhone(p.cell)}</span>}
                     {p.email && <span>✉️ {p.email}</span>}
                     {p.homeAddress && <span>🏠 {p.homeAddress}{p.city ? `, ${p.city}` : ''}</span>}
                   </div>
@@ -307,15 +310,15 @@ export default function ParentConnect({ store }) {
               </div>
             )}
             {[
-              ['Cell', viewParent.cell], ['Email', viewParent.email],
+              ['Cell', viewParent.cell ? formatPhone(viewParent.cell) : ''], ['Email', viewParent.email],
               ['Home Address', [viewParent.homeAddress, viewParent.city, viewParent.state, viewParent.zip].filter(Boolean).join(', ')],
-              ['Employer', viewParent.employer], ['Work Phone', viewParent.workPhone],
+              ['Employer', viewParent.employer], ['Work Phone', viewParent.workPhone ? formatPhone(viewParent.workPhone) : ''],
               ['Birthday', viewParent.birthday], ['Preferred Contact', viewParent.preferredContact],
-              ['Spouse Name', viewParent.spouseName], ['Spouse Cell', viewParent.spouseCell],
+              ['Spouse Name', viewParent.spouseName], ['Spouse Cell', viewParent.spouseCell ? formatPhone(viewParent.spouseCell) : ''],
               ['Spouse Email', viewParent.spouseEmail], ['Spouse Employer', viewParent.spouseEmployer],
-              ['Emergency Contact', viewParent.emergencyContact], ['Emergency Phone', viewParent.emergencyPhone],
+              ['Emergency Contact', viewParent.emergencyContact], ['Emergency Phone', viewParent.emergencyPhone ? formatPhone(viewParent.emergencyPhone) : ''],
               ['Allergies', viewParent.allergies], ['Medical Notes', viewParent.medicalNotes],
-              ['Doctor', viewParent.doctorName], ['Doctor Phone', viewParent.doctorPhone],
+              ['Doctor', viewParent.doctorName], ['Doctor Phone', viewParent.doctorPhone ? formatPhone(viewParent.doctorPhone) : ''],
               ['Notes', viewParent.notes],
             ].filter(([, v]) => v).map(([label, val]) => (
               <div key={label} className="detail-row">

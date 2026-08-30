@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Modal from '../components/Modal'
+import { formatPhone } from '../utils/phone'
 import './Leaders.css'
 
 const ROLES = ['Area Director','YoungLife Leader','WyldLife Leader','Campaigners Leader','Volunteer','Staff']
@@ -23,7 +24,7 @@ export default function Leaders({ store }) {
 
   function handleChange(e) {
     const { name, value } = e.target
-    setForm(f => ({ ...f, [name]: value }))
+    setForm(f => ({ ...f, [name]: name === 'phone' ? formatPhone(value) : value }))
   }
 
   function toggleSchool(school) {
@@ -96,7 +97,7 @@ export default function Leaders({ store }) {
                 <div className="leader-stat"><span className="ls-val">{(l.schools||[]).length}</span><span className="ls-lbl">Schools</span></div>
               </div>
               <div className="leader-card-contact">
-                {l.phone && <a href={`tel:${l.phone}`} className="contact-link" onClick={e=>e.stopPropagation()}>📞 {l.phone}</a>}
+                {l.phone && <a href={`tel:${l.phone}`} className="contact-link" onClick={e=>e.stopPropagation()}>📞 {formatPhone(l.phone)}</a>}
                 {l.email && <a href={`mailto:${l.email}`} className="contact-link" onClick={e=>e.stopPropagation()}>✉️ {l.email}</a>}
               </div>
             </div>
@@ -193,7 +194,7 @@ export default function Leaders({ store }) {
             <div className="profile-grid">
               <div className="profile-section">
                 <div className="profile-section-title">Contact</div>
-                <div className="profile-field"><span>📞</span><a href={`tel:${viewLeader.phone}`}>{viewLeader.phone||'—'}</a></div>
+                <div className="profile-field"><span>📞</span><a href={`tel:${viewLeader.phone}`}>{viewLeader.phone ? formatPhone(viewLeader.phone) : '—'}</a></div>
                 <div className="profile-field"><span>✉️</span><a href={`mailto:${viewLeader.email}`}>{viewLeader.email||'—'}</a></div>
               </div>
               <div className="profile-section">

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Modal from '../components/Modal'
+import { formatPhone } from '../utils/phone'
 import './Events.css'
 
 const TYPE_COLOR = { club:'#1B4FA3', campaigners:'#3AAB35', camp:'#d97706', special:'#854883' }
@@ -332,7 +333,7 @@ export default function Events({ store }) {
                           <div key={sp.id} style={{background:'white',border:'1px solid var(--gray-100)',borderRadius:10,padding:'12px 14px',display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
                             <div style={{flex:1,minWidth:160}}>
                               <div style={{fontWeight:700,fontSize:14,color:'var(--gray-900)'}}>{sp.name}</div>
-                              <div style={{fontSize:12,color:'var(--gray-500)'}}>{sp.contact}{sp.phone ? ` · ${sp.phone}` : ''}</div>
+                              <div style={{fontSize:12,color:'var(--gray-500)'}}>{sp.contact}{sp.phone ? ` · ${formatPhone(sp.phone)}` : ''}</div>
                               {sp.notes && <div style={{fontSize:11,color:'var(--gray-400)',fontStyle:'italic',marginTop:2}}>{sp.notes}</div>}
                             </div>
                             <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:4}}>
@@ -364,7 +365,7 @@ export default function Events({ store }) {
               {[['Organization / Name','name'],['Contact Person','contact'],['Phone','phone'],['Email','email']].map(([label,key])=>(
                 <div key={key} style={key==='name'?{gridColumn:'1/-1'}:{}}>
                   <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>{label}</div>
-                  <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={sponsorDraft[key]||''} onChange={e=>setSponsorDraft(d=>({...d,[key]:e.target.value}))}/>
+                  <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={sponsorDraft[key]||''} onChange={e=>setSponsorDraft(d=>({...d,[key]:key==='phone'?formatPhone(e.target.value):e.target.value}))}/>
                 </div>
               ))}
             </div>
@@ -409,7 +410,7 @@ export default function Events({ store }) {
               {[['Organization / Name','name'],['Contact Person','contact'],['Phone','phone'],['Email','email']].map(([label,key])=>(
                 <div key={key} style={key==='name'?{gridColumn:'1/-1'}:{}}>
                   <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>{label}</div>
-                  <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={sponsorDraft[key]||''} onChange={e=>setSponsorDraft(d=>({...d,[key]:e.target.value}))}/>
+                  <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={sponsorDraft[key]||''} onChange={e=>setSponsorDraft(d=>({...d,[key]:key==='phone'?formatPhone(e.target.value):e.target.value}))}/>
                 </div>
               ))}
             </div>

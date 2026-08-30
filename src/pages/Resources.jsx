@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Modal from '../components/Modal'
+import { formatPhone } from '../utils/phone'
 import './Resources.css'
 
 const NEWS = [
@@ -1077,7 +1078,7 @@ export default function Resources({ store }) {
             </div>
             <div className="camp-detail-grid">
               <div><strong>Address</strong><br/><span style={{color:'var(--gray-600)',fontSize:13}}>{selectedBiz.address}</span></div>
-              {selectedBiz.phone && <div><strong>Phone</strong><br/><a href={`tel:${selectedBiz.phone}`} style={{color:'#1B4FA3',fontSize:13}}>{selectedBiz.phone}</a></div>}
+              {selectedBiz.phone && <div><strong>Phone</strong><br/><a href={`tel:${selectedBiz.phone}`} style={{color:'#1B4FA3',fontSize:13}}>{formatPhone(selectedBiz.phone)}</a></div>}
               {selectedBiz.ownership && <div><strong>Ownership</strong><br/><span style={{color:'var(--gray-600)',fontSize:13}}>{selectedBiz.ownership}</span></div>}
             </div>
             {selectedBiz.notes && (
@@ -1193,7 +1194,7 @@ export default function Resources({ store }) {
             <p style={{fontSize:14,lineHeight:1.7,color:'var(--gray-700)'}}>{selectedCamp.description}</p>
             <div className="camp-detail-grid">
               <div><strong>Address:</strong><br/><span style={{color:'var(--gray-600)'}}>{selectedCamp.address}</span></div>
-              <div><strong>Phone:</strong><br/><a href={`tel:${selectedCamp.phone}`} style={{color:'#1B4FA3'}}>{selectedCamp.phone}</a></div>
+              <div><strong>Phone:</strong><br/><a href={`tel:${selectedCamp.phone}`} style={{color:'#1B4FA3'}}>{formatPhone(selectedCamp.phone)}</a></div>
             </div>
             <div className="modal-actions">
               <button className="btn-secondary" onClick={() => setSelectedCamp(null)}>Close</button>
@@ -1225,7 +1226,7 @@ export default function Resources({ store }) {
                 <p style={{fontSize:14,lineHeight:1.7,color:'var(--gray-700)'}}>Young Life is an international Christian organization serving middle school, high school, and college students in over 100 countries. Founded in 1941 by Jim Rayburn.</p>
                 <div className="camp-detail-grid">
                   <div><strong>Location:</strong><br/><span style={{color:'var(--gray-600)'}}>{orgData.homeOffice.location}</span></div>
-                  <div><strong>Phone:</strong><br/><a href={`tel:${orgData.homeOffice.phone}`} style={{color:'#1B4FA3'}}>{orgData.homeOffice.phone}</a></div>
+                  <div><strong>Phone:</strong><br/><a href={`tel:${orgData.homeOffice.phone}`} style={{color:'#1B4FA3'}}>{formatPhone(orgData.homeOffice.phone)}</a></div>
                 </div>
                 <div className="modal-actions">
                   <button className="btn-secondary" onClick={() => setOrgModal(false)}>Close</button>

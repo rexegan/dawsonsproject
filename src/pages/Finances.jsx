@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Modal from '../components/Modal'
+import { formatPhone } from '../utils/phone'
 import './Finances.css'
 
 const fmt$ = (n) => '$' + Number(n || 0).toLocaleString()
@@ -112,7 +113,7 @@ function DonorModal({ d, onClose, onEdit, onDelete, store }) {
           </div>
         </div>
         <div className="fin-detail-grid">
-          {[['Type',d.type],['Phone',d.phone||'—'],['Email',d.email||'—'],['Monthly Gift',fmt$(d.monthlyAmt)],['Total Given',fmt$(d.totalGiven)],['Last Gift',fmtDate(d.lastGift)]].map(([k,v])=>(
+          {[['Type',d.type],['Phone',d.phone ? formatPhone(d.phone) : '—'],['Email',d.email||'—'],['Monthly Gift',fmt$(d.monthlyAmt)],['Total Given',fmt$(d.totalGiven)],['Last Gift',fmtDate(d.lastGift)]].map(([k,v])=>(
             <div className="fin-detail-cell" key={k}><div className="fin-dc-label">{k}</div>
               <div className="fin-dc-val">
                 {k==='Phone'&&d.phone ? <a href={`tel:${d.phone}`}>{v}</a> : k==='Email'&&d.email ? <a href={`mailto:${d.email}`}>{v}</a> : v}
@@ -273,7 +274,7 @@ function DonorForm({ initial, onSave, onClose, title }) {
           </div>
         </div>
         <div className="form-row-2">
-          <div className="form-group"><label>Phone</label><input value={form.phone} onChange={e=>setForm(d=>({...d,phone:e.target.value}))} /></div>
+          <div className="form-group"><label>Phone</label><input value={form.phone} onChange={e=>setForm(d=>({...d,phone:formatPhone(e.target.value)}))} placeholder="(817) 555-0000" /></div>
           <div className="form-group"><label>Email</label><input type="email" value={form.email} onChange={e=>setForm(d=>({...d,email:e.target.value}))} /></div>
         </div>
         <div className="form-row-2">
@@ -854,7 +855,7 @@ export default function Finances({ store }) {
                         <div className="fin-sds-row-name">{donor?.name || 'Unknown Donor'}</div>
                         <div className="fin-sds-row-meta">{f.type} · {fmtDate(f.date)}</div>
                         <div style={{fontSize:13,color:'var(--gray-700)',marginTop:4,lineHeight:1.4}}>{f.note}</div>
-                        {donor?.phone && <div style={{fontSize:12,color:'var(--gray-500)',marginTop:4}}>📞 {donor.phone}{donor.email ? ' · ✉️ '+donor.email : ''}</div>}
+                        {donor?.phone && <div style={{fontSize:12,color:'var(--gray-500)',marginTop:4}}>📞 {formatPhone(donor.phone)}{donor.email ? ' · ✉️ '+donor.email : ''}</div>}
                       </div>
                     </div>
                     <div style={{display:'flex',flexDirection:'column',gap:6,flexShrink:0}}>

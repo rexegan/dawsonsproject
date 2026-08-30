@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Modal from '../components/Modal'
 import { GRADES } from '../data/initialData'
+import { formatPhone } from '../utils/phone'
 import './Students.css'
 
 const EMPTY_STUDENT = {
@@ -65,7 +66,8 @@ export default function Students({ store }) {
 
   function handleChange(e) {
     const { name, value } = e.target
-    setForm(f => ({ ...f, [name]: value }))
+    const phoneFields = ['phone', 'parentPhone']
+    setForm(f => ({ ...f, [name]: phoneFields.includes(name) ? formatPhone(value) : value }))
   }
 
   function toggleTag(tag) {
@@ -152,7 +154,7 @@ export default function Students({ store }) {
                     </div>
                     <div>
                       <div className="student-fullname">{s.firstName} {s.lastName}</div>
-                      <div className="student-contact">{s.phone || s.email || '—'}</div>
+                      <div className="student-contact">{s.phone ? formatPhone(s.phone) : s.email || '—'}</div>
                     </div>
                   </button>
                 </td>
@@ -298,7 +300,7 @@ export default function Students({ store }) {
                 <div className="profile-section-title">Student Contact</div>
                 <div className="profile-field">
                   <span>📞</span>
-                  {selected.phone ? <a href={`tel:${selected.phone}`}>{selected.phone}</a> : '—'}
+                  {selected.phone ? <a href={`tel:${selected.phone}`}>{formatPhone(selected.phone)}</a> : '—'}
                 </div>
                 <div className="profile-field">
                   <span>✉️</span>
@@ -310,7 +312,7 @@ export default function Students({ store }) {
                 <div className="profile-field"><span>👤</span>{selected.parentName || '—'}</div>
                 <div className="profile-field">
                   <span>📞</span>
-                  {selected.parentPhone ? <a href={`tel:${selected.parentPhone}`}>{selected.parentPhone}</a> : '—'}
+                  {selected.parentPhone ? <a href={`tel:${selected.parentPhone}`}>{formatPhone(selected.parentPhone)}</a> : '—'}
                 </div>
                 <div className="profile-field">
                   <span>✉️</span>
