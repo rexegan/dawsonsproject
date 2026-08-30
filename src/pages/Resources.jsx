@@ -1042,9 +1042,14 @@ export default function Resources({ store }) {
             <span style={{fontSize:13,color:'var(--gray-500)'}}>{BUSINESSES.filter(b=>(bizCategory==='All'||b.category===bizCategory)&&(!bizSearch||b.name.toLowerCase().includes(bizSearch.toLowerCase())||b.city.toLowerCase().includes(bizSearch.toLowerCase()))).length} businesses</span>
           </div>
           <div className="resources-filter-bar" style={{flexWrap:'wrap'}}>
-            {BIZ_CATEGORIES.map(c=>(
-              <button key={c} className={`level-chip ${bizCategory===c?'level-chip--active':''}`} onClick={()=>setBizCategory(c)} style={{marginBottom:4}}>{c}</button>
-            ))}
+            {BIZ_CATEGORIES.map(c=>{
+              const cnt = c==='All' ? BUSINESSES.length : BUSINESSES.filter(b=>b.category===c).length
+              return (
+                <button key={c} className={`level-chip ${bizCategory===c?'level-chip--active':''}`} onClick={()=>setBizCategory(c)} style={{marginBottom:4}}>
+                  {c} <span style={{fontWeight:700,opacity:.75,fontSize:'0.85em'}}>({cnt})</span>
+                </button>
+              )
+            })}
           </div>
           <div className="biz-grid">
             {BUSINESSES.filter(b=>(bizCategory==='All'||b.category===bizCategory)&&(!bizSearch||b.name.toLowerCase().includes(bizSearch.toLowerCase())||b.city.toLowerCase().includes(bizSearch.toLowerCase()))).map(b=>(
