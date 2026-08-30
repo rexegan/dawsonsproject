@@ -68,11 +68,19 @@ export default function Prayer({ store }) {
   }
 
   function updateRequest(id, patch) {
-    save(requests.map(r => r.id === id ? { ...r, ...patch } : r))
+    setRequests(prev => {
+      const list = prev.map(r => r.id === id ? { ...r, ...patch } : r)
+      try { localStorage.setItem('yl_prayer', JSON.stringify(list)) } catch {}
+      return list
+    })
   }
 
   function deleteRequest(id) {
-    save(requests.filter(r => r.id !== id))
+    setRequests(prev => {
+      const list = prev.filter(r => r.id !== id)
+      try { localStorage.setItem('yl_prayer', JSON.stringify(list)) } catch {}
+      return list
+    })
     setViewReq(null)
     addNotification('Request removed')
   }
@@ -94,8 +102,13 @@ export default function Prayer({ store }) {
 
   function saveEdit() {
     if (!editDraft.request.trim()) return
-    save(requests.map(r => r.id === editDraft.id ? { ...editDraft } : r))
-    if (viewReq?.id === editDraft.id) setViewReq(editDraft)
+    const updated = { ...editDraft }
+    setRequests(prev => {
+      const list = prev.map(r => r.id === updated.id ? updated : r)
+      try { localStorage.setItem('yl_prayer', JSON.stringify(list)) } catch {}
+      return list
+    })
+    if (viewReq?.id === updated.id) setViewReq(updated)
     setEditOpen(false)
     setEditDraft(null)
     addNotification('Request updated')
