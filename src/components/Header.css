@@ -29,25 +29,25 @@
   gap: 8px; flex: 1; min-width: 0; text-align: center;
 }
 .header-verse-text {
-  font-size: 15px; font-weight: 700; font-style: italic; color: var(--gray-700);
+  font-size: 17px; font-weight: 700; font-style: italic; color: var(--gray-700);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .header-verse-ref {
-  font-size: 15px; font-weight: 800; color: var(--yl-blue);
+  font-size: 17px; font-weight: 800; color: var(--yl-blue);
   white-space: nowrap; flex-shrink: 0;
 }
 
-/* Wrapping variant (Roll Call, Follow-ups) */
+/* Wrapping variant (Students, Roll Call, Follow-ups) */
 .header-verse--wrap {
-  flex-direction: column; gap: 2px;
-  align-items: center; justify-content: center;
+  flex-direction: column; gap: 1px;
+  align-items: stretch; justify-content: center;
 }
 .header-verse--wrap .header-verse-text {
-  font-size: 13px; white-space: normal; line-height: 1.45;
-  text-align: center; overflow: visible; text-overflow: unset;
+  font-size: 15px; font-weight: 700; white-space: normal; line-height: 1.5;
+  text-align: left; overflow: visible; text-overflow: unset;
 }
 .header-verse--wrap .header-verse-ref {
-  font-size: 13px; display: inline;
+  font-size: 14px; font-weight: 800; display: block; text-align: right;
 }
 
 @media (max-width: 900px) { .header-verse { display: none; } }
