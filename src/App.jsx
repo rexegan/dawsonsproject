@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import { ToastContainer } from './components/Toast'
 import Dashboard from './pages/Dashboard'
+import CheckIn from './pages/CheckIn'
 import Students from './pages/Students'
 import Attendance from './pages/Attendance'
 import FollowUp from './pages/FollowUp'
@@ -18,7 +19,7 @@ import YLStory from './pages/YLStory'
 import Settings from './pages/Settings'
 import './App.css'
 
-const PAGES = { dashboard: Dashboard, students: Students, attendance: Attendance, followup: FollowUp, events: Events, leaders: Leaders, reports: Reports, finances: Finances, resources: Resources, parentconnect: ParentConnect, messaging: Messaging, ylstory: YLStory, settings: Settings }
+const PAGES = { dashboard: Dashboard, checkin: CheckIn, students: Students, attendance: Attendance, followup: FollowUp, events: Events, leaders: Leaders, reports: Reports, finances: Finances, resources: Resources, parentconnect: ParentConnect, messaging: Messaging, ylstory: YLStory, settings: Settings }
 
 export default function App() {
   const [page, setPage] = useState('dashboard')

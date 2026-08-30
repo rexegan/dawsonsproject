@@ -2,6 +2,7 @@ import './Header.css'
 
 const TITLES = {
   dashboard: 'Dashboard',
+  checkin: 'Event Check-In',
   students: 'Students',
   attendance: 'Roll Call',
   followup: 'Follow-ups',
