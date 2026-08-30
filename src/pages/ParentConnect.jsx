@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import Modal from '../components/Modal'
+import { FORM_DOCS } from './FormDocuments'
 import './ParentConnect.css'
 
 const BLANK_PARENT = {
@@ -361,19 +362,37 @@ export default function ParentConnect({ store }) {
 
       {/* VIEW FORM MODAL */}
       {viewForm && (
-        <Modal open title={viewForm.name} onClose={() => setViewForm(null)} size="lg">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <span className={`form-status form-status--${viewForm.status}`}>{viewForm.status.charAt(0).toUpperCase() + viewForm.status.slice(1)}</span>
-              {viewForm.event && <span style={{ fontSize: 12, color: 'var(--gray-500)', alignSelf: 'center' }}>{viewForm.event}</span>}
-            </div>
-            <p style={{ fontSize: 14, color: 'var(--gray-700)', lineHeight: 1.6, margin: 0 }}>{viewForm.desc}</p>
-            <div>
-              <div className="form-fields-label">Required Fields / Information</div>
-              <div className="form-fields-list" style={{ marginTop: 6 }}>{viewForm.fields}</div>
-            </div>
+        <Modal open title={viewForm.name} onClose={() => setViewForm(null)} size="xl">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
+            <span className={`form-status form-status--${viewForm.status}`}>{viewForm.status.charAt(0).toUpperCase() + viewForm.status.slice(1)}</span>
+            {viewForm.event && <span style={{ fontSize: 12, color: 'var(--gray-500)' }}>{viewForm.event}</span>}
+            <button
+              className="btn-secondary"
+              style={{ marginLeft: 'auto', fontSize: 12, padding: '4px 12px' }}
+              onClick={() => {
+                const w = window.open('', '_blank')
+                w.document.write(`<!DOCTYPE html><html><head><title>${viewForm.name}</title><style>body{margin:32px;font-family:Arial,sans-serif;}@media print{body{margin:18px;}}</style></head><body>${FORM_DOCS[viewForm.id] || ''}</body></html>`)
+                w.document.close()
+                w.focus()
+                setTimeout(() => w.print(), 400)
+              }}
+            >🖨 Print / Save PDF</button>
           </div>
-          <div className="modal-actions" style={{ marginTop: 16 }}>
+          {FORM_DOCS[viewForm.id] ? (
+            <div
+              style={{ border: '1px solid var(--gray-200)', borderRadius: 8, padding: '20px 24px', background: '#fff', maxHeight: '60vh', overflowY: 'auto' }}
+              dangerouslySetInnerHTML={{ __html: FORM_DOCS[viewForm.id] }}
+            />
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <p style={{ fontSize: 14, color: 'var(--gray-700)', lineHeight: 1.6, margin: 0 }}>{viewForm.desc}</p>
+              <div>
+                <div className="form-fields-label">Required Fields / Information</div>
+                <div className="form-fields-list" style={{ marginTop: 6 }}>{viewForm.fields}</div>
+              </div>
+            </div>
+          )}
+          <div className="modal-actions" style={{ marginTop: 14 }}>
             <button className="btn-secondary" onClick={() => setViewForm(null)}>Close</button>
           </div>
         </Modal>
