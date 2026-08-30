@@ -41,6 +41,14 @@ const initialGrants = [
   { id:'g3', name:'Young Life National Ministry Fund', amount:8000, deadline:'2025-07-01', status:'awarded', notes:'National matching grant for new area directors.', submitted:'2025-05-15', awarded:'2025-07-20' },
 ]
 
+const initialCommitteeMeetings = [
+  { id:'cm1', title:'Committee Meeting', date:'2026-09-09', time:'6:30 PM', location:'First Baptist Cleburne — Room 201', notes:'Monthly committee. Agenda: Clay Shoot debrief, Fall Banquet planning, budget review.' },
+  { id:'cm2', title:'Committee Meeting', date:'2026-10-07', time:'6:30 PM', location:'First Baptist Cleburne — Room 201', notes:'Monthly committee. Agenda: Fall Banquet final prep, camp scholarship fund.' },
+  { id:'cm3', title:'Committee Meeting', date:'2026-11-04', time:'6:30 PM', location:'First Baptist Cleburne — Room 201', notes:'Monthly committee. Agenda: Fall Banquet debrief, year-end giving push.' },
+  { id:'cm4', title:'Committee Meeting', date:'2026-12-02', time:'6:30 PM', location:'First Baptist Cleburne — Room 201', notes:'Year-end committee. Agenda: Budget review, 2027 planning, holiday outreach.' },
+  { id:'cm5', title:'Committee Meeting', date:'2027-01-06', time:'6:30 PM', location:'First Baptist Cleburne — Room 201', notes:'New year kickoff. Agenda: 2027 goals, Golf Tournament planning begins.' },
+]
+
 const initialFinanceFollowUps = [
   { id:'ff1', donorId:'d1', type:'call', date:'2025-08-20', note:'Thank you call for August gift. Discuss Fall Banquet table.', completed:false },
   { id:'ff2', donorId:'d3', type:'email', date:'2025-09-01', note:'Send impact report ahead of next grant cycle.', completed:false },
@@ -84,6 +92,7 @@ export function useStore() {
   const [donors, setDonors] = useState(() => load('yl_donors', initialDonors))
   const [grants, setGrants] = useState(() => load('yl_grants', initialGrants))
   const [financeFollowUps, setFinanceFollowUps] = useState(() => load('yl_financeFollowUps', initialFinanceFollowUps))
+  const [committeeMeetings, setCommitteeMeetings] = useState(() => load('yl_committeeMeetings', initialCommitteeMeetings))
 
   useEffect(() => { save('yl_students', students) }, [students])
   useEffect(() => { save('yl_leaders', leaders) }, [leaders])
@@ -98,6 +107,7 @@ export function useStore() {
   useEffect(() => { save('yl_donors', donors) }, [donors])
   useEffect(() => { save('yl_grants', grants) }, [grants])
   useEffect(() => { save('yl_financeFollowUps', financeFollowUps) }, [financeFollowUps])
+  useEffect(() => { save('yl_committeeMeetings', committeeMeetings) }, [committeeMeetings])
 
   // Students
   const addStudent = (s) => setStudents(p => [...p, { ...s, id: 's' + uid(), dateAdded: new Date().toISOString().slice(0,10) }])
@@ -189,6 +199,7 @@ export function useStore() {
     setDonors(initialDonors)
     setGrants(initialGrants)
     setFinanceFollowUps(initialFinanceFollowUps)
+    setCommitteeMeetings(initialCommitteeMeetings)
   }
 
   return {
@@ -207,5 +218,6 @@ export function useStore() {
     addDonor, updateDonor, deleteDonor,
     addGrant, updateGrant, deleteGrant,
     addFinanceFollowUp, updateFinanceFollowUp, deleteFinanceFollowUp,
+    committeeMeetings, setCommitteeMeetings,
   }
 }

@@ -34,28 +34,25 @@ export default function Header({ page, onMenuClick }) {
         {page === 'followup' && (
           <div className="header-verse header-verse--wrap">
             <div className="header-verse-text">
-              <span>"Suppose one of you has a hundred sheep and loses one of them.</span><br/>
-              <span>Doesn't he leave the ninety-nine and go after the lost sheep until he finds it?"</span>
+              "Suppose one of you has a hundred sheep and loses one of them.<br/>
+              Doesn't he leave the ninety-nine and go after the lost sheep until he finds it?" <span className="header-verse-ref" style={{fontSize:'0.9em'}}>Luke 15:4</span>
             </div>
-            <span className="header-verse-ref">Luke 15:4</span>
           </div>
         )}
         {page === 'attendance' && (
           <div className="header-verse header-verse--wrap">
             <div className="header-verse-text">
-              <span>"And let us consider how we may spur one another on toward love and good deeds,</span><br/>
-              <span>not giving up meeting together… but encouraging one another."</span>
+              "And let us consider how we may spur one another on toward love and good deeds,<br/>
+              not giving up meeting together… but encouraging one another." <span className="header-verse-ref" style={{fontSize:'0.9em'}}>Hebrews 10:24–25</span>
             </div>
-            <span className="header-verse-ref">Hebrews 10:24–25</span>
           </div>
         )}
         {page === 'students' && (
           <div className="header-verse header-verse--wrap">
             <div className="header-verse-text">
-              <span>"Don't let anyone look down on you because you are young, but set an example</span><br/>
-              <span>for the believers in speech, in conduct, in love, in faith and in purity."</span>
+              "Don't let anyone look down on you because you are young, but set an example<br/>
+              for the believers in speech, in conduct, in love, in faith and in purity." <span className="header-verse-ref" style={{fontSize:'0.9em'}}>1 Timothy 4:12</span>
             </div>
-            <span className="header-verse-ref">1 Timothy 4:12</span>
           </div>
         )}
         <div className="header-badge">Johnson County YL</div>
