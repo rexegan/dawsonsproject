@@ -48,6 +48,22 @@ export default function Header({ page, onMenuClick }) {
             </div>
           </div>
         )}
+        {page === 'events' && (
+          <div className="header-verse header-verse--wrap">
+            <div className="header-verse-text">
+              "The Lord has done it this very day;<br/>
+              let us rejoice today and be glad." <span className="header-verse-ref" style={{fontSize:'0.9em'}}>Psalm 118:24</span>
+            </div>
+          </div>
+        )}
+        {page === 'leaders' && (
+          <div className="header-verse header-verse--wrap">
+            <div className="header-verse-text">
+              "Because we loved you so much, we were delighted to share with you<br/>
+              not only the gospel of God, but our lives as well." <span className="header-verse-ref" style={{fontSize:'0.9em'}}>1 Thessalonians 2:8</span>
+            </div>
+          </div>
+        )}
         {page === 'students' && (
           <div className="header-verse header-verse--wrap">
             <div className="header-verse-text">
