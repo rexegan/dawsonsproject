@@ -211,13 +211,6 @@ export default function ParentConnect({ store }) {
 
   return (
     <div className="parent-page">
-      <div className="parent-header">
-        <div>
-          <h2 className="parent-title">Parent / Guardian Connect</h2>
-          <p className="parent-subtitle">Parent directory, contact info, permission slips, and event authorization forms</p>
-        </div>
-      </div>
-
       <div className="parent-tabs">
         {[
           { id: 'directory', label: '👨‍👩‍👧 Parent Directory' },

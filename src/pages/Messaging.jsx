@@ -288,13 +288,6 @@ export default function Messaging() {
 
   return (
     <div className="msg-page">
-      <div className="msg-header">
-        <div>
-          <h2 className="msg-title">Messaging & Marketing</h2>
-          <p className="msg-subtitle">Templates, brand guidelines, and marketing tools for Johnson County Young Life</p>
-        </div>
-      </div>
-
       <div className="msg-tabs">
         {[
           { id:'templates', label:'📋 Message Templates' },

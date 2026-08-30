@@ -832,13 +832,6 @@ export default function Resources({ store }) {
 
   return (
     <div className="resources-page">
-      <div className="resources-header">
-        <div>
-          <h2 className="resources-title">Resources</h2>
-          <p className="resources-subtitle">News, org chart, camps, and compliance updates for Johnson County Young Life</p>
-        </div>
-      </div>
-
       <div className="resources-tabs">
         {[
           { id:'news', label:'📰 News & Updates' },
