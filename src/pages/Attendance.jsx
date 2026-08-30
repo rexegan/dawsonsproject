@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 import './Attendance.css'
 
+function fmtDate(iso) {
+  if (!iso) return ''
+  const [y, m, d] = iso.split('-').map(Number)
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December']
+  return `${months[m - 1]} ${d}, ${y}`
+}
+
 export default function Attendance({ store }) {
   const { events, students, saveAttendance, getEventAttendance, addNotification } = store
   const [selectedEvent, setSelectedEvent] = useState('')
@@ -100,7 +107,7 @@ export default function Attendance({ store }) {
               <option value="">— Select an Event —</option>
               {sortedEvents.map(e => (
                 <option key={e.id} value={e.id}>
-                  {e.date} · {e.title}
+                  {fmtDate(e.date)} · {e.title}
                 </option>
               ))}
             </select>
@@ -111,7 +118,7 @@ export default function Attendance({ store }) {
               <div className="att-event-banner">
                 <div>
                   <div className="att-event-title">{ev.title}</div>
-                  <div className="att-event-meta">{ev.date} · {ev.time} · {ev.location}</div>
+                  <div className="att-event-meta">{fmtDate(ev.date)} · {ev.time} · {ev.location}</div>
                 </div>
                 <div className="att-counts">
                   <span className="att-count att-count--present">✓ {presentCount}</span>
@@ -184,7 +191,7 @@ export default function Attendance({ store }) {
           >
             <option value="">— View Event —</option>
             {sortedEvents.map(e => (
-              <option key={e.id} value={e.id}>{e.date} · {e.title}</option>
+              <option key={e.id} value={e.id}>{fmtDate(e.date)} · {e.title}</option>
             ))}
           </select>
 
@@ -192,7 +199,7 @@ export default function Attendance({ store }) {
             <>
               <div className="hist-event-info">
                 <strong>{viewEv.title}</strong>
-                <span>{viewEv.date}</span>
+                <span>{fmtDate(viewEv.date)}</span>
               </div>
               {viewRecords.length === 0
                 ? <p className="empty-msg-sm">No records for this event</p>
