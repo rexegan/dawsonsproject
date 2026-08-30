@@ -324,9 +324,7 @@ export default function Events({ store }) {
                         <div style={{background:'#fef3c7',borderRadius:8,padding:'8px 14px',fontSize:13}}>
                           <span style={{fontWeight:700,color:'#d97706'}}>${(total-paid).toLocaleString()}</span><span style={{color:'var(--gray-600)'}}> outstanding</span>
                         </div>
-                        {sponsorEvent !== 'all' && (
-                          <button className="btn-primary" style={{fontSize:12,padding:'6px 14px',marginLeft:'auto'}} onClick={()=>{ setSponsorDraft({name:'',contact:'',phone:'',email:'',tier:SPONSOR_TIERS[ev.id]?.[0]||'',amount:'',paid:false,notes:''}); setAddingSponsor(ev.id) }}>+ Add Sponsor</button>
-                        )}
+                        <button className="btn-primary" style={{fontSize:12,padding:'6px 14px',marginLeft:'auto'}} onClick={()=>{ setSponsorDraft({name:'',contact:'',phone:'',email:'',tier:SPONSOR_TIERS[ev.id]?.[0]||'',amount:'',paid:false,notes:''}); setAddingSponsor(ev.id) }}>+ Add Sponsor</button>
                       </div>
                       <div style={{display:'flex',flexDirection:'column',gap:8}}>
                         {evSponsors.length === 0 && <div style={{color:'var(--gray-400)',fontSize:13}}>No sponsors yet.</div>}
@@ -342,9 +340,7 @@ export default function Events({ store }) {
                               {Number(sp.amount)>0 && <span style={{fontWeight:800,fontSize:14,color:'var(--gray-800)'}}>${Number(sp.amount).toLocaleString()}</span>}
                               <span style={{padding:'2px 8px',borderRadius:20,fontSize:11,fontWeight:700,background:sp.paid?'#EDFAEC':'#fee2e2',color:sp.paid?'#3AAB35':'#dc2626'}}>{sp.paid?'✓ Paid':'⏳ Outstanding'}</span>
                             </div>
-                            {sponsorEvent !== 'all' && (
-                              <button style={{fontSize:11,padding:'4px 10px',border:'1px solid var(--gray-200)',borderRadius:6,background:'white',cursor:'pointer',color:'var(--gray-600)'}} onClick={()=>{ setSponsorDraft({...sp}); setEditSponsor({eventId:ev.id,sponsorId:sp.id}) }}>✏️ Edit</button>
-                            )}
+                            <button style={{fontSize:11,padding:'4px 10px',border:'1px solid var(--gray-200)',borderRadius:6,background:'white',cursor:'pointer',color:'var(--gray-600)'}} onClick={()=>{ setSponsorDraft({...sp}); setEditSponsor({eventId:ev.id,sponsorId:sp.id}) }}>✏️ Edit</button>
                           </div>
                         ))}
                       </div>
