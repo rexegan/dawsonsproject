@@ -165,7 +165,7 @@ export default function YLStory() {
           <div className="ylstory-mission-hero">
             <h2>Our Mission</h2>
             <p className="ylstory-mission-statement">"Introducing adolescents to Jesus Christ and helping them grow in their faith."</p>
-            <p style={{color:'var(--gray-600)',lineHeight:1.7,maxWidth:680}}>That's it. No footnotes. No asterisks. Young Life exists for one reason: to give every kid on earth a chance to hear who Jesus is and what He's done — in a way they can actually understand and receive.</p>
+            <p style={{color:'var(--gray-600)',lineHeight:1.7,maxWidth:680,margin:'0 auto'}}>That's it. No footnotes. No asterisks. Young Life exists for one reason: to give every kid on earth a chance to hear who Jesus is and what He's done — in a way they can actually understand and receive.</p>
           </div>
           <div className="ylstory-principles">
             <h3>Core Principles</h3>
