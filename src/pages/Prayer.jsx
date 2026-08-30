@@ -273,7 +273,12 @@ export default function Prayer({ store }) {
       </div>
 
       {/* ── Add Request Modal ── */}
-      <Modal open={addOpen} title="Add Prayer Request" onClose={() => setAddOpen(false)} size="md">
+      <Modal open={addOpen} title="Add Prayer Request" onClose={() => setAddOpen(false)} size="md"
+        footer={<>
+          <button className="btn btn-secondary" onClick={() => setAddOpen(false)}>Cancel</button>
+          <button className="btn-primary" onClick={addRequest} disabled={!draft.request.trim()}>Add Request</button>
+        </>}
+      >
         <div className="prayer-form">
           <div className="prayer-form-row">
             <label>Your Name <span style={{color:'var(--gray-400)',fontWeight:400}}>(optional)</span></label>
@@ -310,15 +315,16 @@ export default function Prayer({ store }) {
             <label htmlFor="priv" style={{margin:0,fontWeight:600,cursor:'pointer'}}>Mark as private (leaders only)</label>
           </div>
         </div>
-        <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={() => setAddOpen(false)}>Cancel</button>
-          <button className="btn-primary" onClick={addRequest} disabled={!draft.request.trim()}>Add Request</button>
-        </div>
       </Modal>
 
       {/* ── View / Detail Modal ── */}
       {viewReq && (
-        <Modal open title="Prayer Request" onClose={() => setViewReq(null)} size="lg">
+        <Modal open title="Prayer Request" onClose={() => setViewReq(null)} size="lg"
+          footer={<>
+            <button className="btn btn-secondary btn-danger" onClick={() => { if(window.confirm('Delete this prayer request?')) deleteRequest(viewReq.id) }}>Delete</button>
+            <button className="btn btn-secondary" onClick={() => setViewReq(null)}>Close</button>
+          </>}
+        >
           <div>
             <div className="prayer-detail-header">
               <div>
@@ -398,16 +404,17 @@ export default function Prayer({ store }) {
               </div>
             </div>
           </div>
-          <div className="modal-footer">
-            <button className="btn btn-secondary btn-danger" onClick={() => { if(window.confirm('Delete this prayer request?')) deleteRequest(viewReq.id) }}>Delete</button>
-            <button className="btn btn-secondary" onClick={() => setViewReq(null)}>Close</button>
-          </div>
         </Modal>
       )}
 
       {/* ── Edit Modal ── */}
       {editOpen && editDraft && (
-        <Modal open title="Edit Prayer Request" onClose={() => { setEditOpen(false); setEditDraft(null) }} size="md">
+        <Modal open title="Edit Prayer Request" onClose={() => { setEditOpen(false); setEditDraft(null) }} size="md"
+          footer={<>
+            <button className="btn btn-secondary" onClick={() => { setEditOpen(false); setEditDraft(null) }}>Cancel</button>
+            <button className="btn-primary" onClick={saveEdit}>Save Changes</button>
+          </>}
+        >
           <div className="prayer-form">
             <div className="prayer-form-row">
               <label>Your Name</label>
@@ -437,10 +444,6 @@ export default function Prayer({ store }) {
               <input type="checkbox" id="editpriv" checked={editDraft.private} onChange={e => setEditDraft(d => ({...d, private: e.target.checked}))} />
               <label htmlFor="editpriv" style={{margin:0,fontWeight:600,cursor:'pointer'}}>Private (leaders only)</label>
             </div>
-          </div>
-          <div className="modal-footer">
-            <button className="btn btn-secondary" onClick={() => { setEditOpen(false); setEditDraft(null) }}>Cancel</button>
-            <button className="btn-primary" onClick={saveEdit}>Save Changes</button>
           </div>
         </Modal>
       )}

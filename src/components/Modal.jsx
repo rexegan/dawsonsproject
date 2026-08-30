@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import './Modal.css'
 
-export default function Modal({ title, onClose, children, size = 'md' }) {
+export default function Modal({ title, onClose, children, footer, size = 'md' }) {
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') onClose() }
     document.addEventListener('keydown', handler)
@@ -24,6 +24,7 @@ export default function Modal({ title, onClose, children, size = 'md' }) {
           </button>
         </div>
         <div className="modal-body">{children}</div>
+        {footer && <div className="modal-footer">{footer}</div>}
       </div>
     </div>
   )
