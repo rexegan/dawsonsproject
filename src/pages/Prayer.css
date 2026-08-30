@@ -31,9 +31,9 @@
   cursor: pointer; transition: all .15s;
 }
 .prayer-tab:hover { border-color: #1B4FA3; color: #1B4FA3; }
-.prayer-tab--active { background: #1B4FA3; color: white; border-color: #1B4FA3; }
+.prayer-tab--active { background: white; color: #1B4FA3; border-color: #1B4FA3; }
 .prayer-tab--green { border-color: #3AAB35; color: #3AAB35; }
-.prayer-tab--green-active { background: #3AAB35 !important; color: white !important; border-color: #3AAB35 !important; }
+.prayer-tab--green-active { background: white !important; color: #3AAB35 !important; border-color: #3AAB35 !important; }
 .prayer-tab-badge {
   background: rgba(255,255,255,.25); color: inherit;
   font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 20px;
