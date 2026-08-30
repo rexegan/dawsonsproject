@@ -4,6 +4,21 @@ import { GRADES } from '../data/initialData'
 import { formatPhone } from '../utils/phone'
 import './Students.css'
 
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
+
+function getBirthday(s) {
+  // Use explicit birthday field, or fall back to DOB in notes ("DOB YYYY-MM-DD")
+  const raw = s.birthday || (s.notes && (s.notes.match(/DOB (\d{4}-\d{2}-\d{2})/)||[])[1]) || ''
+  if (!raw) return ''
+  const [y, m, d] = raw.split('-').map(Number)
+  if (!y || !m || !d) return ''
+  return `${MONTHS[m - 1]} ${d}, ${y}`
+}
+
+function getBirthdayRaw(s) {
+  return s.birthday || (s.notes && (s.notes.match(/DOB (\d{4}-\d{2}-\d{2})/)||[])[1]) || ''
+}
+
 const EMPTY_STUDENT = {
   firstName:'', lastName:'', grade:'9th', school:'', phone:'', email:'',
   parentName:'', parentPhone:'', parentEmail:'', program:'YoungLife',
@@ -52,7 +67,7 @@ export default function Students({ store }) {
     else if (sortCol === 'school')  { av = a.school;   bv = b.school }
     else if (sortCol === 'program') { av = a.program;  bv = b.program }
     else if (sortCol === 'leader')  { av = leaderName(a.leaderId); bv = leaderName(b.leaderId) }
-    else if (sortCol === 'birthday') { av = (a.birthday||'').slice(5); bv = (b.birthday||'').slice(5) }
+    else if (sortCol === 'birthday') { av = getBirthdayRaw(a).slice(5); bv = getBirthdayRaw(b).slice(5) }
     else { av = av||''; bv = bv||'' }
     const cmp = typeof av === 'number' ? av - bv : String(av).localeCompare(String(bv))
     return sortDir === 'asc' ? cmp : -cmp
@@ -167,11 +182,7 @@ export default function Students({ store }) {
                 </td>
                 <td className="td-leader">{leaderName(s.leaderId)}</td>
                 <td style={{fontSize:13,color:'var(--gray-700)',whiteSpace:'nowrap'}}>
-                  {s.birthday ? (() => {
-                    const [,m,d] = s.birthday.split('-')
-                    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-                    return `${months[parseInt(m,10)-1]} ${parseInt(d,10)}`
-                  })() : '—'}
+                  {getBirthday(s) || '—'}
                 </td>
                 <td>
                   <div className="row-actions">
