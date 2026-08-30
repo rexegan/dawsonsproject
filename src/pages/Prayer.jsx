@@ -61,7 +61,11 @@ export default function Prayer({ store }) {
   function addRequest() {
     if (!draft.request.trim()) return
     const newR = { ...draft, id: 'pr' + Date.now(), date: today, followUps: [] }
-    save([newR, ...requests])
+    setRequests(prev => {
+      const list = [newR, ...prev]
+      try { localStorage.setItem('yl_prayer', JSON.stringify(list)) } catch {}
+      return list
+    })
     setDraft(BLANK)
     setAddOpen(false)
     addNotification('Prayer request added 🙏')
@@ -270,7 +274,7 @@ export default function Prayer({ store }) {
 
       {/* ── Add Request Modal ── */}
       <Modal open={addOpen} title="Add Prayer Request" onClose={() => setAddOpen(false)} size="md">
-        <div className="modal-body prayer-form">
+        <div className="prayer-form">
           <div className="prayer-form-row">
             <label>Your Name <span style={{color:'var(--gray-400)',fontWeight:400}}>(optional)</span></label>
             <input className="form-input" placeholder="Who is submitting this?" value={draft.name} onChange={e => setDraft(d => ({...d, name: e.target.value}))} />
@@ -315,7 +319,7 @@ export default function Prayer({ store }) {
       {/* ── View / Detail Modal ── */}
       {viewReq && (
         <Modal open title="Prayer Request" onClose={() => setViewReq(null)} size="lg">
-          <div className="modal-body">
+          <div>
             <div className="prayer-detail-header">
               <div>
                 {viewReq.name && <div className="prayer-detail-submitter">Submitted by: <strong>{viewReq.name}</strong></div>}
@@ -404,7 +408,7 @@ export default function Prayer({ store }) {
       {/* ── Edit Modal ── */}
       {editOpen && editDraft && (
         <Modal open title="Edit Prayer Request" onClose={() => { setEditOpen(false); setEditDraft(null) }} size="md">
-          <div className="modal-body prayer-form">
+          <div className="prayer-form">
             <div className="prayer-form-row">
               <label>Your Name</label>
               <input className="form-input" value={editDraft.name} onChange={e => setEditDraft(d => ({...d, name: e.target.value}))} />
