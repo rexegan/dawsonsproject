@@ -38,13 +38,12 @@ export default function Header({ page, onMenuClick }) {
         )}
         {page === 'attendance' && (
           <div className="header-verse header-verse--wrap header-verse--center">
-            <span className="header-verse-text">"And let us consider how we may spur one another on toward love and good deeds, not giving up meeting together… but encouraging one another." <span className="header-verse-ref">Hebrews 10:24–25 NIV</span></span>
+            <span className="header-verse-text">"And let us consider how we may spur one another on toward love and good deeds, not giving up meeting together… but encouraging one another." &nbsp;<span className="header-verse-ref" style={{display:'inline',whiteSpace:'nowrap'}}>Hebrews 10:24–25 NIV</span></span>
           </div>
         )}
         {page === 'students' && (
-          <div className="header-verse">
-            <span className="header-verse-text">"Don't let anyone look down on you because you are young, but set an example for the believers in speech, in conduct, in love, in faith and in purity."</span>
-            <span className="header-verse-ref">1 Timothy 4:12</span>
+          <div className="header-verse header-verse--wrap header-verse--center">
+            <span className="header-verse-text">"Don't let anyone look down on you because you are young, but set an example for the believers in speech, in conduct, in love, in faith and in purity." &nbsp;<span className="header-verse-ref" style={{display:'inline',whiteSpace:'nowrap'}}>1 Timothy 4:12</span></span>
           </div>
         )}
         <div className="header-badge">Johnson County YL</div>
