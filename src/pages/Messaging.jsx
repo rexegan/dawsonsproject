@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import Modal from '../components/Modal'
 import './Messaging.css'
 
@@ -267,7 +267,9 @@ export default function Messaging() {
   const [templateDraft, setTemplateDraft] = useState({title:'',category:'Club Invite',channel:'Text',audience:'Students',body:'',notes:''})
   const [pieces, setPieces] = useState([])
   const [addingPiece, setAddingPiece] = useState(false)
-  const [pieceDraft, setPieceDraft] = useState({title:'',type:'Flyer',description:'',link:'',notes:''})
+  const [editingPieceIdx, setEditingPieceIdx] = useState(null)
+  const [pieceDraft, setPieceDraft] = useState({title:'',type:'Flyer',description:'',link:'',notes:'',fileName:'',fileData:''})
+  const fileInputRef = useRef(null)
 
   const filtered = templates.filter(t =>
     (chanFilter === 'All' || t.channel === chanFilter) &&
@@ -532,7 +534,7 @@ export default function Messaging() {
         <div className="msg-section">
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:8,marginBottom:4}}>
             <p style={{fontSize:14,color:'var(--gray-500)',margin:0}}>Actual marketing pieces — flyers, graphics, videos, links, and assets for Johnson County Young Life.</p>
-            <button className="btn-primary" style={{fontSize:13,padding:'6px 14px'}} onClick={()=>{ setPieceDraft({title:'',type:'Flyer',description:'',link:'',notes:''}); setAddingPiece(true) }}>+ Add Piece</button>
+            <button className="btn-primary" style={{fontSize:13,padding:'6px 14px'}} onClick={()=>{ setPieceDraft({title:'',type:'Flyer',description:'',link:'',notes:'',fileName:'',fileData:''}); setEditingPieceIdx(null); setAddingPiece(true) }}>+ Add Piece</button>
           </div>
           {pieces.length === 0 ? (
             <div style={{textAlign:'center',padding:'48px 20px',color:'var(--gray-400)',fontSize:14}}>
@@ -544,13 +546,21 @@ export default function Messaging() {
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:14}}>
               {pieces.map((p,i) => (
                 <div key={i} style={{background:'white',borderRadius:'var(--radius-lg)',padding:18,boxShadow:'var(--shadow-sm)',display:'flex',flexDirection:'column',gap:8,borderLeft:'4px solid #1B4FA3'}}>
-                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:6}}>
                     <span style={{background:'#EEF3FB',color:'#1B4FA3',padding:'2px 10px',borderRadius:20,fontSize:11,fontWeight:700}}>{p.type}</span>
-                    <button style={{fontSize:11,padding:'3px 8px',border:'1px solid #fee2e2',borderRadius:4,background:'#fff5f5',cursor:'pointer',color:'#dc2626'}} onClick={()=>setPieces(ps=>ps.filter((_,j)=>j!==i))}>✕ Remove</button>
+                    <div style={{display:'flex',gap:4}}>
+                      <button style={{fontSize:11,padding:'3px 8px',border:'1px solid var(--gray-200)',borderRadius:4,background:'white',cursor:'pointer',color:'var(--gray-600)'}} onClick={()=>{ setPieceDraft({...p}); setEditingPieceIdx(i); setAddingPiece(true) }}>✏️ Edit</button>
+                      <button style={{fontSize:11,padding:'3px 8px',border:'1px solid #fee2e2',borderRadius:4,background:'#fff5f5',cursor:'pointer',color:'#dc2626'}} onClick={()=>setPieces(ps=>ps.filter((_,j)=>j!==i))}>✕</button>
+                    </div>
                   </div>
                   <div style={{fontWeight:700,fontSize:15,color:'var(--gray-900)'}}>{p.title}</div>
                   {p.description && <div style={{fontSize:13,color:'var(--gray-600)',lineHeight:1.5}}>{p.description}</div>}
                   {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:'#1B4FA3'}}>🔗 Open Link</a>}
+                  {p.fileName && p.fileData && (
+                    <a href={p.fileData} download={p.fileName} style={{fontSize:12,color:'#3AAB35',display:'flex',alignItems:'center',gap:4}}>
+                      📎 {p.fileName}
+                    </a>
+                  )}
                   {p.notes && <div style={{fontSize:12,color:'var(--gray-400)',fontStyle:'italic'}}>{p.notes}</div>}
                 </div>
               ))}
@@ -559,9 +569,9 @@ export default function Messaging() {
         </div>
       )}
 
-      {/* ADD PIECE MODAL */}
+      {/* ADD / EDIT PIECE MODAL */}
       {addingPiece && (
-        <Modal open title="Add Messaging Piece" onClose={()=>setAddingPiece(false)} size="md">
+        <Modal open title={editingPieceIdx !== null ? 'Edit Messaging Piece' : 'Add Messaging Piece'} onClose={()=>{ setAddingPiece(false); setEditingPieceIdx(null) }} size="md">
           <div style={{display:'flex',flexDirection:'column',gap:12}}>
             {[['Title','title'],['Type','type'],['Description','description'],['Link (URL)','link'],['Notes','notes']].map(([label,key])=>(
               <div key={key}>
@@ -577,9 +587,41 @@ export default function Messaging() {
                 )}
               </div>
             ))}
+
+            {/* File attachment */}
+            <div>
+              <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.6px',marginBottom:6}}>Attach File</div>
+              <input ref={fileInputRef} type="file" style={{display:'none'}} onChange={e=>{
+                const file = e.target.files[0]
+                if (!file) return
+                const reader = new FileReader()
+                reader.onload = ev => setPieceDraft(d=>({...d, fileName: file.name, fileData: ev.target.result}))
+                reader.readAsDataURL(file)
+              }}/>
+              {pieceDraft.fileName ? (
+                <div style={{display:'flex',alignItems:'center',gap:8,background:'#EDFAEC',borderRadius:8,padding:'8px 12px'}}>
+                  <span style={{fontSize:13,color:'#3AAB35',fontWeight:600,flex:1}}>📎 {pieceDraft.fileName}</span>
+                  <button style={{fontSize:11,padding:'2px 8px',border:'1px solid #fee2e2',borderRadius:4,background:'#fff5f5',cursor:'pointer',color:'#dc2626'}} onClick={()=>{ setPieceDraft(d=>({...d,fileName:'',fileData:''})); if(fileInputRef.current) fileInputRef.current.value='' }}>Remove</button>
+                </div>
+              ) : (
+                <button style={{padding:'8px 16px',border:'1.5px dashed var(--gray-300)',borderRadius:8,background:'white',cursor:'pointer',color:'var(--gray-600)',fontSize:13,width:'100%'}} onClick={()=>fileInputRef.current?.click()}>
+                  📎 Choose File (PDF, image, doc…)
+                </button>
+              )}
+            </div>
+
             <div className="modal-actions">
-              <button className="btn-secondary" onClick={()=>setAddingPiece(false)}>Cancel</button>
-              <button className="btn-primary" onClick={()=>{ if(pieceDraft.title.trim()){ setPieces(ps=>[...ps,{...pieceDraft}]); setAddingPiece(false) } }}>Add Piece</button>
+              <button className="btn-secondary" onClick={()=>{ setAddingPiece(false); setEditingPieceIdx(null) }}>Cancel</button>
+              <button className="btn-primary" onClick={()=>{
+                if (!pieceDraft.title.trim()) return
+                if (editingPieceIdx !== null) {
+                  setPieces(ps => ps.map((p,i) => i === editingPieceIdx ? {...pieceDraft} : p))
+                } else {
+                  setPieces(ps=>[...ps,{...pieceDraft}])
+                }
+                setAddingPiece(false)
+                setEditingPieceIdx(null)
+              }}>{editingPieceIdx !== null ? 'Save Changes' : 'Add Piece'}</button>
             </div>
           </div>
         </Modal>
