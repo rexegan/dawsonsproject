@@ -43,8 +43,8 @@
   align-items: stretch; justify-content: center;
 }
 .header-verse--wrap .header-verse-text {
-  font-size: 15px; font-weight: 700; white-space: normal; line-height: 1.5;
-  text-align: left; overflow: visible; text-overflow: unset;
+  font-size: 15px; font-weight: 700; white-space: normal; line-height: 1.55;
+  text-align: left; overflow: visible; text-overflow: unset; display: block;
 }
 .header-verse--wrap .header-verse-ref {
   font-size: 14px; font-weight: 800; display: block; text-align: right;

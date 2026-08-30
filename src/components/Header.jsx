@@ -33,19 +33,28 @@ export default function Header({ page, onMenuClick }) {
         )}
         {page === 'followup' && (
           <div className="header-verse header-verse--wrap">
-            <span className="header-verse-text">"Suppose one of you has a hundred sheep and loses one of them. Doesn't he leave the ninety-nine and go after the lost sheep until he finds it?"</span>
+            <div className="header-verse-text">
+              <span>"Suppose one of you has a hundred sheep and loses one of them.</span><br/>
+              <span>Doesn't he leave the ninety-nine and go after the lost sheep until he finds it?"</span>
+            </div>
             <span className="header-verse-ref">Luke 15:4</span>
           </div>
         )}
         {page === 'attendance' && (
           <div className="header-verse header-verse--wrap">
-            <span className="header-verse-text">"And let us consider how we may spur one another on toward love and good deeds, not giving up meeting together… but encouraging one another."</span>
+            <div className="header-verse-text">
+              <span>"And let us consider how we may spur one another on toward love and good deeds,</span><br/>
+              <span>not giving up meeting together… but encouraging one another."</span>
+            </div>
             <span className="header-verse-ref">Hebrews 10:24–25</span>
           </div>
         )}
         {page === 'students' && (
           <div className="header-verse header-verse--wrap">
-            <span className="header-verse-text">"Don't let anyone look down on you because you are young, but set an example for the believers in speech, in conduct, in love, in faith and in purity."</span>
+            <div className="header-verse-text">
+              <span>"Don't let anyone look down on you because you are young, but set an example</span><br/>
+              <span>for the believers in speech, in conduct, in love, in faith and in purity."</span>
+            </div>
             <span className="header-verse-ref">1 Timothy 4:12</span>
           </div>
         )}
