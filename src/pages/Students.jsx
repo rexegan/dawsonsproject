@@ -51,7 +51,7 @@ export default function Students({ store }) {
     else if (sortCol === 'school')  { av = a.school;   bv = b.school }
     else if (sortCol === 'program') { av = a.program;  bv = b.program }
     else if (sortCol === 'leader')  { av = leaderName(a.leaderId); bv = leaderName(b.leaderId) }
-    else if (sortCol === 'tags')    { av = (a.tags||[]).join(','); bv = (b.tags||[]).join(',') }
+    else if (sortCol === 'birthday') { av = (a.birthday||'').slice(5); bv = (b.birthday||'').slice(5) }
     else { av = av||''; bv = bv||'' }
     const cmp = typeof av === 'number' ? av - bv : String(av).localeCompare(String(bv))
     return sortDir === 'asc' ? cmp : -cmp
@@ -134,7 +134,7 @@ export default function Students({ store }) {
         <table className="students-table">
           <thead>
             <tr>
-              {[['name','Name'],['grade','Grade'],['school','School'],['program','Program'],['leader','Leader'],['tags','Tags']].map(([col,label])=>(
+              {[['name','Name'],['grade','Grade'],['school','School'],['program','Program'],['leader','Leader'],['birthday','Birthday']].map(([col,label])=>(
                 <th key={col} className="th-sortable" onClick={()=>handleSort(col)}>
                   {label} <span className="sort-arrow">{sortCol===col ? (sortDir==='asc'?'↑':'↓') : '↕'}</span>
                 </th>
@@ -164,15 +164,12 @@ export default function Students({ store }) {
                   </span>
                 </td>
                 <td className="td-leader">{leaderName(s.leaderId)}</td>
-                <td>
-                  <div className="tag-list">
-                    {(s.tags || []).slice(0,2).map(t => (
-                      <span key={t} className="tag-chip" style={{background: (TAG_COLORS[t]||'#999')+'22', color: TAG_COLORS[t]||'#999'}}>
-                        {t}
-                      </span>
-                    ))}
-                    {(s.tags||[]).length > 2 && <span className="tag-chip tag-chip--more">+{s.tags.length-2}</span>}
-                  </div>
+                <td style={{fontSize:13,color:'var(--gray-700)',whiteSpace:'nowrap'}}>
+                  {s.birthday ? (() => {
+                    const [,m,d] = s.birthday.split('-')
+                    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                    return `${months[parseInt(m,10)-1]} ${parseInt(d,10)}`
+                  })() : '—'}
                 </td>
                 <td>
                   <div className="row-actions">
