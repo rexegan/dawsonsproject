@@ -48,6 +48,14 @@ export default function Header({ page, onMenuClick }) {
             </div>
           </div>
         )}
+        {page === 'parentconnect' && (
+          <div className="header-verse header-verse--wrap">
+            <div className="header-verse-text">
+              "Honor your father and mother — which is the first commandment with a promise —<br/>
+              so that it may go well with you and that you may enjoy long life on the earth." <span className="header-verse-ref" style={{fontSize:'0.9em'}}>Ephesians 6:2–3</span>
+            </div>
+          </div>
+        )}
         {page === 'resources' && (
           <div className="header-verse header-verse--wrap">
             <div className="header-verse-text">
