@@ -273,7 +273,7 @@ export default function Prayer({ store }) {
       </div>
 
       {/* ── Add Request Modal ── */}
-      <Modal open={addOpen} title="Add Prayer Request" onClose={() => setAddOpen(false)} size="md"
+      {addOpen && <Modal open title="Add Prayer Request" onClose={() => setAddOpen(false)} size="md"
         footer={<>
           <button className="btn btn-secondary" onClick={() => setAddOpen(false)}>Cancel</button>
           <button className="btn-primary" onClick={addRequest} disabled={!draft.request.trim()}>Add Request</button>
@@ -315,7 +315,7 @@ export default function Prayer({ store }) {
             <label htmlFor="priv" style={{margin:0,fontWeight:600,cursor:'pointer'}}>Mark as private (leaders only)</label>
           </div>
         </div>
-      </Modal>
+      </Modal>}
 
       {/* ── View / Detail Modal ── */}
       {viewReq && (
