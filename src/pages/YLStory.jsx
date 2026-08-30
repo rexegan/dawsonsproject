@@ -26,18 +26,18 @@ const TIMELINE = [
 ]
 
 const CAMPS = [
-  { name: 'Malibu Club', location: 'British Columbia, Canada', desc: 'Accessible only by boat, nestled in Princess Louisa Inlet. Often called "the most beautiful place on earth." HS camp.', img: '🏔️' },
-  { name: 'Crooked Creek Ranch', location: 'Fraser, Colorado', desc: 'A premier property in the Rocky Mountains — the primary middle school / WyldLife destination for Texas areas.', img: '⛰️' },
-  { name: 'Frontier Ranch', location: 'Buena Vista, Colorado', desc: 'High-country Colorado HS camp with whitewater rafting, horseback riding, and breathtaking views of the Rockies.', img: '🤠' },
-  { name: 'Castaway Club', location: 'Detroit Lakes, Minnesota', desc: 'A lakeside paradise in the Minnesota north woods. HS camp known for watersports and excellent program.', img: '🌊' },
-  { name: 'Trail West Lodge', location: 'Buena Vista, Colorado', desc: 'Small, intimate HS camp for deeper discipleship. Stunning Collegiate Peaks backdrop.', img: '🌲' },
-  { name: 'Sharptop Cove', location: 'Jasper, Georgia', desc: 'Southern Appalachian beauty. HS camp serving the southeastern U.S.', img: '🏕️' },
-  { name: 'Woodleaf', location: 'Challenge, California', desc: 'In the Sierra Nevada foothills north of Sacramento. HS camp with stunning outdoor adventures.', img: '🌄' },
-  { name: 'Lake Champion', location: 'Glen Spey, New York', desc: 'Overlooking a beautiful lake in the Hudson Valley. HS camp serving the Northeast.', img: '🏞️' },
-  { name: 'Saranac Village', location: 'Saranac Lake, New York', desc: 'Adirondack lakefront property. Serves the Northeast and Canada.', img: '🛶' },
-  { name: 'Carolina Point', location: 'Brevard, North Carolina', desc: 'Nestled in the Blue Ridge Mountains with a pristine lake. HS camp for the Southeast.', img: '🌿' },
-  { name: 'Washington Family Ranch', location: 'Antelope, Oregon', desc: 'Young Life\'s largest property — over 65,000 acres in the high Oregon desert. Incredible scale and beauty.', img: '🦅' },
-  { name: 'Oakbridge', location: 'Goshen, Indiana', desc: 'Midwest base camp with a beautiful lake and rolling hills. HS camp serving the Great Lakes region.', img: '🌾' },
+  { name: 'Malibu Club', location: 'British Columbia, Canada', desc: 'Accessible only by boat, nestled in Princess Louisa Inlet. Often called "the most beautiful place on earth." HS camp.', img: '🏔️', url: 'https://www.younglife.org/camps/malibu-club/' },
+  { name: 'Crooked Creek Ranch', location: 'Fraser, Colorado', desc: 'A premier property in the Rocky Mountains — the primary middle school / WyldLife destination for Texas areas.', img: '⛰️', url: 'https://www.younglife.org/camps/crooked-creek-ranch/' },
+  { name: 'Frontier Ranch', location: 'Buena Vista, Colorado', desc: 'High-country Colorado HS camp with whitewater rafting, horseback riding, and breathtaking views of the Rockies.', img: '🤠', url: 'https://www.younglife.org/camps/frontier-ranch/' },
+  { name: 'Castaway Club', location: 'Detroit Lakes, Minnesota', desc: 'A lakeside paradise in the Minnesota north woods. HS camp known for watersports and excellent program.', img: '🌊', url: 'https://www.younglife.org/camps/castaway-club/' },
+  { name: 'Trail West Lodge', location: 'Buena Vista, Colorado', desc: 'Small, intimate HS camp for deeper discipleship. Stunning Collegiate Peaks backdrop.', img: '🌲', url: 'https://www.younglife.org/camps/trail-west-lodge/' },
+  { name: 'Sharptop Cove', location: 'Jasper, Georgia', desc: 'Southern Appalachian beauty. HS camp serving the southeastern U.S.', img: '🏕️', url: 'https://www.younglife.org/camps/sharptop-cove/' },
+  { name: 'Woodleaf', location: 'Challenge, California', desc: 'In the Sierra Nevada foothills north of Sacramento. HS camp with stunning outdoor adventures.', img: '🌄', url: 'https://www.younglife.org/camps/woodleaf/' },
+  { name: 'Lake Champion', location: 'Glen Spey, New York', desc: 'Overlooking a beautiful lake in the Hudson Valley. HS camp serving the Northeast.', img: '🏞️', url: 'https://www.younglife.org/camps/lake-champion/' },
+  { name: 'Saranac Village', location: 'Saranac Lake, New York', desc: 'Adirondack lakefront property. Serves the Northeast and Canada.', img: '🛶', url: 'https://www.younglife.org/camps/saranac-village/' },
+  { name: 'Carolina Point', location: 'Brevard, North Carolina', desc: 'Nestled in the Blue Ridge Mountains with a pristine lake. HS camp for the Southeast.', img: '🌿', url: 'https://www.younglife.org/camps/carolina-point/' },
+  { name: 'Washington Family Ranch', location: 'Antelope, Oregon', desc: 'Young Life\'s largest property — over 65,000 acres in the high Oregon desert. Incredible scale and beauty.', img: '🦅', url: 'https://www.younglife.org/camps/washington-family-ranch/' },
+  { name: 'Oakbridge', location: 'Goshen, Indiana', desc: 'Midwest base camp with a beautiful lake and rolling hills. HS camp serving the Great Lakes region.', img: '🌾', url: 'https://www.younglife.org/camps/oakbridge/' },
 ]
 
 const PROGRAMS_INFO = [
@@ -231,6 +231,15 @@ export default function YLStory() {
                 <div className="ylstory-camp-name">{camp.name}</div>
                 <div className="ylstory-camp-loc">📍 {camp.location}</div>
                 <div className="ylstory-camp-desc">{camp.desc}</div>
+                <a
+                  href={camp.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ylstory-camp-link"
+                  onClick={e => e.stopPropagation()}
+                >
+                  Visit Website →
+                </a>
               </div>
             ))}
           </div>
