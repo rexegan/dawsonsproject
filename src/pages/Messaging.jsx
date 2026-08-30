@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Modal from '../components/Modal'
 import './Messaging.css'
 
@@ -261,8 +261,15 @@ export default function Messaging() {
   const [editingTask, setEditingTask] = useState(null)
   const [newTaskText, setNewTaskText] = useState('')
   const [addingTask, setAddingTask] = useState(false)
+  const [monthMeta, setMonthMeta] = useState(null) // {icon, month, focus} draft for editing
+  const [templates, setTemplates] = useState(TEMPLATES)
+  const [addingTemplate, setAddingTemplate] = useState(false)
+  const [templateDraft, setTemplateDraft] = useState({title:'',category:'Club Invite',channel:'Text',audience:'Students',body:'',notes:''})
+  const [pieces, setPieces] = useState([])
+  const [addingPiece, setAddingPiece] = useState(false)
+  const [pieceDraft, setPieceDraft] = useState({title:'',type:'Flyer',description:'',link:'',notes:''})
 
-  const filtered = TEMPLATES.filter(t =>
+  const filtered = templates.filter(t =>
     (chanFilter === 'All' || t.channel === chanFilter) &&
     (catFilter === 'All' || t.category === catFilter)
   )
@@ -291,6 +298,7 @@ export default function Messaging() {
           { id:'templates', label:'📋 Message Templates' },
           { id:'brand', label:'🎨 Brand Guidelines' },
           { id:'calendar', label:'📅 Marketing Calendar' },
+          { id:'pieces', label:'✉️ Messaging Pieces' },
         ].map(t => (
           <button key={t.id} className={`msg-tab ${tab===t.id?'msg-tab--active':''}`} onClick={()=>setTab(t.id)}>
             {t.label}
@@ -316,7 +324,10 @@ export default function Messaging() {
             </div>
           </div>
 
-          <div className="msg-count">{filtered.length} template{filtered.length!==1?'s':''}</div>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:8}}>
+            <div className="msg-count">{filtered.length} template{filtered.length!==1?'s':''}</div>
+            <button className="btn-primary" style={{fontSize:13,padding:'6px 14px'}} onClick={()=>{ setTemplateDraft({title:'',category:'Club Invite',channel:'Text',audience:'Students',body:'',notes:''}); setAddingTemplate(true) }}>+ Add Template</button>
+          </div>
 
           <div className="templates-grid">
             {filtered.map(t => (
@@ -421,7 +432,10 @@ export default function Messaging() {
       {/* MARKETING CALENDAR TAB */}
       {tab === 'calendar' && (
         <div className="msg-section">
-          <p style={{fontSize:14,color:'var(--gray-500)',marginBottom:4}}>Annual marketing rhythm for Johnson County Young Life. Click any month to view, edit, or add tasks.</p>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:8,marginBottom:4}}>
+            <p style={{fontSize:14,color:'var(--gray-500)',margin:0}}>Annual marketing rhythm for Johnson County Young Life. Click any month to view, edit, or add tasks.</p>
+            <button className="btn-primary" style={{fontSize:13,padding:'6px 14px'}} onClick={()=>{ setMonths(ms=>[...ms,{month:'New Month',icon:'📌',focus:'Focus area',tasks:[]}]); setSelectedMonth(months.length); setMonthMeta({icon:'📌',month:'New Month',focus:'Focus area'}); setAddingTask(false); setEditingTask(null); setNewTaskText('') }}>+ Add Month</button>
+          </div>
           <div className="mktg-calendar">
             {months.map((m,i) => (
               <button key={i} className="mktg-month mktg-month--clickable" onClick={()=>{ setSelectedMonth(i); setAddingTask(false); setEditingTask(null); setNewTaskText('') }}>
@@ -443,8 +457,26 @@ export default function Messaging() {
 
       {/* MONTH DETAIL MODAL */}
       {selectedMonth !== null && (
-        <Modal open title={`${months[selectedMonth].icon} ${months[selectedMonth].month} — ${months[selectedMonth].focus}`} onClose={()=>setSelectedMonth(null)} size="lg">
+        <Modal open title="Edit Month" onClose={()=>{ setSelectedMonth(null); setMonthMeta(null) }} size="lg">
           <div style={{display:'flex',flexDirection:'column',gap:14}}>
+            {/* Editable month header */}
+            <div style={{display:'grid',gridTemplateColumns:'80px 1fr 1fr',gap:8}}>
+              <div>
+                <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.6px',marginBottom:3}}>Icon</div>
+                <input className="settings-input" value={(monthMeta||months[selectedMonth]).icon} onChange={e=>{ const v=e.target.value; setMonthMeta(m=>({...(m||months[selectedMonth]),icon:v})) }} style={{width:'100%',boxSizing:'border-box',fontSize:20,textAlign:'center'}}/>
+              </div>
+              <div>
+                <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.6px',marginBottom:3}}>Month Name</div>
+                <input className="settings-input" value={(monthMeta||months[selectedMonth]).month} onChange={e=>{ const v=e.target.value; setMonthMeta(m=>({...(m||months[selectedMonth]),month:v})) }} style={{width:'100%',boxSizing:'border-box'}}/>
+              </div>
+              <div>
+                <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.6px',marginBottom:3}}>Focus / Theme</div>
+                <input className="settings-input" value={(monthMeta||months[selectedMonth]).focus} onChange={e=>{ const v=e.target.value; setMonthMeta(m=>({...(m||months[selectedMonth]),focus:v})) }} style={{width:'100%',boxSizing:'border-box'}}/>
+              </div>
+            </div>
+            <button className="btn-primary" style={{alignSelf:'flex-start',fontSize:12,padding:'5px 12px'}} onClick={()=>{ if(monthMeta){ setMonths(ms=>ms.map((m,i)=>i===selectedMonth?{...m,...monthMeta}:m)); setMonthMeta(null) } }}>Save Title Changes</button>
+            <hr style={{border:'none',borderTop:'1px solid var(--gray-100)',margin:0}}/>
+            <div style={{fontWeight:700,fontSize:13,color:'var(--gray-700)'}}>Tasks</div>
             <div style={{display:'flex',flexDirection:'column',gap:8}}>
               {months[selectedMonth].tasks.map((task,j) => (
                 <div key={j} style={{display:'flex',gap:8,alignItems:'center'}}>
@@ -489,7 +521,105 @@ export default function Messaging() {
             )}
 
             <div className="modal-actions">
-              <button className="btn-secondary" onClick={()=>setSelectedMonth(null)}>Close</button>
+              <button className="btn-secondary" onClick={()=>{ setSelectedMonth(null); setMonthMeta(null) }}>Close</button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* MESSAGING PIECES TAB */}
+      {tab === 'pieces' && (
+        <div className="msg-section">
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:8,marginBottom:4}}>
+            <p style={{fontSize:14,color:'var(--gray-500)',margin:0}}>Actual marketing pieces — flyers, graphics, videos, links, and assets for Johnson County Young Life.</p>
+            <button className="btn-primary" style={{fontSize:13,padding:'6px 14px'}} onClick={()=>{ setPieceDraft({title:'',type:'Flyer',description:'',link:'',notes:''}); setAddingPiece(true) }}>+ Add Piece</button>
+          </div>
+          {pieces.length === 0 ? (
+            <div style={{textAlign:'center',padding:'48px 20px',color:'var(--gray-400)',fontSize:14}}>
+              <div style={{fontSize:40,marginBottom:12}}>✉️</div>
+              <div style={{fontWeight:700,marginBottom:6}}>No messaging pieces yet</div>
+              <div>Add flyers, graphics, videos, or links to keep all your marketing assets in one place.</div>
+            </div>
+          ) : (
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:14}}>
+              {pieces.map((p,i) => (
+                <div key={i} style={{background:'white',borderRadius:'var(--radius-lg)',padding:18,boxShadow:'var(--shadow-sm)',display:'flex',flexDirection:'column',gap:8,borderLeft:'4px solid #1B4FA3'}}>
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                    <span style={{background:'#EEF3FB',color:'#1B4FA3',padding:'2px 10px',borderRadius:20,fontSize:11,fontWeight:700}}>{p.type}</span>
+                    <button style={{fontSize:11,padding:'3px 8px',border:'1px solid #fee2e2',borderRadius:4,background:'#fff5f5',cursor:'pointer',color:'#dc2626'}} onClick={()=>setPieces(ps=>ps.filter((_,j)=>j!==i))}>✕ Remove</button>
+                  </div>
+                  <div style={{fontWeight:700,fontSize:15,color:'var(--gray-900)'}}>{p.title}</div>
+                  {p.description && <div style={{fontSize:13,color:'var(--gray-600)',lineHeight:1.5}}>{p.description}</div>}
+                  {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:'#1B4FA3'}}>🔗 Open Link</a>}
+                  {p.notes && <div style={{fontSize:12,color:'var(--gray-400)',fontStyle:'italic'}}>{p.notes}</div>}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ADD PIECE MODAL */}
+      {addingPiece && (
+        <Modal open title="Add Messaging Piece" onClose={()=>setAddingPiece(false)} size="md">
+          <div style={{display:'flex',flexDirection:'column',gap:12}}>
+            {[['Title','title'],['Type','type'],['Description','description'],['Link (URL)','link'],['Notes','notes']].map(([label,key])=>(
+              <div key={key}>
+                <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.6px',marginBottom:3}}>{label}</div>
+                {key==='type' ? (
+                  <select className="settings-input" value={pieceDraft.type} onChange={e=>setPieceDraft(d=>({...d,type:e.target.value}))}>
+                    {['Flyer','Graphic','Video','Email','Social Post','Presentation','Other'].map(o=><option key={o}>{o}</option>)}
+                  </select>
+                ) : key==='description'||key==='notes' ? (
+                  <textarea className="settings-input" rows={3} style={{width:'100%',boxSizing:'border-box',resize:'vertical'}} value={pieceDraft[key]} onChange={e=>setPieceDraft(d=>({...d,[key]:e.target.value}))}/>
+                ) : (
+                  <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={pieceDraft[key]} onChange={e=>setPieceDraft(d=>({...d,[key]:e.target.value}))}/>
+                )}
+              </div>
+            ))}
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={()=>setAddingPiece(false)}>Cancel</button>
+              <button className="btn-primary" onClick={()=>{ if(pieceDraft.title.trim()){ setPieces(ps=>[...ps,{...pieceDraft}]); setAddingPiece(false) } }}>Add Piece</button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* ADD TEMPLATE MODAL */}
+      {addingTemplate && (
+        <Modal open title="Add Message Template" onClose={()=>setAddingTemplate(false)} size="lg">
+          <div style={{display:'flex',flexDirection:'column',gap:12}}>
+            {[['Title','title'],['Category','category'],['Channel','channel'],['Audience','audience']].map(([label,key])=>(
+              <div key={key}>
+                <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.6px',marginBottom:3}}>{label}</div>
+                {key==='category' ? (
+                  <select className="settings-input" value={templateDraft.category} onChange={e=>setTemplateDraft(d=>({...d,category:e.target.value}))}>
+                    {['Club Invite','Camp','Fundraising','Follow-Up','Social Media'].map(o=><option key={o}>{o}</option>)}
+                  </select>
+                ) : key==='channel' ? (
+                  <select className="settings-input" value={templateDraft.channel} onChange={e=>setTemplateDraft(d=>({...d,channel:e.target.value}))}>
+                    {['Text','Email','Instagram/Facebook'].map(o=><option key={o}>{o}</option>)}
+                  </select>
+                ) : key==='audience' ? (
+                  <select className="settings-input" value={templateDraft.audience} onChange={e=>setTemplateDraft(d=>({...d,audience:e.target.value}))}>
+                    {['Students','Parents','Donors','Public'].map(o=><option key={o}>{o}</option>)}
+                  </select>
+                ) : (
+                  <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={templateDraft[key]} onChange={e=>setTemplateDraft(d=>({...d,[key]:e.target.value}))}/>
+                )}
+              </div>
+            ))}
+            <div>
+              <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.6px',marginBottom:3}}>Message Body</div>
+              <textarea className="settings-input" rows={8} style={{width:'100%',boxSizing:'border-box',resize:'vertical',fontFamily:'monospace',fontSize:13}} value={templateDraft.body} onChange={e=>setTemplateDraft(d=>({...d,body:e.target.value}))} placeholder="Use {firstName}, {leaderName}, etc. as placeholders"/>
+            </div>
+            <div>
+              <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.6px',marginBottom:3}}>Usage Notes</div>
+              <textarea className="settings-input" rows={2} style={{width:'100%',boxSizing:'border-box',resize:'vertical'}} value={templateDraft.notes} onChange={e=>setTemplateDraft(d=>({...d,notes:e.target.value}))}/>
+            </div>
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={()=>setAddingTemplate(false)}>Cancel</button>
+              <button className="btn-primary" onClick={()=>{ if(templateDraft.title.trim()&&templateDraft.body.trim()){ setTemplates(ts=>[...ts,{...templateDraft,id:'t'+(Date.now())}]); setAddingTemplate(false) } }}>Add Template</button>
             </div>
           </div>
         </Modal>

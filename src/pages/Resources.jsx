@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import Modal from '../components/Modal'
 import './Resources.css'
 
@@ -585,18 +585,31 @@ const BIZ_CATEGORIES = ['All', 'Restaurant', 'Retail', 'Healthcare', 'Financial'
 
 const ORG_CHART = {
   homeOffice: { name:'Young Life', role:'International Home Office', location:'Colorado Springs, CO', phone:'(719) 381-1800', website:'https://www.younglife.org' },
-  regional: { name:'Holly McLean', role:'Regional Director', region:'West Texas Region' },
-  area: { name:'Theresa Boydston', role:'Area Director', area:'Johnson County Young Life' },
+  regional: {
+    name:'Holly McLean', role:'Regional Director', region:'West Texas Region',
+    cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'',
+    birthday:'', spouseName:'', emergencyContact:'', emergencyPhone:'', notes:''
+  },
+  area: {
+    name:'Theresa Boydston', role:'Area Director', area:'Johnson County Young Life',
+    cell:'', email:'theresa.boydston@younglife.org', homeAddress:'', city:'', state:'TX', zip:'',
+    birthday:'', spouseName:'', emergencyContact:'', emergencyPhone:'', notes:''
+  },
   staffLeaders: [
-    { name:'Theresa Boydston', role:'Area Director', program:'Both' },
+    { name:'Theresa Boydston', role:'Area Director', program:'Both', cell:'', email:'theresa.boydston@younglife.org', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', emergencyContact:'', emergencyPhone:'', notes:'' },
   ],
   groupLeaders: [
-    { name:'Group Leader Team', role:'YoungLife Club Leaders', count:6, program:'YoungLife' },
-    { name:'Group Leader Team', role:'WyldLife Club Leaders', count:4, program:'WyldLife' },
+    { id:'gl1', name:'', role:'YoungLife Club Leader', program:'YoungLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
+    { id:'gl2', name:'', role:'YoungLife Club Leader', program:'YoungLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
+    { id:'gl3', name:'', role:'YoungLife Club Leader', program:'YoungLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
+    { id:'gl4', name:'', role:'WyldLife Club Leader', program:'WyldLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
+    { id:'gl5', name:'', role:'WyldLife Club Leader', program:'WyldLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
   ],
   studentLeaders: [
-    { name:'Campaigner Leaders', role:'Student Leaders in Training', count:12, program:'YoungLife' },
-    { name:'WyldLife Campaigners', role:'Student Leaders in Training', count:8, program:'WyldLife' },
+    { id:'sl1', name:'', role:'Student Leader in Training', program:'YoungLife', school:'', grade:'', cell:'', email:'', parentName:'', parentCell:'', homeAddress:'', city:'', state:'TX', zip:'', notes:'' },
+    { id:'sl2', name:'', role:'Student Leader in Training', program:'YoungLife', school:'', grade:'', cell:'', email:'', parentName:'', parentCell:'', homeAddress:'', city:'', state:'TX', zip:'', notes:'' },
+    { id:'sl3', name:'', role:'Student Leader in Training', program:'WyldLife', school:'', grade:'', cell:'', email:'', parentName:'', parentCell:'', homeAddress:'', city:'', state:'TX', zip:'', notes:'' },
+    { id:'sl4', name:'', role:'Student Leader in Training', program:'WyldLife', school:'', grade:'', cell:'', email:'', parentName:'', parentCell:'', homeAddress:'', city:'', state:'TX', zip:'', notes:'' },
   ],
 }
 
@@ -622,6 +635,104 @@ const UPDATES_501C3 = [
     body:'501(c)(3) organizations must maintain annual board meeting minutes. Ensure your area has documented all board decisions, officer elections, and financial approvals for 2025–2026. Store records for minimum 7 years.',
   },
 ]
+
+function OrgField({ label, value, onChange }) {
+  const isTextarea = label === 'Notes'
+  return (
+    <div>
+      <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.6px',marginBottom:3}}>{label}</div>
+      {isTextarea
+        ? <textarea className="settings-input" rows={3} style={{width:'100%',boxSizing:'border-box',resize:'vertical'}} value={value||''} onChange={onChange}/>
+        : <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={value||''} onChange={onChange}/>}
+    </div>
+  )
+}
+
+function OrgPersonModal({ data, fields, onSave, onClose }) {
+  const [draft, setDraft] = React.useState({...data})
+  const half = Math.ceil(fields.length / 2)
+  const left = fields.slice(0, half)
+  const right = fields.slice(half)
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:14}}>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {left.map(([k,label])=><OrgField key={k} label={label} value={draft[k]} onChange={e=>setDraft(d=>({...d,[k]:e.target.value}))}/>)}
+        </div>
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {right.map(([k,label])=><OrgField key={k} label={label} value={draft[k]} onChange={e=>setDraft(d=>({...d,[k]:e.target.value}))}/>)}
+        </div>
+      </div>
+      <div className="modal-actions">
+        <button className="btn-secondary" onClick={onClose}>Cancel</button>
+        <button className="btn-primary" onClick={()=>onSave(draft)}>Save Changes</button>
+      </div>
+    </div>
+  )
+}
+
+function OrgListModal({ items, itemLabel, fields, newItem, onSave, onClose }) {
+  const [list, setList] = React.useState(items.map((it,i)=>({...it,_id:i})))
+  const [editIdx, setEditIdx] = React.useState(null)
+  const [draft, setDraft] = React.useState(null)
+
+  const startEdit = idx => { setEditIdx(idx); setDraft({...list[idx]}) }
+  const saveEdit = () => {
+    setList(l => l.map((it,i) => i===editIdx ? {...draft} : it))
+    setEditIdx(null); setDraft(null)
+  }
+  const addItem = () => {
+    const ni = {...newItem, _id: Date.now()}
+    setList(l=>[...l, ni])
+    setEditIdx(list.length); setDraft({...ni})
+  }
+  const deleteItem = idx => { setList(l=>l.filter((_,i)=>i!==idx)); setEditIdx(null); setDraft(null) }
+
+  if (editIdx !== null && draft !== null) {
+    const half = Math.ceil(fields.length / 2)
+    return (
+      <div style={{display:'flex',flexDirection:'column',gap:14}}>
+        <div style={{fontWeight:700,fontSize:14,marginBottom:4}}>{editIdx < items.length ? `Edit ${itemLabel}` : `Add ${itemLabel}`}</div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+          <div style={{display:'flex',flexDirection:'column',gap:10}}>
+            {fields.slice(0,half).map(([k,label])=><OrgField key={k} label={label} value={draft[k]} onChange={e=>setDraft(d=>({...d,[k]:e.target.value}))}/>)}
+          </div>
+          <div style={{display:'flex',flexDirection:'column',gap:10}}>
+            {fields.slice(half).map(([k,label])=><OrgField key={k} label={label} value={draft[k]} onChange={e=>setDraft(d=>({...d,[k]:e.target.value}))}/>)}
+          </div>
+        </div>
+        <div className="modal-actions">
+          <button className="btn-secondary" onClick={()=>{setEditIdx(null);setDraft(null)}}>← Back</button>
+          <button className="btn-red" onClick={()=>deleteItem(editIdx)}>Delete</button>
+          <button className="btn-primary" onClick={saveEdit}>Save</button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:12}}>
+      <div style={{display:'flex',flexDirection:'column',gap:8,maxHeight:380,overflowY:'auto'}}>
+        {list.map((it,i)=>(
+          <div key={it._id||i} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 14px',background:'white',border:'1.5px solid var(--gray-200)',borderRadius:10}}>
+            <div style={{flex:1}}>
+              <div style={{fontWeight:700,fontSize:14}}>{it.name||<em style={{color:'var(--gray-400)',fontStyle:'normal'}}>(No name)</em>}</div>
+              <div style={{fontSize:12,color:'var(--gray-500)'}}>{it.role} · {it.program}{it.school?` · ${it.school}`:''}</div>
+              {it.cell && <div style={{fontSize:12,color:'var(--gray-600)'}}>{it.cell}</div>}
+              {it.email && <div style={{fontSize:12,color:'#1B4FA3'}}>{it.email}</div>}
+            </div>
+            <button className="btn-secondary" style={{padding:'5px 12px',fontSize:12}} onClick={()=>startEdit(i)}>Edit</button>
+          </div>
+        ))}
+      </div>
+      <div className="modal-actions">
+        <button className="btn-secondary" onClick={onClose}>Cancel</button>
+        <button className="btn-secondary" onClick={addItem}>+ Add {itemLabel}</button>
+        <button className="btn-primary" onClick={()=>onSave(list)}>Save All</button>
+      </div>
+    </div>
+  )
+}
 
 export default function Resources({ store }) {
   const [tab, setTab] = useState('news')
@@ -1050,112 +1161,47 @@ export default function Resources({ store }) {
         </Modal>
       )}
       {orgModal === 'regional' && (
-        <Modal open title="Regional Director — West Texas" onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="md">
-          <div style={{display:'flex',flexDirection:'column',gap:14}}>
-            {orgEditDraft ? (
-              <>
-                {[['name','Name'],['role','Role'],['region','Region']].map(([k,label])=>(
-                  <div key={k}>
-                    <div style={{fontSize:12,fontWeight:700,color:'var(--gray-500)',marginBottom:4}}>{label}</div>
-                    <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={orgEditDraft[k]||''} onChange={e=>setOrgEditDraft(d=>({...d,[k]:e.target.value}))} />
-                  </div>
-                ))}
-                <div className="modal-actions">
-                  <button className="btn-secondary" onClick={()=>setOrgEditDraft(null)}>Cancel</button>
-                  <button className="btn-primary" onClick={()=>{ setOrgData(d=>({...d,regional:{...d.regional,...orgEditDraft}})); setOrgEditDraft(null) }}>Save Changes</button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="org-detail-row"><span className="org-detail-label">Name</span><span>{orgData.regional.name}</span></div>
-                <div className="org-detail-row"><span className="org-detail-label">Role</span><span>{orgData.regional.role}</span></div>
-                <div className="org-detail-row"><span className="org-detail-label">Region</span><span>{orgData.regional.region}</span></div>
-                <div className="modal-actions">
-                  <button className="btn-secondary" onClick={() => setOrgModal(false)}>Close</button>
-                  <button className="btn-primary" onClick={()=>setOrgEditDraft({...orgData.regional})}>Edit</button>
-                </div>
-              </>
-            )}
-          </div>
+        <Modal open title="Regional Director — West Texas" onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="lg">
+          <OrgPersonModal
+            data={orgData.regional}
+            fields={[['name','Full Name'],['role','Title/Role'],['region','Region'],['cell','Cell Phone'],['email','Email'],['homeAddress','Home Address'],['city','City'],['state','State'],['zip','ZIP'],['birthday','Birthday'],['spouseName','Spouse Name'],['emergencyContact','Emergency Contact'],['emergencyPhone','Emergency Phone'],['notes','Notes']]}
+            onSave={draft=>{ setOrgData(d=>({...d,regional:{...d.regional,...draft}})); setOrgEditDraft(null); setOrgModal(false) }}
+            onClose={()=>setOrgModal(false)}
+          />
         </Modal>
       )}
       {orgModal === 'area' && (
-        <Modal open title={`Area Director — ${directorName}`} onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="md">
-          <div style={{display:'flex',flexDirection:'column',gap:14}}>
-            {orgEditDraft ? (
-              <>
-                {[['name','Name'],['role','Role'],['area','Area']].map(([k,label])=>(
-                  <div key={k}>
-                    <div style={{fontSize:12,fontWeight:700,color:'var(--gray-500)',marginBottom:4}}>{label}</div>
-                    <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={orgEditDraft[k]||''} onChange={e=>setOrgEditDraft(d=>({...d,[k]:e.target.value}))} />
-                  </div>
-                ))}
-                <div className="modal-actions">
-                  <button className="btn-secondary" onClick={()=>setOrgEditDraft(null)}>Cancel</button>
-                  <button className="btn-primary" onClick={()=>{ setOrgData(d=>({...d,area:{...d.area,...orgEditDraft}})); setOrgEditDraft(null) }}>Save Changes</button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="org-detail-row"><span className="org-detail-label">Name</span><span>{orgData.area.name}</span></div>
-                <div className="org-detail-row"><span className="org-detail-label">Role</span><span>{orgData.area.role}</span></div>
-                <div className="org-detail-row"><span className="org-detail-label">Area</span><span>{orgData.area.area}</span></div>
-                <div className="org-detail-row"><span className="org-detail-label">Programs</span><span>YoungLife (HS) + WyldLife (MS)</span></div>
-                <div className="modal-actions">
-                  <button className="btn-secondary" onClick={() => setOrgModal(false)}>Close</button>
-                  <button className="btn-primary" onClick={()=>setOrgEditDraft({...orgData.area})}>Edit</button>
-                </div>
-              </>
-            )}
-          </div>
+        <Modal open title={`Area Director — ${directorName}`} onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="lg">
+          <OrgPersonModal
+            data={orgData.area}
+            fields={[['name','Full Name'],['role','Title/Role'],['area','Area'],['cell','Cell Phone'],['email','Email'],['homeAddress','Home Address'],['city','City'],['state','State'],['zip','ZIP'],['birthday','Birthday'],['spouseName','Spouse Name'],['emergencyContact','Emergency Contact'],['emergencyPhone','Emergency Phone'],['notes','Notes']]}
+            onSave={draft=>{ setOrgData(d=>({...d,area:{...d.area,...draft}})); setOrgEditDraft(null); setOrgModal(false) }}
+            onClose={()=>setOrgModal(false)}
+          />
         </Modal>
       )}
       {orgModal === 'groupleaders' && (
-        <Modal open title="Group Leader Teams" onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="md">
-          <div style={{display:'flex',flexDirection:'column',gap:12}}>
-            <p style={{fontSize:14,color:'var(--gray-600)'}}>Volunteer group leaders run weekly club nights, Campaigners, and provide relational ministry to students.</p>
-            {orgData.groupLeaders.map((g,i) => (
-              <div key={i} style={{display:'flex',gap:8,alignItems:'center',padding:'8px 0',borderBottom:'1px solid var(--gray-100)'}}>
-                <div style={{flex:1}}>
-                  <div style={{fontSize:13,fontWeight:700}}>{g.program}</div>
-                  <div style={{fontSize:12,color:'var(--gray-500)'}}>{g.role}</div>
-                </div>
-                <input type="number" min="0" max="99"
-                  style={{width:60,padding:'4px 8px',border:'1.5px solid var(--gray-200)',borderRadius:6,fontSize:13,textAlign:'center'}}
-                  value={g.count}
-                  onChange={e=>setOrgData(d=>({...d,groupLeaders:d.groupLeaders.map((gl,j)=>j===i?{...gl,count:parseInt(e.target.value)||0}:gl)}))}
-                />
-                <span style={{fontSize:12,color:'var(--gray-500)'}}>leaders</span>
-              </div>
-            ))}
-            <div className="modal-actions">
-              <button className="btn-primary" onClick={() => setOrgModal(false)}>Close</button>
-            </div>
-          </div>
+        <Modal open title="Club Leader Team" onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="xl">
+          <OrgListModal
+            items={orgData.groupLeaders}
+            itemLabel="Leader"
+            fields={[['name','Full Name'],['role','Role'],['program','Program (YoungLife / WyldLife)'],['cell','Cell Phone'],['email','Email'],['homeAddress','Home Address'],['city','City'],['state','State'],['zip','ZIP'],['birthday','Birthday'],['spouseName','Spouse Name'],['employer','Employer'],['emergencyContact','Emergency Contact'],['emergencyPhone','Emergency Phone'],['notes','Notes']]}
+            newItem={{ name:'', role:'Club Leader', program:'YoungLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' }}
+            onSave={items=>{ setOrgData(d=>({...d,groupLeaders:items})); setOrgModal(false) }}
+            onClose={()=>setOrgModal(false)}
+          />
         </Modal>
       )}
       {orgModal === 'studentleaders' && (
-        <Modal open title="Student Leaders in Training" onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="md">
-          <div style={{display:'flex',flexDirection:'column',gap:12}}>
-            <p style={{fontSize:14,color:'var(--gray-600)'}}>Campaigner student leaders are trained to bring their friends to Young Life and take ownership of the ministry on their campuses.</p>
-            {orgData.studentLeaders.map((s,i) => (
-              <div key={i} style={{display:'flex',gap:8,alignItems:'center',padding:'8px 0',borderBottom:'1px solid var(--gray-100)'}}>
-                <div style={{flex:1}}>
-                  <div style={{fontSize:13,fontWeight:700}}>{s.program}</div>
-                  <div style={{fontSize:12,color:'var(--gray-500)'}}>{s.role}</div>
-                </div>
-                <input type="number" min="0" max="99"
-                  style={{width:60,padding:'4px 8px',border:'1.5px solid var(--gray-200)',borderRadius:6,fontSize:13,textAlign:'center'}}
-                  value={s.count}
-                  onChange={e=>setOrgData(d=>({...d,studentLeaders:d.studentLeaders.map((sl,j)=>j===i?{...sl,count:parseInt(e.target.value)||0}:sl)}))}
-                />
-                <span style={{fontSize:12,color:'var(--gray-500)'}}>students</span>
-              </div>
-            ))}
-            <div className="modal-actions">
-              <button className="btn-primary" onClick={() => setOrgModal(false)}>Close</button>
-            </div>
-          </div>
+        <Modal open title="Student Leaders in Training" onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="xl">
+          <OrgListModal
+            items={orgData.studentLeaders}
+            itemLabel="Student"
+            fields={[['name','Full Name'],['role','Role'],['program','Program'],['school','School'],['grade','Grade'],['cell','Cell Phone'],['email','Email'],['parentName','Parent/Guardian Name'],['parentCell','Parent Cell'],['homeAddress','Home Address'],['city','City'],['state','State'],['zip','ZIP'],['notes','Notes']]}
+            newItem={{ name:'', role:'Student Leader in Training', program:'YoungLife', school:'', grade:'', cell:'', email:'', parentName:'', parentCell:'', homeAddress:'', city:'', state:'TX', zip:'', notes:'' }}
+            onSave={items=>{ setOrgData(d=>({...d,studentLeaders:items})); setOrgModal(false) }}
+            onClose={()=>setOrgModal(false)}
+          />
         </Modal>
       )}
     </div>

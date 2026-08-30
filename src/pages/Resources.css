@@ -1,5 +1,8 @@
 .resources-page { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
 
+.btn-red { background: #fee2e2; color: #dc2626; padding: 9px 20px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .15s; }
+.btn-red:hover { background: #fecaca; }
+
 .resources-header { display: flex; align-items: flex-start; justify-content: space-between; }
 .resources-title { font-size: 24px; font-weight: 800; color: var(--gray-900); margin: 0; }
 .resources-subtitle { font-size: 14px; color: var(--gray-500); margin: 4px 0 0; }
