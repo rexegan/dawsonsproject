@@ -48,6 +48,14 @@ export default function Header({ page, onMenuClick }) {
             </div>
           </div>
         )}
+        {page === 'resources' && (
+          <div className="header-verse header-verse--wrap">
+            <div className="header-verse-text">
+              "Ask and it will be given to you; seek and you will find;<br/>
+              knock and the door will be opened to you." <span className="header-verse-ref" style={{fontSize:'0.9em'}}>Matthew 7:7</span>
+            </div>
+          </div>
+        )}
         {page === 'reports' && (
           <div className="header-verse header-verse--wrap">
             <div className="header-verse-text">
