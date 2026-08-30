@@ -194,6 +194,62 @@ export const initialEvents = [
   { id:'e9', title:'Frontier Ranch — Departs',     type:'camp',        program:'YoungLife', date:'2026-07-14', time:'05:30', location:'Cleburne HS Parking Lot',                description:'Summer camp at Frontier Ranch, Buena Vista CO.',                 leaderId:'l2' },
   { id:'e10',title:'Crooked Creek — Departs',      type:'camp',        program:'WyldLife',  date:'2026-07-21', time:'06:00', location:'Burleson Centennial Parking Lot',        description:'WyldLife summer camp — Crooked Creek Ranch, CO.',                leaderId:'l3' },
   { id:'e11',title:'Golf Tournament Fundraiser',   type:'special',     program:'Both',      date:'2026-09-25', time:'07:30', location:'Cleburne Golf Links, Cleburne TX',        description:'Johnson County Young Life Annual Golf Tournament fundraiser. All proceeds support student camp scholarships and local programming.', leaderId:'l1' },
+
+  // ── 2025 Fall Semester — WyldLife ────────────────────────────────────────
+  { id:'e100', title:'WyldLife — First Club',              type:'club',        program:'WyldLife',  date:'2025-09-18', time:'18:30', location:'TBA', description:'First WyldLife Club of the fall semester!', leaderId:'l3' },
+  { id:'e101', title:'WyldLife — Club',                    type:'club',        program:'WyldLife',  date:'2025-10-02', time:'18:30', location:'TBA', description:'WyldLife Club night.', leaderId:'l3' },
+  { id:'e102', title:'WyldLife — Club',                    type:'club',        program:'WyldLife',  date:'2025-10-16', time:'18:30', location:'TBA', description:'WyldLife Club night.', leaderId:'l3' },
+  { id:'e103', title:'WyldLife — Club',                    type:'club',        program:'WyldLife',  date:'2025-10-30', time:'18:30', location:'TBA', description:'WyldLife Club night.', leaderId:'l3' },
+  { id:'e104', title:'WyldLife — Extended Club',           type:'club',        program:'WyldLife',  date:'2025-11-13', time:'18:30', location:'TBA', description:'WyldLife Extended Club night.', leaderId:'l3' },
+  { id:'e105', title:'Thanksgiving Bonfire',               type:'special',     program:'Both',      date:'2025-11-20', time:'19:00', location:'TBA', description:'Thanksgiving Bonfire — WyldLife & YoungLife together.', leaderId:'l1' },
+  { id:'e106', title:'WyldLife — Christmas Extended Club', type:'special',     program:'WyldLife',  date:'2025-12-04', time:'18:30', location:'TBA', description:'Christmas Extended Club — WyldLife.', leaderId:'l3' },
+
+  // ── 2025 Fall Semester — YoungLife Club ──────────────────────────────────
+  { id:'e110', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-09-14', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e111', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-09-21', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e112', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-09-28', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e113', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-10-05', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e114', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-10-19', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e115', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-02', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e116', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-09', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e117', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-16', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e118', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-30', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+
+  // ── 2025 Fall Semester — Campaigners ─────────────────────────────────────
+  { id:'e120', title:'Campaigners',                        type:'campaigners', program:'YoungLife', date:'2025-09-15', time:'16:30', location:'TBA', description:'YoungLife Campaigners Bible study.', leaderId:'l2' },
+  { id:'e121', title:'Campaigners',                        type:'campaigners', program:'YoungLife', date:'2025-09-22', time:'16:30', location:'TBA', description:'YoungLife Campaigners Bible study.', leaderId:'l2' },
+  { id:'e122', title:'Campaigners',                        type:'campaigners', program:'YoungLife', date:'2025-09-29', time:'16:30', location:'TBA', description:'YoungLife Campaigners Bible study.', leaderId:'l2' },
+  { id:'e123', title:'Campaigners',                        type:'campaigners', program:'YoungLife', date:'2025-10-06', time:'16:30', location:'TBA', description:'YoungLife Campaigners Bible study.', leaderId:'l2' },
+  { id:'e124', title:'Campaigners',                        type:'campaigners', program:'YoungLife', date:'2025-10-20', time:'16:30', location:'TBA', description:'YoungLife Campaigners Bible study.', leaderId:'l2' },
+  { id:'e125', title:'Campaigners',                        type:'campaigners', program:'YoungLife', date:'2025-10-27', time:'16:30', location:'TBA', description:'YoungLife Campaigners Bible study.', leaderId:'l2' },
+  { id:'e126', title:'Campaigners',                        type:'campaigners', program:'YoungLife', date:'2025-11-03', time:'16:30', location:'TBA', description:'YoungLife Campaigners Bible study.', leaderId:'l2' },
+  { id:'e127', title:'Campaigners',                        type:'campaigners', program:'YoungLife', date:'2025-11-10', time:'16:30', location:'TBA', description:'YoungLife Campaigners Bible study.', leaderId:'l2' },
+  { id:'e128', title:'Campaigners',                        type:'campaigners', program:'YoungLife', date:'2025-11-17', time:'16:30', location:'TBA', description:'YoungLife Campaigners Bible study.', leaderId:'l2' },
+  { id:'e129', title:'Campaigners',                        type:'campaigners', program:'YoungLife', date:'2025-12-01', time:'16:30', location:'TBA', description:'YoungLife Campaigners Bible study.', leaderId:'l2' },
+
+  // ── 2025 Fall Semester — Breakfast Bible Study ───────────────────────────
+  { id:'e130', title:'Breakfast Bible Study',              type:'campaigners', program:'YoungLife', date:'2025-09-16', time:'07:00', location:'TBA', description:'Breakfast Bible Study.', leaderId:'l2' },
+  { id:'e131', title:'Breakfast Bible Study',              type:'campaigners', program:'YoungLife', date:'2025-09-23', time:'07:00', location:'TBA', description:'Breakfast Bible Study.', leaderId:'l2' },
+  { id:'e132', title:'Breakfast Bible Study',              type:'campaigners', program:'YoungLife', date:'2025-09-30', time:'07:00', location:'TBA', description:'Breakfast Bible Study.', leaderId:'l2' },
+  { id:'e133', title:'Breakfast Bible Study',              type:'campaigners', program:'YoungLife', date:'2025-10-07', time:'07:00', location:'TBA', description:'Breakfast Bible Study.', leaderId:'l2' },
+  { id:'e134', title:'Breakfast Bible Study',              type:'campaigners', program:'YoungLife', date:'2025-10-21', time:'07:00', location:'TBA', description:'Breakfast Bible Study.', leaderId:'l2' },
+  { id:'e135', title:'Breakfast Bible Study',              type:'campaigners', program:'YoungLife', date:'2025-10-28', time:'07:00', location:'TBA', description:'Breakfast Bible Study.', leaderId:'l2' },
+  { id:'e136', title:'Breakfast Bible Study',              type:'campaigners', program:'YoungLife', date:'2025-11-04', time:'07:00', location:'TBA', description:'Breakfast Bible Study.', leaderId:'l2' },
+  { id:'e137', title:'Breakfast Bible Study',              type:'campaigners', program:'YoungLife', date:'2025-11-11', time:'07:00', location:'TBA', description:'Breakfast Bible Study.', leaderId:'l2' },
+  { id:'e138', title:'Breakfast Bible Study',              type:'campaigners', program:'YoungLife', date:'2025-11-18', time:'07:00', location:'TBA', description:'Breakfast Bible Study.', leaderId:'l2' },
+  { id:'e139', title:'Breakfast Bible Study',              type:'campaigners', program:'YoungLife', date:'2025-12-02', time:'07:00', location:'TBA', description:'Breakfast Bible Study.', leaderId:'l2' },
+
+  // ── 2025 Fall Semester — 5th Quarter ─────────────────────────────────────
+  { id:'e140', title:'5th Quarter',                        type:'special',     program:'YoungLife', date:'2025-09-11', time:'21:30', location:'TBA', description:'5th Quarter — post-game hangout for high schoolers.', leaderId:'l2' },
+  { id:'e141', title:'5th Quarter',                        type:'special',     program:'YoungLife', date:'2025-09-18', time:'21:30', location:'TBA', description:'5th Quarter — post-game hangout for high schoolers.', leaderId:'l2' },
+  { id:'e142', title:'5th Quarter',                        type:'special',     program:'YoungLife', date:'2025-10-09', time:'21:30', location:'TBA', description:'5th Quarter — post-game hangout for high schoolers.', leaderId:'l2' },
+  { id:'e143', title:'5th Quarter',                        type:'special',     program:'YoungLife', date:'2025-10-16', time:'21:30', location:'TBA', description:'5th Quarter — post-game hangout for high schoolers.', leaderId:'l2' },
+  { id:'e144', title:'5th Quarter',                        type:'special',     program:'YoungLife', date:'2025-10-30', time:'21:30', location:'TBA', description:'5th Quarter — post-game hangout for high schoolers.', leaderId:'l2' },
+
+  // ── 2025 Fall Semester — Extra Events ────────────────────────────────────
+  { id:'e150', title:'Golf Tournament',                    type:'special',     program:'Both',      date:'2025-09-25', time:'07:30', location:'Cleburne Golf Links, Cleburne TX', description:'Annual Golf Tournament fundraiser. All proceeds support student camp scholarships.', leaderId:'l1' },
+  { id:'e151', title:'Instagram Scavenger Hunt',           type:'special',     program:'YoungLife', date:'2025-10-26', time:'14:00', location:'TBA', description:'Instagram Scavenger Hunt — all students welcome!', leaderId:'l2' },
+  { id:'e152', title:'Mr. Christmas Tree / Banquet',       type:'special',     program:'Both',      date:'2025-12-07', time:'18:00', location:'TBA', description:'Mr. Christmas Tree & Year-End Banquet — celebration for all students and leaders.', leaderId:'l1' },
 ];
 
 export const initialAttendance = [
