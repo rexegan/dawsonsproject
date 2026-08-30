@@ -8,6 +8,10 @@ const TITLES = {
   events: 'Events & Calendar',
   leaders: 'Our Leaders',
   reports: 'Reports',
+  finances: 'Finances',
+  resources: 'Resources',
+  parentconnect: 'Parent / Guardian Connect',
+  messaging: 'Messaging & Marketing',
   settings: 'Settings',
 }
 
