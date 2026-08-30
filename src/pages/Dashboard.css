@@ -121,8 +121,16 @@
 .dd-row {
   display: flex; align-items: flex-start; gap: 12px;
   padding: 10px 0; border-bottom: 1px solid var(--gray-100);
+  width: 100%;
 }
 .dd-row:last-child { border-bottom: none; }
+.dd-row--clickable {
+  cursor: pointer; border-radius: 8px; padding: 10px 8px;
+  margin: 0 -8px; transition: background .15s;
+  text-align: left;
+}
+.dd-row--clickable:hover { background: var(--gray-50); }
+.dd-row--clickable:hover .dd-avatar { box-shadow: 0 0 0 3px rgba(27,79,163,.18); }
 .dd-avatar {
   width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;

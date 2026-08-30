@@ -11,6 +11,7 @@ function getBirthdayISO(s) {
 export default function Dashboard({ store, setPage }) {
   const { students, events, followUps, attendance, fundraisers, committeeMeetings } = store
   const [tab, setTab] = useState('overview')
+  const [viewMeeting, setViewMeeting] = useState(null)
 
   const today = new Date()
   const todayStr = today.toISOString().slice(0,10)
@@ -207,11 +208,11 @@ export default function Dashboard({ store, setPage }) {
             </div>
             {upcomingBirthdays.length === 0 && <p className="empty-msg">No birthdays in the next 30 days</p>}
             {upcomingBirthdays.map(({ student: s, diff, month, day, year }) => (
-              <div key={s.id} className="dd-row">
+              <button key={s.id} className="dd-row dd-row--clickable" onClick={() => setPage('students')}>
                 <div className="dd-avatar" style={{background: s.program === 'WyldLife' ? '#3AAB35' : '#1B4FA3'}}>
                   {s.firstName[0]}{s.lastName[0]}
                 </div>
-                <div style={{flex:1}}>
+                <div style={{flex:1,textAlign:'left'}}>
                   <div style={{fontWeight:700,fontSize:14}}>{s.firstName} {s.lastName}</div>
                   <div style={{fontSize:12,color:'var(--gray-500)'}}>{MONTHS[month-1]} {day}, {year} · {s.program} · {s.school}</div>
                 </div>
@@ -221,7 +222,7 @@ export default function Dashboard({ store, setPage }) {
                   </div>
                   <div style={{fontSize:11,color:'var(--gray-400)'}}>{MONTHS_SHORT[month-1]} {day}</div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
 
@@ -233,14 +234,14 @@ export default function Dashboard({ store, setPage }) {
             </div>
             {upcomingEvents.length === 0 && <p className="empty-msg">No events in the next 30 days</p>}
             {upcomingEvents.map(e => (
-              <div key={e.id} className="dd-row">
+              <button key={e.id} className="dd-row dd-row--clickable" onClick={() => setPage('events')}>
                 <div className="dd-event-dot" style={{background: TYPE_COLOR[e.type]||'#999'}} />
-                <div style={{flex:1}}>
+                <div style={{flex:1,textAlign:'left'}}>
                   <div style={{fontWeight:700,fontSize:14}}>{TYPE_EMOJI[e.type]} {e.title}</div>
                   <div style={{fontSize:12,color:'var(--gray-500)'}}>{fmtDate(e.date)} · {e.time}</div>
                   {e.location && <div style={{fontSize:11,color:'var(--gray-400)'}}>{e.location}</div>}
                 </div>
-              </div>
+              </button>
             ))}
           </div>
 
@@ -263,8 +264,8 @@ export default function Dashboard({ store, setPage }) {
             {activeFundraisers.map(f => {
               const fp = f.goal ? Math.min(100, Math.round(Number(f.raised)/Number(f.goal)*100)) : 0
               return (
-                <div key={f.id} className="dd-row" style={{alignItems:'center'}}>
-                  <div style={{flex:1}}>
+                <button key={f.id} className="dd-row dd-row--clickable" style={{alignItems:'center'}} onClick={() => setPage('finances')}>
+                  <div style={{flex:1,textAlign:'left'}}>
                     <div style={{fontWeight:700,fontSize:13}}>{f.name}</div>
                     <div style={{fontSize:11,color:'var(--gray-500)'}}>{fmt$(f.raised)} raised of {fmt$(f.goal)}</div>
                   </div>
@@ -274,7 +275,7 @@ export default function Dashboard({ store, setPage }) {
                       <div style={{background: fp>=75?'#3AAB35': fp>=40?'#F3C546':'#1B4FA3',height:'100%',width:fp+'%',borderRadius:999}} />
                     </div>
                   </div>
-                </div>
+                </button>
               )
             })}
             {activeFundraisers.length === 0 && <p className="empty-msg">No active fundraisers</p>}
@@ -288,18 +289,57 @@ export default function Dashboard({ store, setPage }) {
             </div>
             {upcomingCommittee.length === 0 && <p className="empty-msg">No upcoming committee meetings</p>}
             {upcomingCommittee.map(m => (
-              <div key={m.id} className="dd-row">
+              <button key={m.id} className="dd-row dd-row--clickable" onClick={() => setViewMeeting(m)}>
                 <div className="dd-cm-dot" />
-                <div style={{flex:1}}>
+                <div style={{flex:1,textAlign:'left'}}>
                   <div style={{fontWeight:700,fontSize:14}}>{m.title}</div>
                   <div style={{fontSize:12,color:'var(--gray-500)'}}>{fmtDate(m.date)} · {m.time}</div>
                   <div style={{fontSize:12,color:'var(--gray-600)'}}>{m.location}</div>
                   {m.notes && <div style={{fontSize:11,color:'var(--gray-400)',marginTop:2,fontStyle:'italic'}}>{m.notes}</div>}
                 </div>
-              </div>
+              </button>
             ))}
           </div>
 
+        </div>
+      )}
+
+      {/* Committee meeting detail modal */}
+      {viewMeeting && (
+        <div className="modal-overlay" onClick={() => setViewMeeting(null)}>
+          <div className="modal modal--md" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>🤝 {viewMeeting.title}</h2>
+              <button className="modal-close" onClick={() => setViewMeeting(null)}>✕</button>
+            </div>
+            <div className="modal-body" style={{display:'flex',flexDirection:'column',gap:14}}>
+              <div style={{display:'flex',gap:24,flexWrap:'wrap'}}>
+                <div>
+                  <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px'}}>Date</div>
+                  <div style={{fontWeight:700,fontSize:15,marginTop:2}}>{fmtDate(viewMeeting.date)}</div>
+                </div>
+                <div>
+                  <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px'}}>Time</div>
+                  <div style={{fontWeight:700,fontSize:15,marginTop:2}}>{viewMeeting.time}</div>
+                </div>
+              </div>
+              <div>
+                <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px'}}>Location</div>
+                <div style={{fontWeight:600,fontSize:14,marginTop:2}}>{viewMeeting.location}</div>
+              </div>
+              {viewMeeting.notes && (
+                <div>
+                  <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:6}}>Agenda / Notes</div>
+                  <div style={{background:'var(--gray-50)',border:'1px solid var(--gray-200)',borderRadius:8,padding:'12px 14px',fontSize:14,lineHeight:1.6,color:'var(--gray-700)'}}>
+                    {viewMeeting.notes}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-secondary" onClick={() => setViewMeeting(null)}>Close</button>
+            </div>
+          </div>
         </div>
       )}
     </div>

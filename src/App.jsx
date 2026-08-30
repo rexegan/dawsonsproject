@@ -14,10 +14,11 @@ import Finances from './pages/Finances'
 import Resources from './pages/Resources'
 import ParentConnect from './pages/ParentConnect'
 import Messaging from './pages/Messaging'
+import YLStory from './pages/YLStory'
 import Settings from './pages/Settings'
 import './App.css'
 
-const PAGES = { dashboard: Dashboard, students: Students, attendance: Attendance, followup: FollowUp, events: Events, leaders: Leaders, reports: Reports, finances: Finances, resources: Resources, parentconnect: ParentConnect, messaging: Messaging, settings: Settings }
+const PAGES = { dashboard: Dashboard, students: Students, attendance: Attendance, followup: FollowUp, events: Events, leaders: Leaders, reports: Reports, finances: Finances, resources: Resources, parentconnect: ParentConnect, messaging: Messaging, ylstory: YLStory, settings: Settings }
 
 export default function App() {
   const [page, setPage] = useState('dashboard')
