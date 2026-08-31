@@ -112,6 +112,7 @@ export default function Leaders({ store }) {
           {[
             { name: 'Monica Farum', role: 'Committee Member', phone: '(817) 247-7495', email: 'monicafaram@gmail.com', initials: 'MF', color: '#854883' },
             { name: 'Rex Russell', role: 'Committee Chair', phone: '(817) 689-4560', email: 'rex@russellwg.com', initials: 'RR', color: '#1B4FA3' },
+            { name: 'Brenda Henderson', role: 'Committee Member', phone: '(817) 781-3628', email: 'auntb22@sbcglobal.net', initials: 'BH', color: '#0891b2' },
           ].map(m => (
             <div key={m.name} className="committee-card">
               <div className="leader-avatar-lg" style={{background:m.color,width:44,height:44,fontSize:15,flexShrink:0}}>{m.initials}</div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { fmtTime } from '../utils/time'
 import './Attendance.css'
 
 function fmtDate(iso) {
@@ -118,7 +119,7 @@ export default function Attendance({ store }) {
               <div className="att-event-banner">
                 <div>
                   <div className="att-event-title">{ev.title}</div>
-                  <div className="att-event-meta">{fmtDate(ev.date)} · {ev.time} · {ev.location}</div>
+                  <div className="att-event-meta">{fmtDate(ev.date)} · {fmtTime(ev.time)} · {ev.location}</div>
                 </div>
                 <div className="att-counts">
                   <span className="att-count att-count--present">✓ {presentCount}</span>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import Modal from '../components/Modal'
 import { formatPhone } from '../utils/phone'
+import { fmtTime } from '../utils/time'
 import './Events.css'
 import './Planning.css'
 
@@ -16,7 +17,6 @@ const PLAN_CATEGORIES = [
   { id: 'camp',        label: 'Camp',           color: '#f97316', bg: '#fff7ed', icon: '⛺' },
   { id: 'outreach',    label: 'Outreach',       color: '#0f766e', bg: '#f0fdfa', icon: '🎯' },
   { id: 'admin',       label: 'Admin',          color: '#6b7280', bg: '#f9fafb', icon: '📋' },
-  { id: 'other',       label: 'Other',          color: '#64748b', bg: '#f8fafc', icon: '💡' },
 ]
 const PLAN_STATUSES = [
   { id: 'idea',     label: 'Idea',        color: '#6b7280', bg: '#f3f4f6' },
@@ -239,6 +239,9 @@ export default function Events({ store, openEventId }) {
         <button className={`events-section-tab ${section==='planning'?'events-section-tab--active':''}`} onClick={() => setSection('planning')}>
           📋 Planning
         </button>
+        <button className={`events-section-tab ${section==='fundraiser'?'events-section-tab--active':''}`} onClick={() => setSection('fundraiser')}>
+          💰 Fundraiser
+        </button>
       </div>
 
       {/* ═══════════ EVENTS SECTION ═══════════ */}
@@ -258,11 +261,6 @@ export default function Events({ store, openEventId }) {
           </select>
         </div>
         <div style={{display:'flex',gap:8}}>
-          <select className="filter-select" value={sponsorEvent} onChange={e=>setSponsorEvent(e.target.value)} style={{fontWeight:600}}>
-            <option value="">🤝 Event Sponsors</option>
-            <option value="all">— All Events —</option>
-            {SPONSOR_EVENTS.map(ev=><option key={ev.id} value={ev.id}>{ev.label}</option>)}
-          </select>
           <button className="btn-primary" onClick={openAdd}>+ Add Event</button>
         </div>
       </div>
@@ -286,7 +284,7 @@ export default function Events({ store, openEventId }) {
               <div className="event-card-body">
                 <h4 className="event-card-title">{e.title}</h4>
                 <div className="event-card-meta">
-                  <span>🕐 {e.time}</span>
+                  <span>🕐 {fmtTime(e.time)}</span>
                   <span>📍 {e.location}</span>
                   {leader && <span>👤 {leader.firstName} {leader.lastName}</span>}
                 </div>
@@ -370,7 +368,7 @@ export default function Events({ store, openEventId }) {
             <div className="event-detail-banner" style={{background: TYPE_COLOR[viewEvent.type]}}>
               <div className="event-detail-type">{TYPE_LABEL[viewEvent.type]}</div>
               <div className="event-detail-title">{viewEvent.title}</div>
-              <div className="event-detail-sub">{fmtDate(viewEvent.date)} · {viewEvent.time}</div>
+              <div className="event-detail-sub">{fmtDate(viewEvent.date)} · {fmtTime(viewEvent.time)}</div>
             </div>
             <div className="event-detail-body">
               <div className="event-detail-row"><span>📍</span>{viewEvent.location}</div>
@@ -427,151 +425,6 @@ export default function Events({ store, openEventId }) {
         </Modal>
       )}
 
-      {/* EVENT SPONSORS MODAL */}
-      {sponsorEvent && (
-        <Modal open title={sponsorEvent === 'all' ? 'All Event Sponsors' : `${SPONSOR_EVENTS.find(e=>e.id===sponsorEvent)?.label} — Sponsors`} onClose={()=>setSponsorEvent('')} size="xl">
-          {(() => {
-            const eventList = sponsorEvent === 'all' ? SPONSOR_EVENTS : SPONSOR_EVENTS.filter(e=>e.id===sponsorEvent)
-            return (
-              <div style={{display:'flex',flexDirection:'column',gap:20}}>
-                {eventList.map(ev => {
-                  const evSponsors = sponsors[ev.id] || []
-                  const total = evSponsors.reduce((s,sp)=>s+(Number(sp.amount)||0),0)
-                  const paid = evSponsors.filter(sp=>sp.paid).reduce((s,sp)=>s+(Number(sp.amount)||0),0)
-                  return (
-                    <div key={ev.id}>
-                      {sponsorEvent==='all' && <div style={{fontWeight:800,fontSize:16,color:'var(--gray-900)',marginBottom:8,paddingBottom:6,borderBottom:'2px solid #EEF3FB'}}>{ev.label}</div>}
-                      <div style={{display:'flex',gap:12,marginBottom:12,flexWrap:'wrap'}}>
-                        <div style={{background:'#EEF3FB',borderRadius:8,padding:'8px 14px',fontSize:13}}>
-                          <span style={{fontWeight:700,color:'#1B4FA3'}}>{evSponsors.length}</span><span style={{color:'var(--gray-600)'}}> sponsors</span>
-                        </div>
-                        <div style={{background:'#EDFAEC',borderRadius:8,padding:'8px 14px',fontSize:13}}>
-                          <span style={{fontWeight:700,color:'#3AAB35'}}>${paid.toLocaleString()}</span><span style={{color:'var(--gray-600)'}}> collected</span>
-                        </div>
-                        <div style={{background:'#fef3c7',borderRadius:8,padding:'8px 14px',fontSize:13}}>
-                          <span style={{fontWeight:700,color:'#d97706'}}>${(total-paid).toLocaleString()}</span><span style={{color:'var(--gray-600)'}}> outstanding</span>
-                        </div>
-                        <button className="btn-primary" style={{fontSize:12,padding:'6px 14px',marginLeft:'auto'}} onClick={()=>{ setSponsorDraft({name:'',contact:'',phone:'',email:'',tier:SPONSOR_TIERS[ev.id]?.[0]||'',amount:'',paid:false,notes:''}); setAddingSponsor(ev.id) }}>+ Add Sponsor</button>
-                      </div>
-                      <div style={{display:'flex',flexDirection:'column',gap:8}}>
-                        {evSponsors.length === 0 && <div style={{color:'var(--gray-400)',fontSize:13}}>No sponsors yet.</div>}
-                        {evSponsors.map(sp => (
-                          <div key={sp.id} style={{background:'white',border:'1px solid var(--gray-100)',borderRadius:10,padding:'12px 14px',display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
-                            <div style={{flex:1,minWidth:160}}>
-                              <div style={{fontWeight:700,fontSize:14,color:'var(--gray-900)'}}>{sp.name}</div>
-                              <div style={{fontSize:12,color:'var(--gray-500)'}}>{sp.contact}{sp.phone ? ` · ${formatPhone(sp.phone)}` : ''}</div>
-                              {sp.notes && <div style={{fontSize:11,color:'var(--gray-400)',fontStyle:'italic',marginTop:2}}>{sp.notes}</div>}
-                            </div>
-                            <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:4}}>
-                              <span style={{background:'#EEF3FB',color:'#1B4FA3',padding:'2px 8px',borderRadius:20,fontSize:11,fontWeight:700}}>{sp.tier}</span>
-                              {Number(sp.amount)>0 && <span style={{fontWeight:800,fontSize:14,color:'var(--gray-800)'}}>${Number(sp.amount).toLocaleString()}</span>}
-                              <span style={{padding:'2px 8px',borderRadius:20,fontSize:11,fontWeight:700,background:sp.paid?'#EDFAEC':'#fee2e2',color:sp.paid?'#3AAB35':'#dc2626'}}>{sp.paid?'✓ Paid':'⏳ Outstanding'}</span>
-                            </div>
-                            <button style={{fontSize:11,padding:'4px 10px',border:'1px solid var(--gray-200)',borderRadius:6,background:'white',cursor:'pointer',color:'var(--gray-600)'}} onClick={()=>{ setSponsorDraft({...sp}); setEditSponsor({eventId:ev.id,sponsorId:sp.id}) }}>✏️ Edit</button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )
-                })}
-                <div className="modal-actions">
-                  <button className="btn-secondary" onClick={()=>setSponsorEvent('')}>Close</button>
-                </div>
-              </div>
-            )
-          })()}
-        </Modal>
-      )}
-
-      {/* ADD SPONSOR MODAL */}
-      {addingSponsor && (
-        <Modal open title={`Add Sponsor — ${SPONSOR_EVENTS.find(e=>e.id===addingSponsor)?.label}`} onClose={()=>setAddingSponsor(false)} size="md">
-          <div style={{display:'flex',flexDirection:'column',gap:12}}>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-              {[['Organization / Name','name'],['Contact Person','contact'],['Phone','phone'],['Email','email']].map(([label,key])=>(
-                <div key={key} style={key==='name'?{gridColumn:'1/-1'}:{}}>
-                  <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>{label}</div>
-                  <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={sponsorDraft[key]||''} onChange={e=>setSponsorDraft(d=>({...d,[key]:key==='phone'?formatPhone(e.target.value):e.target.value}))}/>
-                </div>
-              ))}
-            </div>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-              <div>
-                <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Tier / Level</div>
-                <select className="settings-input" value={sponsorDraft.tier} onChange={e=>setSponsorDraft(d=>({...d,tier:e.target.value}))}>
-                  {(SPONSOR_TIERS[addingSponsor]||[]).map(t=><option key={t}>{t}</option>)}
-                </select>
-              </div>
-              <div>
-                <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Amount ($)</div>
-                <input className="settings-input" type="number" style={{width:'100%',boxSizing:'border-box'}} value={sponsorDraft.amount} onChange={e=>setSponsorDraft(d=>({...d,amount:e.target.value}))}/>
-              </div>
-            </div>
-            <div style={{display:'flex',alignItems:'center',gap:10}}>
-              <input type="checkbox" id="paid-cb" checked={!!sponsorDraft.paid} onChange={e=>setSponsorDraft(d=>({...d,paid:e.target.checked}))} style={{width:16,height:16,cursor:'pointer'}}/>
-              <label htmlFor="paid-cb" style={{fontSize:13,fontWeight:600,color:'var(--gray-700)',cursor:'pointer'}}>Payment received</label>
-            </div>
-            <div>
-              <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Notes</div>
-              <textarea className="settings-input" rows={2} style={{width:'100%',boxSizing:'border-box',resize:'vertical'}} value={sponsorDraft.notes||''} onChange={e=>setSponsorDraft(d=>({...d,notes:e.target.value}))}/>
-            </div>
-            <div className="modal-actions">
-              <button className="btn-secondary" onClick={()=>setAddingSponsor(false)}>Cancel</button>
-              <button className="btn-primary" onClick={()=>{
-                if(!sponsorDraft.name.trim()) return
-                const newSp = {...sponsorDraft, id:'sp'+Date.now(), amount:Number(sponsorDraft.amount)||0}
-                setSponsors(s=>({...s,[addingSponsor]:[...(s[addingSponsor]||[]),newSp]}))
-                setAddingSponsor(false)
-              }}>Add Sponsor</button>
-            </div>
-          </div>
-        </Modal>
-      )}
-
-      {/* EDIT SPONSOR MODAL */}
-      {section === 'events' && editSponsor && (
-        <Modal open title="Edit Sponsor" onClose={()=>setEditSponsor(null)} size="md">
-          <div style={{display:'flex',flexDirection:'column',gap:12}}>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-              {[['Organization / Name','name'],['Contact Person','contact'],['Phone','phone'],['Email','email']].map(([label,key])=>(
-                <div key={key} style={key==='name'?{gridColumn:'1/-1'}:{}}>
-                  <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>{label}</div>
-                  <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={sponsorDraft[key]||''} onChange={e=>setSponsorDraft(d=>({...d,[key]:key==='phone'?formatPhone(e.target.value):e.target.value}))}/>
-                </div>
-              ))}
-            </div>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-              <div>
-                <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Tier / Level</div>
-                <select className="settings-input" value={sponsorDraft.tier} onChange={e=>setSponsorDraft(d=>({...d,tier:e.target.value}))}>
-                  {(SPONSOR_TIERS[editSponsor.eventId]||[]).map(t=><option key={t}>{t}</option>)}
-                  {!(SPONSOR_TIERS[editSponsor.eventId]||[]).includes(sponsorDraft.tier) && <option>{sponsorDraft.tier}</option>}
-                </select>
-              </div>
-              <div>
-                <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Amount ($)</div>
-                <input className="settings-input" type="number" style={{width:'100%',boxSizing:'border-box'}} value={sponsorDraft.amount} onChange={e=>setSponsorDraft(d=>({...d,amount:e.target.value}))}/>
-              </div>
-            </div>
-            <div style={{display:'flex',alignItems:'center',gap:10}}>
-              <input type="checkbox" id="edit-paid-cb" checked={!!sponsorDraft.paid} onChange={e=>setSponsorDraft(d=>({...d,paid:e.target.checked}))} style={{width:16,height:16,cursor:'pointer'}}/>
-              <label htmlFor="edit-paid-cb" style={{fontSize:13,fontWeight:600,color:'var(--gray-700)',cursor:'pointer'}}>Payment received</label>
-            </div>
-            <div>
-              <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Notes</div>
-              <textarea className="settings-input" rows={2} style={{width:'100%',boxSizing:'border-box',resize:'vertical'}} value={sponsorDraft.notes||''} onChange={e=>setSponsorDraft(d=>({...d,notes:e.target.value}))}/>
-            </div>
-            <div className="modal-actions">
-              <button className="btn-secondary" style={{marginRight:'auto',color:'#dc2626',borderColor:'#fee2e2'}} onClick={()=>{ setSponsors(s=>({...s,[editSponsor.eventId]:s[editSponsor.eventId].filter(sp=>sp.id!==editSponsor.sponsorId)})); setEditSponsor(null) }}>Remove</button>
-              <button className="btn-secondary" onClick={()=>setEditSponsor(null)}>Cancel</button>
-              <button className="btn-primary" onClick={()=>{
-                setSponsors(s=>({...s,[editSponsor.eventId]:s[editSponsor.eventId].map(sp=>sp.id===editSponsor.sponsorId?{...sponsorDraft,amount:Number(sponsorDraft.amount)||0}:sp)}))
-                setEditSponsor(null)
-              }}>Save Changes</button>
-            </div>
-          </div>
-        </Modal>
-      )}
       </> }
 
       {/* ═══════════ PLANNING SECTION ═══════════ */}
@@ -775,6 +628,141 @@ export default function Events({ store, openEventId }) {
               footer={<><button className="btn btn-secondary" onClick={() => { setPlanEditOpen(false); setPlanEditDraft(null) }}>Cancel</button><button className="btn-primary" onClick={planSaveEdit}>Save Changes</button></>}
             >
               <PlanForm draft={planEditDraft} setDraft={setPlanEditDraft} />
+            </Modal>
+          )}
+        </div>
+      )}
+
+      {/* ═══════════ FUNDRAISER SECTION ═══════════ */}
+      {section === 'fundraiser' && (
+        <div className="fundraiser-section">
+          {SPONSOR_EVENTS.map(ev => {
+            const evSponsors = sponsors[ev.id] || []
+            const total = evSponsors.reduce((s,sp)=>s+(Number(sp.amount)||0),0)
+            const paid  = evSponsors.filter(sp=>sp.paid).reduce((s,sp)=>s+(Number(sp.amount)||0),0)
+            return (
+              <div key={ev.id} className="fundraiser-event-block">
+                <div className="fundraiser-event-header">
+                  <div className="fundraiser-event-title">{ev.label}</div>
+                  <div className="fundraiser-event-summary">
+                    <span className="fundraiser-stat fundraiser-stat--blue"><strong>{evSponsors.length}</strong> sponsors</span>
+                    <span className="fundraiser-stat fundraiser-stat--green"><strong>${paid.toLocaleString()}</strong> collected</span>
+                    <span className="fundraiser-stat fundraiser-stat--amber"><strong>${(total-paid).toLocaleString()}</strong> outstanding</span>
+                    <button className="btn-primary" style={{fontSize:12,padding:'6px 14px'}}
+                      onClick={() => { setSponsorDraft({name:'',contact:'',phone:'',email:'',tier:SPONSOR_TIERS[ev.id]?.[0]||'',amount:'',paid:false,notes:''}); setAddingSponsor(ev.id) }}>
+                      + Add Sponsor
+                    </button>
+                  </div>
+                </div>
+                <div className="fundraiser-sponsors-list">
+                  {evSponsors.length === 0 && <div style={{color:'var(--gray-400)',fontSize:13,padding:'12px 0'}}>No sponsors yet. Click "+ Add Sponsor" to get started.</div>}
+                  {evSponsors.map(sp => (
+                    <div key={sp.id} className="fundraiser-sponsor-row">
+                      <div className="fundraiser-sponsor-info">
+                        <div style={{fontWeight:700,fontSize:14,color:'var(--gray-900)'}}>{sp.name}</div>
+                        <div style={{fontSize:12,color:'var(--gray-500)'}}>{sp.contact}{sp.phone ? ` · ${formatPhone(sp.phone)}` : ''}</div>
+                        {sp.notes && <div style={{fontSize:11,color:'var(--gray-400)',fontStyle:'italic',marginTop:2}}>{sp.notes}</div>}
+                      </div>
+                      <div className="fundraiser-sponsor-right">
+                        <span className="fundraiser-tier-badge">{sp.tier}</span>
+                        {Number(sp.amount)>0 && <span style={{fontWeight:800,fontSize:14,color:'var(--gray-800)'}}>${Number(sp.amount).toLocaleString()}</span>}
+                        <span style={{padding:'2px 8px',borderRadius:20,fontSize:11,fontWeight:700,background:sp.paid?'#EDFAEC':'#fee2e2',color:sp.paid?'#3AAB35':'#dc2626'}}>{sp.paid?'✓ Paid':'⏳ Outstanding'}</span>
+                        <button className="fundraiser-edit-btn" onClick={() => { setSponsorDraft({...sp}); setEditSponsor({eventId:ev.id,sponsorId:sp.id}) }}>✏️ Edit</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+
+          {/* Add sponsor modal */}
+          {addingSponsor && (
+            <Modal title={`Add Sponsor — ${SPONSOR_EVENTS.find(e=>e.id===addingSponsor)?.label}`} onClose={()=>setAddingSponsor(false)} size="md">
+              <div style={{display:'flex',flexDirection:'column',gap:12}}>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+                  {[['Organization / Name','name'],['Contact Person','contact'],['Phone','phone'],['Email','email']].map(([label,key])=>(
+                    <div key={key} style={key==='name'?{gridColumn:'1/-1'}:{}}>
+                      <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>{label}</div>
+                      <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={sponsorDraft[key]||''} onChange={e=>setSponsorDraft(d=>({...d,[key]:key==='phone'?formatPhone(e.target.value):e.target.value}))}/>
+                    </div>
+                  ))}
+                </div>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+                  <div>
+                    <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Tier / Level</div>
+                    <select className="settings-input" value={sponsorDraft.tier} onChange={e=>setSponsorDraft(d=>({...d,tier:e.target.value}))}>
+                      {(SPONSOR_TIERS[addingSponsor]||[]).map(t=><option key={t}>{t}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Amount ($)</div>
+                    <input className="settings-input" type="number" style={{width:'100%',boxSizing:'border-box'}} value={sponsorDraft.amount} onChange={e=>setSponsorDraft(d=>({...d,amount:e.target.value}))}/>
+                  </div>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:10}}>
+                  <input type="checkbox" id="fs-paid-cb" checked={!!sponsorDraft.paid} onChange={e=>setSponsorDraft(d=>({...d,paid:e.target.checked}))} style={{width:16,height:16,cursor:'pointer'}}/>
+                  <label htmlFor="fs-paid-cb" style={{fontSize:13,fontWeight:600,color:'var(--gray-700)',cursor:'pointer'}}>Payment received</label>
+                </div>
+                <div>
+                  <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Notes</div>
+                  <textarea className="settings-input" rows={2} style={{width:'100%',boxSizing:'border-box',resize:'vertical'}} value={sponsorDraft.notes||''} onChange={e=>setSponsorDraft(d=>({...d,notes:e.target.value}))}/>
+                </div>
+                <div className="modal-actions">
+                  <button className="btn-secondary" onClick={()=>setAddingSponsor(false)}>Cancel</button>
+                  <button className="btn-primary" onClick={()=>{
+                    if(!sponsorDraft.name.trim()) return
+                    const newSp = {...sponsorDraft, id:'sp'+Date.now(), amount:Number(sponsorDraft.amount)||0}
+                    setSponsors(s=>({...s,[addingSponsor]:[...(s[addingSponsor]||[]),newSp]}))
+                    setAddingSponsor(false)
+                  }}>Add Sponsor</button>
+                </div>
+              </div>
+            </Modal>
+          )}
+
+          {/* Edit sponsor modal */}
+          {editSponsor && (
+            <Modal title="Edit Sponsor" onClose={()=>setEditSponsor(null)} size="md">
+              <div style={{display:'flex',flexDirection:'column',gap:12}}>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+                  {[['Organization / Name','name'],['Contact Person','contact'],['Phone','phone'],['Email','email']].map(([label,key])=>(
+                    <div key={key} style={key==='name'?{gridColumn:'1/-1'}:{}}>
+                      <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>{label}</div>
+                      <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={sponsorDraft[key]||''} onChange={e=>setSponsorDraft(d=>({...d,[key]:key==='phone'?formatPhone(e.target.value):e.target.value}))}/>
+                    </div>
+                  ))}
+                </div>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+                  <div>
+                    <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Tier / Level</div>
+                    <select className="settings-input" value={sponsorDraft.tier} onChange={e=>setSponsorDraft(d=>({...d,tier:e.target.value}))}>
+                      {(SPONSOR_TIERS[editSponsor.eventId]||[]).map(t=><option key={t}>{t}</option>)}
+                      {!(SPONSOR_TIERS[editSponsor.eventId]||[]).includes(sponsorDraft.tier) && <option>{sponsorDraft.tier}</option>}
+                    </select>
+                  </div>
+                  <div>
+                    <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Amount ($)</div>
+                    <input className="settings-input" type="number" style={{width:'100%',boxSizing:'border-box'}} value={sponsorDraft.amount} onChange={e=>setSponsorDraft(d=>({...d,amount:e.target.value}))}/>
+                  </div>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:10}}>
+                  <input type="checkbox" id="fs-edit-paid-cb" checked={!!sponsorDraft.paid} onChange={e=>setSponsorDraft(d=>({...d,paid:e.target.checked}))} style={{width:16,height:16,cursor:'pointer'}}/>
+                  <label htmlFor="fs-edit-paid-cb" style={{fontSize:13,fontWeight:600,color:'var(--gray-700)',cursor:'pointer'}}>Payment received</label>
+                </div>
+                <div>
+                  <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Notes</div>
+                  <textarea className="settings-input" rows={2} style={{width:'100%',boxSizing:'border-box',resize:'vertical'}} value={sponsorDraft.notes||''} onChange={e=>setSponsorDraft(d=>({...d,notes:e.target.value}))}/>
+                </div>
+                <div className="modal-actions">
+                  <button className="btn-secondary" style={{marginRight:'auto',color:'#dc2626',borderColor:'#fee2e2'}} onClick={()=>{ setSponsors(s=>({...s,[editSponsor.eventId]:s[editSponsor.eventId].filter(sp=>sp.id!==editSponsor.sponsorId)})); setEditSponsor(null) }}>Remove</button>
+                  <button className="btn-secondary" onClick={()=>setEditSponsor(null)}>Cancel</button>
+                  <button className="btn-primary" onClick={()=>{
+                    setSponsors(s=>({...s,[editSponsor.eventId]:s[editSponsor.eventId].map(sp=>sp.id===editSponsor.sponsorId?{...sponsorDraft,amount:Number(sponsorDraft.amount)||0}:sp)}))
+                    setEditSponsor(null)
+                  }}>Save Changes</button>
+                </div>
+              </div>
             </Modal>
           )}
         </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { fmtTime } from '../utils/time'
 import './CheckIn.css'
 
 const TYPE_COLOR  = { club:'#1B4FA3', campaigners:'#3AAB35', camp:'#d97706', special:'#854883' }
@@ -157,7 +158,7 @@ export default function CheckIn({ store }) {
                   <div className="checkin-card-title">{ev.title}</div>
                   <div className="checkin-card-date">{fmtDate(ev.date)}</div>
                   <div className="checkin-card-meta">
-                    {ev.time && <span>🕐 {ev.time}</span>}
+                    {ev.time && <span>🕐 {fmtTime(ev.time)}</span>}
                     {ev.location && <span>📍 {ev.location}</span>}
                   </div>
                   <div className="checkin-card-prog" style={{color: ev.program==='WyldLife'?'#3AAB35':'#1B4FA3'}}>
@@ -185,7 +186,7 @@ export default function CheckIn({ store }) {
           <div className="checkin-roster-emoji">{TYPE_EMOJI[activeEvent.type]}</div>
           <div>
             <div className="checkin-roster-title">{activeEvent.title}</div>
-            <div className="checkin-roster-meta">{fmtDate(activeEvent.date)} · {activeEvent.time} · {activeEvent.location}</div>
+            <div className="checkin-roster-meta">{fmtDate(activeEvent.date)} · {fmtTime(activeEvent.time)} · {activeEvent.location}</div>
           </div>
         </div>
         <div className="checkin-counts">

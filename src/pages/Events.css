@@ -68,3 +68,22 @@
 .att-present { color: #15803d; font-weight: 800; }
 .att-absent  { color: #dc2626; font-weight: 800; }
 .att-note    { color: var(--gray-400); }
+
+/* Fundraiser */
+.fundraiser-section { display: flex; flex-direction: column; gap: 20px; }
+.fundraiser-event-block { background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
+.fundraiser-event-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--gray-100); background: var(--gray-50); }
+.fundraiser-event-title { font-size: 17px; font-weight: 800; color: var(--gray-900); }
+.fundraiser-event-summary { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.fundraiser-stat { font-size: 13px; color: var(--gray-600); }
+.fundraiser-stat--blue strong { color: #1B4FA3; }
+.fundraiser-stat--green strong { color: #3AAB35; }
+.fundraiser-stat--amber strong { color: #d97706; }
+.fundraiser-sponsors-list { display: flex; flex-direction: column; padding: 8px 0; }
+.fundraiser-sponsor-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--gray-100); flex-wrap: wrap; }
+.fundraiser-sponsor-row:last-child { border-bottom: none; }
+.fundraiser-sponsor-info { flex: 1; min-width: 0; }
+.fundraiser-sponsor-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
+.fundraiser-tier-badge { background: #eff6ff; color: #1B4FA3; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px; }
+.fundraiser-edit-btn { background: none; border: none; cursor: pointer; font-size: 14px; padding: 4px; border-radius: 6px; }
+.fundraiser-edit-btn:hover { background: var(--gray-100); }

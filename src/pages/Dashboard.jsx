@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { fmtTime } from '../utils/time'
 import './Dashboard.css'
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
@@ -125,7 +126,7 @@ export default function Dashboard({ store, setPage, navigateTo }) {
                   <div className="dash-event-dot" style={{background: TYPE_COLOR[e.type] || '#999'}} />
                   <div className="dash-event-body">
                     <div className="dash-event-title">{TYPE_EMOJI[e.type]} {e.title}</div>
-                    <div className="dash-event-meta">{fmtDate(e.date)} · {e.time} · {e.location}</div>
+                    <div className="dash-event-meta">{fmtDate(e.date)} · {fmtTime(e.time)} · {e.location}</div>
                   </div>
                 </div>
               ))}
@@ -238,7 +239,7 @@ export default function Dashboard({ store, setPage, navigateTo }) {
                 <div className="dd-event-dot" style={{background: TYPE_COLOR[e.type]||'#999'}} />
                 <div style={{flex:1,textAlign:'left'}}>
                   <div style={{fontWeight:700,fontSize:14}}>{TYPE_EMOJI[e.type]} {e.title}</div>
-                  <div style={{fontSize:12,color:'var(--gray-500)'}}>{fmtDate(e.date)} · {e.time}</div>
+                  <div style={{fontSize:12,color:'var(--gray-500)'}}>{fmtDate(e.date)} · {fmtTime(e.time)}</div>
                   {e.location && <div style={{fontSize:11,color:'var(--gray-400)'}}>{e.location}</div>}
                 </div>
               </button>
@@ -293,7 +294,7 @@ export default function Dashboard({ store, setPage, navigateTo }) {
                 <div className="dd-cm-dot" />
                 <div style={{flex:1,textAlign:'left'}}>
                   <div style={{fontWeight:700,fontSize:14}}>{m.title}</div>
-                  <div style={{fontSize:12,color:'var(--gray-500)'}}>{fmtDate(m.date)} · {m.time}</div>
+                  <div style={{fontSize:12,color:'var(--gray-500)'}}>{fmtDate(m.date)} · {fmtTime(m.time)}</div>
                   <div style={{fontSize:12,color:'var(--gray-600)'}}>{m.location}</div>
                   {m.notes && <div style={{fontSize:11,color:'var(--gray-400)',marginTop:2,fontStyle:'italic'}}>{m.notes}</div>}
                 </div>
@@ -320,7 +321,7 @@ export default function Dashboard({ store, setPage, navigateTo }) {
                 </div>
                 <div>
                   <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px'}}>Time</div>
-                  <div style={{fontWeight:700,fontSize:15,marginTop:2}}>{viewMeeting.time}</div>
+                  <div style={{fontWeight:700,fontSize:15,marginTop:2}}>{fmtTime(viewMeeting.time)}</div>
                 </div>
               </div>
               <div>

@@ -83,6 +83,14 @@ export default function Header({ page, onMenuClick }) {
             </div>
           </div>
         )}
+        {page === 'prayer' && (
+          <div className="header-verse header-verse--wrap">
+            <div className="header-verse-text">
+              "In every situation, by prayer and petition with thanksgiving, present your request to God,<br/>
+              and the peace of God will guard your hearts and your minds in Christ Jesus." <span className="header-verse-ref" style={{fontSize:'0.9em'}}>Philippians 4:6–7</span>
+            </div>
+          </div>
+        )}
         {page === 'events' && (
           <div className="header-verse header-verse--wrap">
             <div className="header-verse-text">
