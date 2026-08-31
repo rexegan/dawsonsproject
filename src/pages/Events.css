@@ -1,5 +1,22 @@
 .events-page { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
 
+/* Section tabs */
+.events-section-tabs {
+  display: flex; gap: 6px;
+  border-bottom: 2px solid var(--gray-200);
+  padding-bottom: 0;
+  margin-bottom: 4px;
+}
+.events-section-tab {
+  padding: 10px 20px; font-size: 14px; font-weight: 700;
+  border: none; border-bottom: 3px solid transparent;
+  background: none; color: var(--gray-500);
+  cursor: pointer; transition: color .15s, border-color .15s;
+  margin-bottom: -2px;
+}
+.events-section-tab:hover { color: #1B4FA3; }
+.events-section-tab--active { color: #1B4FA3; border-bottom-color: #1B4FA3; }
+
 .tab-group { display: flex; background: var(--gray-200); border-radius: 8px; padding: 3px; gap: 2px; }
 .tab-btn {
   padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 600;

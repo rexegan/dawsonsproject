@@ -108,14 +108,9 @@ export default function YLStory() {
 
   return (
     <div className="ylstory">
-      {/* Hero */}
-      <div className="ylstory-hero">
-        <div className="ylstory-hero-content">
-          <div className="ylstory-hero-logo">YL</div>
-          <h1 className="ylstory-hero-title">The Young Life Story</h1>
-          <p className="ylstory-hero-sub">Over 80 years of going to where kids are — earning the right to be heard.</p>
-          <div className="ylstory-hero-quote">"It's a sin to bore a kid." — Jim Rayburn, Founder</div>
-        </div>
+      {/* Slim quote strip */}
+      <div className="ylstory-quote-strip">
+        "It's a sin to bore a kid." <span className="ylstory-quote-attr">— Jim Rayburn, Founder of Young Life</span>
       </div>
 
       {/* Section nav */}

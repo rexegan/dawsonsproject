@@ -1,28 +1,13 @@
 .ylstory { padding: 0 0 40px; display: flex; flex-direction: column; }
 
-/* ── Hero ── */
-.ylstory-hero {
-  background: linear-gradient(135deg, #1B4FA3 0%, #153e85 50%, #0f2d60 100%);
-  padding: 20px 28px 18px;
-  display: flex; justify-content: center;
+/* ── Quote strip (replaces hero) ── */
+.ylstory-quote-strip {
+  background: linear-gradient(135deg, #1B4FA3, #153e85);
+  color: white; padding: 10px 24px;
+  font-size: 14px; font-style: italic; font-weight: 600;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
 }
-.ylstory-hero-content { text-align: center; color: white; max-width: 640px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; }
-.ylstory-hero-logo {
-  width: 48px; height: 48px; border-radius: 12px;
-  background: rgba(255,255,255,.15); border: 2px solid rgba(255,255,255,.4);
-  font-size: 20px; font-weight: 900; color: white;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.ylstory-hero-title { font-size: 22px; font-weight: 900; margin: 0; }
-.ylstory-hero-sub { display: none; }
-.ylstory-hero-quote {
-  display: inline-block;
-  background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.25);
-  border-radius: 8px; padding: 6px 14px;
-  font-size: 13px; font-style: italic; opacity: .9;
-}
+.ylstory-quote-attr { font-style: normal; font-weight: 700; font-size: 12px; opacity: .8; }
 
 /* ── Nav ── */
 .ylstory-nav {
@@ -36,7 +21,7 @@
   border: 1.5px solid var(--gray-200); background: white; color: var(--gray-600);
   cursor: pointer; transition: all .15s; white-space: nowrap;
 }
-.ylstory-nav-btn:hover { border-color: #1B4FA3; color: #1B4FA3; background: #eff6ff; }
+.ylstory-nav-btn:hover { border-color: #1B4FA3; color: #1B4FA3 !important; background: #eff6ff; }
 .ylstory-nav-btn--active { background: #1B4FA3; color: white; border-color: #1B4FA3; }
 
 /* ── Section ── */

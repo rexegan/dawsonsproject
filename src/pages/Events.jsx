@@ -1,7 +1,39 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Modal from '../components/Modal'
 import { formatPhone } from '../utils/phone'
 import './Events.css'
+import './Planning.css'
+
+// ── Planning constants ──────────────────────────────────────────────────────
+const PLAN_CATEGORIES = [
+  { id: 'event',       label: 'Event',          color: '#1B4FA3', bg: '#eff6ff', icon: '📅' },
+  { id: 'auction',     label: 'Auction Items',  color: '#d97706', bg: '#fffbeb', icon: '🏷️' },
+  { id: 'doorprize',   label: 'Door Prizes',    color: '#854883', bg: '#faf5ff', icon: '🎁' },
+  { id: 'decorations', label: 'Decorations',    color: '#e11d48', bg: '#fff1f2', icon: '🎨' },
+  { id: 'food',        label: 'Food',           color: '#3AAB35', bg: '#f0fdf4', icon: '🍽️' },
+  { id: 'location',    label: 'Location',       color: '#0891b2', bg: '#ecfeff', icon: '📍' },
+  { id: 'supplies',    label: 'Supplies',       color: '#7c3aed', bg: '#f5f3ff', icon: '🛒' },
+  { id: 'camp',        label: 'Camp',           color: '#f97316', bg: '#fff7ed', icon: '⛺' },
+  { id: 'outreach',    label: 'Outreach',       color: '#0f766e', bg: '#f0fdfa', icon: '🎯' },
+  { id: 'admin',       label: 'Admin',          color: '#6b7280', bg: '#f9fafb', icon: '📋' },
+  { id: 'other',       label: 'Other',          color: '#64748b', bg: '#f8fafc', icon: '💡' },
+]
+const PLAN_STATUSES = [
+  { id: 'idea',     label: 'Idea',        color: '#6b7280', bg: '#f3f4f6' },
+  { id: 'planning', label: 'Planning',    color: '#d97706', bg: '#fffbeb' },
+  { id: 'active',   label: 'In Progress', color: '#1B4FA3', bg: '#eff6ff' },
+  { id: 'complete', label: 'Complete',    color: '#3AAB35', bg: '#f0fdf4' },
+  { id: 'on-hold',  label: 'On Hold',     color: '#854883', bg: '#faf5ff' },
+]
+const PLAN_PRIORITIES = ['High', 'Medium', 'Low']
+const PRIORITY_COLOR = { High: '#dc2626', Medium: '#d97706', Low: '#3AAB35' }
+const PRIORITY_BG    = { High: '#fee2e2', Medium: '#fffbeb', Low: '#f0fdf4' }
+const PLAN_BLANK = { title:'', category:'event', status:'planning', priority:'Medium', date:'', notes:'', assignedTo:'', checklist:[] }
+
+function planLoad() { try { const v = localStorage.getItem('yl_planning'); return v ? JSON.parse(v) : [] } catch { return [] } }
+function planPersist(list) { try { localStorage.setItem('yl_planning', JSON.stringify(list)) } catch {} }
+function planFmtDate(iso) { if (!iso) return ''; const [y,m,d]=iso.split('-').map(Number); const ms=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return `${ms[m-1]} ${d}, ${y}` }
+function planDaysUntil(iso) { if (!iso) return null; return Math.ceil((new Date(iso)-new Date())/86400000) }
 
 const TYPE_COLOR = { club:'#1B4FA3', campaigners:'#3AAB35', camp:'#d97706', special:'#854883' }
 const TYPE_LABEL = { club:'Club Night', campaigners:'Campaigners', camp:'Camp', special:'Special Event' }
@@ -63,6 +95,11 @@ function fmtDate(d) {
 
 export default function Events({ store, openEventId }) {
   const { events, leaders, students, getEventAttendance, addEvent, updateEvent, deleteEvent, addNotification } = store
+
+  // Top-level section tab
+  const [section, setSection] = useState('events') // 'events' | 'planning'
+
+  // ── Events state ──
   const [filter, setFilter] = useState('all')
   const [filterType, setFilterType] = useState('All')
   const [modal, setModal] = useState(null)
@@ -70,11 +107,80 @@ export default function Events({ store, openEventId }) {
   const [editId, setEditId] = useState(null)
   const [viewEvent, setViewEvent] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
-  const [sponsorEvent, setSponsorEvent] = useState('')        // '' = closed, event id = open
+  const [sponsorEvent, setSponsorEvent] = useState('')
   const [sponsors, setSponsors] = useState(INITIAL_SPONSORS)
-  const [editSponsor, setEditSponsor] = useState(null)        // sponsor object being edited
+  const [editSponsor, setEditSponsor] = useState(null)
   const [addingSponsor, setAddingSponsor] = useState(false)
   const [sponsorDraft, setSponsorDraft] = useState({name:'',contact:'',phone:'',email:'',tier:'',amount:'',paid:false,notes:''})
+
+  // ── Planning state ──
+  const [planItems, setPlanItems] = useState(planLoad)
+  const [planView, setPlanView] = useState('list')
+  const [planFilterCat, setPlanFilterCat] = useState('All')
+  const [planFilterStatus, setPlanFilterStatus] = useState('All')
+  const [planSearch, setPlanSearch] = useState('')
+  const [planAddOpen, setPlanAddOpen] = useState(false)
+  const [planDraft, setPlanDraft] = useState(PLAN_BLANK)
+  const [planViewItem, setPlanViewItem] = useState(null)
+  const [planEditOpen, setPlanEditOpen] = useState(false)
+  const [planEditDraft, setPlanEditDraft] = useState(null)
+  const [planNewTask, setPlanNewTask] = useState('')
+
+  function planMutate(fn) { setPlanItems(prev => { const next = fn(prev); planPersist(next); return next }) }
+  function planAddItem() {
+    if (!planDraft.title.trim()) return
+    const today = new Date().toISOString().slice(0,10)
+    const item = { ...planDraft, id: 'pl' + Date.now(), created: today, checklist: planDraft.checklist || [] }
+    planMutate(prev => [item, ...prev])
+    setPlanDraft(PLAN_BLANK); setPlanAddOpen(false)
+    addNotification('Planning item added')
+  }
+  function planSaveEdit() {
+    if (!planEditDraft.title.trim()) return
+    const updated = { ...planEditDraft }
+    planMutate(prev => prev.map(i => i.id === updated.id ? updated : i))
+    if (planViewItem?.id === updated.id) setPlanViewItem(updated)
+    setPlanEditOpen(false); setPlanEditDraft(null)
+    addNotification('Item updated')
+  }
+  function planDeleteItem(id) { planMutate(prev => prev.filter(i => i.id !== id)); setPlanViewItem(null); addNotification('Item removed') }
+  function planUpdateStatus(id, status) {
+    planMutate(prev => prev.map(i => i.id === id ? { ...i, status } : i))
+    setPlanViewItem(v => v?.id === id ? { ...v, status } : v)
+  }
+  function planAddTask() {
+    if (!planNewTask.trim() || !planViewItem) return
+    const task = { id: 'tk' + Date.now(), text: planNewTask.trim(), done: false }
+    planMutate(prev => prev.map(i => i.id === planViewItem.id ? { ...i, checklist: [...(i.checklist||[]), task] } : i))
+    setPlanViewItem(v => ({ ...v, checklist: [...(v.checklist||[]), task] }))
+    setPlanNewTask('')
+  }
+  function planToggleTask(itemId, taskId) {
+    planMutate(prev => prev.map(i => i.id === itemId ? { ...i, checklist: i.checklist.map(t => t.id === taskId ? { ...t, done: !t.done } : t) } : i))
+    setPlanViewItem(v => v?.id === itemId ? { ...v, checklist: v.checklist.map(t => t.id === taskId ? { ...t, done: !t.done } : t) } : v)
+  }
+  function planDeleteTask(itemId, taskId) {
+    planMutate(prev => prev.map(i => i.id === itemId ? { ...i, checklist: i.checklist.filter(t => t.id !== taskId) } : i))
+    setPlanViewItem(v => v?.id === itemId ? { ...v, checklist: v.checklist.filter(t => t.id !== taskId) } : v)
+  }
+
+  const planCatMap = Object.fromEntries(PLAN_CATEGORIES.map(c => [c.id, c]))
+  const planStatusMap = Object.fromEntries(PLAN_STATUSES.map(s => [s.id, s]))
+
+  const planFiltered = useMemo(() => planItems.filter(i => {
+    if (planFilterCat !== 'All' && i.category !== planFilterCat) return false
+    if (planFilterStatus !== 'All' && i.status !== planFilterStatus) return false
+    if (planSearch && !i.title.toLowerCase().includes(planSearch.toLowerCase()) && !(i.notes||'').toLowerCase().includes(planSearch.toLowerCase())) return false
+    return true
+  }), [planItems, planFilterCat, planFilterStatus, planSearch])
+
+  const planTimeline = [...planFiltered].filter(i => i.date).sort((a,b) => a.date.localeCompare(b.date))
+  const planNoDate = planFiltered.filter(i => !i.date)
+
+  const planTotal    = planItems.length
+  const planActive   = planItems.filter(i => i.status === 'active').length
+  const planComplete = planItems.filter(i => i.status === 'complete').length
+  const planUpcoming = planItems.filter(i => i.date && planDaysUntil(i.date) !== null && planDaysUntil(i.date) >= 0 && planDaysUntil(i.date) <= 30).length
 
   const today = new Date().toISOString().slice(0,10)
 
@@ -124,6 +230,19 @@ export default function Events({ store, openEventId }) {
 
   return (
     <div className="events-page">
+
+      {/* Section tabs */}
+      <div className="events-section-tabs">
+        <button className={`events-section-tab ${section==='events'?'events-section-tab--active':''}`} onClick={() => setSection('events')}>
+          📅 Events
+        </button>
+        <button className={`events-section-tab ${section==='planning'?'events-section-tab--active':''}`} onClick={() => setSection('planning')}>
+          📋 Planning
+        </button>
+      </div>
+
+      {/* ═══════════ EVENTS SECTION ═══════════ */}
+      {section === 'events' && <>
       <div className="page-toolbar">
         <div className="toolbar-left">
           <div className="tab-group">
@@ -410,7 +529,7 @@ export default function Events({ store, openEventId }) {
       )}
 
       {/* EDIT SPONSOR MODAL */}
-      {editSponsor && (
+      {section === 'events' && editSponsor && (
         <Modal open title="Edit Sponsor" onClose={()=>setEditSponsor(null)} size="md">
           <div style={{display:'flex',flexDirection:'column',gap:12}}>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
@@ -453,6 +572,281 @@ export default function Events({ store, openEventId }) {
           </div>
         </Modal>
       )}
+      </> }
+
+      {/* ═══════════ PLANNING SECTION ═══════════ */}
+      {section === 'planning' && (
+        <div>
+          {/* Stats */}
+          <div className="planning-stats">
+            <div className="planning-stat planning-stat--blue"><div className="planning-stat-val">{planTotal}</div><div className="planning-stat-label">Total Items</div></div>
+            <div className="planning-stat planning-stat--amber"><div className="planning-stat-val">{planActive}</div><div className="planning-stat-label">In Progress</div></div>
+            <div className="planning-stat planning-stat--green"><div className="planning-stat-val">{planComplete}</div><div className="planning-stat-label">Completed</div></div>
+            <div className="planning-stat planning-stat--purple"><div className="planning-stat-val">{planUpcoming}</div><div className="planning-stat-label">Due in 30 Days</div></div>
+          </div>
+
+          {/* Toolbar */}
+          <div className="planning-toolbar">
+            <div className="planning-toolbar-left">
+              <input className="planning-search" placeholder="Search…" value={planSearch} onChange={e => setPlanSearch(e.target.value)} />
+              <select className="filter-select" value={planFilterCat} onChange={e => setPlanFilterCat(e.target.value)}>
+                <option value="All">All Categories</option>
+                {PLAN_CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.icon} {c.label}</option>)}
+              </select>
+              <select className="filter-select" value={planFilterStatus} onChange={e => setPlanFilterStatus(e.target.value)}>
+                <option value="All">All Statuses</option>
+                {PLAN_STATUSES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+              </select>
+            </div>
+            <div className="planning-toolbar-right">
+              <div className="planning-view-toggle">
+                {['list','timeline'].map(v => (
+                  <button key={v} className={`planning-view-btn ${planView===v?'planning-view-btn--active':''}`} onClick={() => setPlanView(v)}>
+                    {v === 'list' ? '≡ List' : '📅 Timeline'}
+                  </button>
+                ))}
+              </div>
+              <button className="btn-primary" onClick={() => { setPlanDraft({...PLAN_BLANK, date: new Date().toISOString().slice(0,10)}); setPlanAddOpen(true) }}>
+                + Add Item
+              </button>
+            </div>
+          </div>
+
+          {/* Category pills */}
+          <div className="planning-cats">
+            <button className={`planning-cat-pill ${planFilterCat==='All'?'planning-cat-pill--active':''}`} onClick={() => setPlanFilterCat('All')}>All</button>
+            {PLAN_CATEGORIES.map(c => (
+              <button key={c.id}
+                className={`planning-cat-pill ${planFilterCat===c.id?'planning-cat-pill--active':''}`}
+                style={planFilterCat===c.id ? {background:c.color,color:'white',borderColor:c.color} : {}}
+                onClick={() => setPlanFilterCat(planFilterCat===c.id?'All':c.id)}
+              >{c.icon} {c.label}<span className="planning-cat-count">{planItems.filter(i=>i.category===c.id).length}</span></button>
+            ))}
+          </div>
+
+          {planFiltered.length === 0 && (
+            <div className="planning-empty">
+              <div style={{fontSize:48,marginBottom:12}}>📋</div>
+              <div style={{fontWeight:700,fontSize:16,color:'var(--gray-700)'}}>No planning items yet</div>
+              <div style={{fontSize:14,color:'var(--gray-500)',marginTop:6}}>Click "+ Add Item" to start planning</div>
+            </div>
+          )}
+
+          {/* List view */}
+          {planView === 'list' && planFiltered.length > 0 && (
+            <div className="planning-list">
+              {PLAN_STATUSES.map(st => {
+                const rows = planFiltered.filter(i => i.status === st.id)
+                if (!rows.length) return null
+                return (
+                  <div key={st.id} className="planning-list-group">
+                    <div className="planning-list-group-header" style={{color:st.color,borderLeftColor:st.color}}>
+                      {st.label} <span className="planning-list-group-count">{rows.length}</span>
+                    </div>
+                    {rows.map(item => <PlanRow key={item.id} item={item} catMap={planCatMap} statusMap={planStatusMap} onClick={() => setPlanViewItem(item)} />)}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {/* Timeline view */}
+          {planView === 'timeline' && (
+            <div className="planning-timeline">
+              {planTimeline.map(item => {
+                const cat = planCatMap[item.category] || {}
+                const st  = planStatusMap[item.status] || {}
+                const days = planDaysUntil(item.date)
+                return (
+                  <button key={item.id} className="planning-tl-row" onClick={() => setPlanViewItem(item)}>
+                    <div className="planning-tl-date">{planFmtDate(item.date)}</div>
+                    <div className="planning-tl-dot" style={{background:cat.color}} />
+                    <div className="planning-tl-content">
+                      <div className="planning-tl-title">{item.title}</div>
+                      <div className="planning-tl-meta">
+                        <span style={{color:cat.color,fontWeight:700,fontSize:12}}>{cat.icon} {cat.label}</span>
+                        <span className="planning-status-badge" style={{background:st.bg,color:st.color}}>{st.label}</span>
+                        {item.assignedTo && <span style={{fontSize:12,color:'var(--gray-500)'}}>👤 {item.assignedTo}</span>}
+                      </div>
+                    </div>
+                    <div className="planning-tl-right">
+                      {days !== null && days >= 0 && days <= 7 && <span className="planning-tl-days">{days===0?'Today':`${days}d`}</span>}
+                      {days !== null && days < 0 && <span className="planning-tl-days planning-tl-days--past">{Math.abs(days)}d ago</span>}
+                      <span className="planning-priority-badge" style={{background:PRIORITY_BG[item.priority],color:PRIORITY_COLOR[item.priority]}}>{item.priority}</span>
+                    </div>
+                  </button>
+                )
+              })}
+              {planNoDate.length > 0 && (
+                <>
+                  <div className="planning-tl-nodatelabel">No Date Set</div>
+                  {planNoDate.map(item => {
+                    const cat = planCatMap[item.category] || {}
+                    const st  = planStatusMap[item.status] || {}
+                    return (
+                      <button key={item.id} className="planning-tl-row planning-tl-row--nodate" onClick={() => setPlanViewItem(item)}>
+                        <div className="planning-tl-date">—</div>
+                        <div className="planning-tl-dot" style={{background:cat.color}} />
+                        <div className="planning-tl-content">
+                          <div className="planning-tl-title">{item.title}</div>
+                          <div className="planning-tl-meta">
+                            <span style={{color:cat.color,fontWeight:700,fontSize:12}}>{cat.icon} {cat.label}</span>
+                            <span className="planning-status-badge" style={{background:st.bg,color:st.color}}>{st.label}</span>
+                          </div>
+                        </div>
+                        <div className="planning-tl-right">
+                          <span className="planning-priority-badge" style={{background:PRIORITY_BG[item.priority],color:PRIORITY_COLOR[item.priority]}}>{item.priority}</span>
+                        </div>
+                      </button>
+                    )
+                  })}
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Add modal */}
+          {planAddOpen && (
+            <Modal title="Add Planning Item" onClose={() => setPlanAddOpen(false)} size="md"
+              footer={<><button className="btn btn-secondary" onClick={() => setPlanAddOpen(false)}>Cancel</button><button className="btn-primary" onClick={planAddItem} disabled={!planDraft.title.trim()}>Add Item</button></>}
+            >
+              <PlanForm draft={planDraft} setDraft={setPlanDraft} />
+            </Modal>
+          )}
+
+          {/* Detail modal */}
+          {planViewItem && (() => {
+            const cat = planCatMap[planViewItem.category] || {}
+            const st  = planStatusMap[planViewItem.status] || {}
+            const done = (planViewItem.checklist||[]).filter(t=>t.done).length
+            const tot  = (planViewItem.checklist||[]).length
+            return (
+              <Modal title={planViewItem.title} onClose={() => setPlanViewItem(null)} size="lg"
+                footer={<>
+                  <button className="btn btn-secondary btn-danger" onClick={() => { if(window.confirm('Delete this item?')) planDeleteItem(planViewItem.id) }}>Delete</button>
+                  <button className="btn btn-secondary" onClick={() => { setPlanEditDraft({...planViewItem}); setPlanEditOpen(true) }}>Edit</button>
+                  <button className="btn btn-secondary" onClick={() => setPlanViewItem(null)}>Close</button>
+                </>}
+              >
+                <div className="planning-detail">
+                  <div className="planning-detail-meta">
+                    <span className="planning-cat-tag" style={{background:cat.bg,color:cat.color}}>{cat.icon} {cat.label}</span>
+                    <span className="planning-status-badge" style={{background:st.bg,color:st.color}}>{st.label}</span>
+                    <span className="planning-priority-badge" style={{background:PRIORITY_BG[planViewItem.priority],color:PRIORITY_COLOR[planViewItem.priority]}}>{planViewItem.priority} Priority</span>
+                    {planViewItem.date && <span style={{fontSize:12,color:'var(--gray-500)'}}>📅 {planFmtDate(planViewItem.date)}</span>}
+                    {planViewItem.assignedTo && <span style={{fontSize:12,color:'var(--gray-500)'}}>👤 {planViewItem.assignedTo}</span>}
+                  </div>
+                  {planViewItem.notes && <div className="planning-detail-notes">{planViewItem.notes}</div>}
+                  <div className="planning-detail-section">
+                    <div className="planning-detail-section-label">Update Status</div>
+                    <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+                      {PLAN_STATUSES.map(s => (
+                        <button key={s.id} className="planning-status-btn"
+                          style={{background:planViewItem.status===s.id?s.color:s.bg,color:planViewItem.status===s.id?'white':s.color,borderColor:s.color}}
+                          onClick={() => planUpdateStatus(planViewItem.id, s.id)}>{s.label}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="planning-detail-section">
+                    <div className="planning-detail-section-label">Checklist {tot > 0 && <span style={{color:'var(--gray-400)',fontWeight:400}}>({done}/{tot})</span>}</div>
+                    {tot > 0 && <div className="planning-checklist-bar"><div className="planning-checklist-fill" style={{width:`${Math.round(done/tot*100)}%`}} /></div>}
+                    <div className="planning-checklist">
+                      {(planViewItem.checklist||[]).map(task => (
+                        <div key={task.id} className="planning-task">
+                          <button className={`planning-task-check ${task.done?'planning-task-check--done':''}`} onClick={() => planToggleTask(planViewItem.id, task.id)}>{task.done?'✓':''}</button>
+                          <span className="planning-task-text" style={{textDecoration:task.done?'line-through':'none',color:task.done?'var(--gray-400)':'var(--gray-800)'}}>{task.text}</span>
+                          <button className="planning-task-del" onClick={() => planDeleteTask(planViewItem.id, task.id)}>✕</button>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="planning-task-add">
+                      <input className="form-input" placeholder="Add a task…" value={planNewTask} onChange={e => setPlanNewTask(e.target.value)} onKeyDown={e => e.key==='Enter' && planAddTask()} />
+                      <button className="btn btn-secondary" onClick={planAddTask} disabled={!planNewTask.trim()}>Add</button>
+                    </div>
+                  </div>
+                </div>
+              </Modal>
+            )
+          })()}
+
+          {/* Edit modal */}
+          {planEditOpen && planEditDraft && (
+            <Modal title="Edit Planning Item" onClose={() => { setPlanEditOpen(false); setPlanEditDraft(null) }} size="md"
+              footer={<><button className="btn btn-secondary" onClick={() => { setPlanEditOpen(false); setPlanEditDraft(null) }}>Cancel</button><button className="btn-primary" onClick={planSaveEdit}>Save Changes</button></>}
+            >
+              <PlanForm draft={planEditDraft} setDraft={setPlanEditDraft} />
+            </Modal>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function PlanRow({ item, catMap, statusMap, onClick }) {
+  const cat = catMap[item.category] || {}
+  const st  = statusMap[item.status] || {}
+  const days = planDaysUntil(item.date)
+  return (
+    <button className="planning-row" onClick={onClick}>
+      <div className="planning-row-accent" style={{background:cat.color}} />
+      <div className="planning-row-main">
+        <div className="planning-row-title">{item.title}</div>
+        <div className="planning-row-sub">
+          <span style={{color:cat.color,fontWeight:700,fontSize:12}}>{cat.icon} {cat.label}</span>
+          {item.assignedTo && <span style={{fontSize:12,color:'var(--gray-500)'}}>👤 {item.assignedTo}</span>}
+          {item.date && <span style={{fontSize:12,color:days!==null&&days<=7?'#dc2626':'var(--gray-500)'}}>📅 {planFmtDate(item.date)}</span>}
+        </div>
+      </div>
+      <div className="planning-row-right">
+        <span className="planning-status-badge" style={{background:st.bg,color:st.color}}>{st.label}</span>
+        <span className="planning-priority-badge" style={{background:PRIORITY_BG[item.priority],color:PRIORITY_COLOR[item.priority]}}>{item.priority}</span>
+      </div>
+    </button>
+  )
+}
+
+function PlanForm({ draft, setDraft }) {
+  return (
+    <div className="planning-form">
+      <div className="planning-form-row">
+        <label>Title <span style={{color:'#dc2626'}}>*</span></label>
+        <input className="form-input" placeholder="What are you planning?" value={draft.title} onChange={e => setDraft(d=>({...d,title:e.target.value}))} />
+      </div>
+      <div className="planning-form-2col">
+        <div className="planning-form-row">
+          <label>Category</label>
+          <select className="form-input" value={draft.category} onChange={e => setDraft(d=>({...d,category:e.target.value}))}>
+            {PLAN_CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.icon} {c.label}</option>)}
+          </select>
+        </div>
+        <div className="planning-form-row">
+          <label>Status</label>
+          <select className="form-input" value={draft.status} onChange={e => setDraft(d=>({...d,status:e.target.value}))}>
+            {PLAN_STATUSES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+          </select>
+        </div>
+      </div>
+      <div className="planning-form-2col">
+        <div className="planning-form-row">
+          <label>Priority</label>
+          <select className="form-input" value={draft.priority} onChange={e => setDraft(d=>({...d,priority:e.target.value}))}>
+            {PLAN_PRIORITIES.map(p => <option key={p}>{p}</option>)}
+          </select>
+        </div>
+        <div className="planning-form-row">
+          <label>Target Date</label>
+          <input type="date" className="form-input" value={draft.date} onChange={e => setDraft(d=>({...d,date:e.target.value}))} />
+        </div>
+      </div>
+      <div className="planning-form-row">
+        <label>Assigned To <span style={{color:'var(--gray-400)',fontWeight:400}}>(optional)</span></label>
+        <input className="form-input" placeholder="Leader name or team" value={draft.assignedTo} onChange={e => setDraft(d=>({...d,assignedTo:e.target.value}))} />
+      </div>
+      <div className="planning-form-row">
+        <label>Notes / Description</label>
+        <textarea className="form-input" rows={4} placeholder="Details, goals, logistics…" value={draft.notes} onChange={e => setDraft(d=>({...d,notes:e.target.value}))} />
+      </div>
     </div>
   )
 }

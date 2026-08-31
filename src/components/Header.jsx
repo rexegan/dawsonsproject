@@ -8,7 +8,7 @@ const TITLES = {
   students: 'Students',
   attendance: 'Roll Call',
   followup: 'Follow-ups',
-  events: 'Events & Calendar',
+  events: 'Events & Planning',
   leaders: 'Our Leaders',
   reports: 'Reports',
   finances: 'Finances',
