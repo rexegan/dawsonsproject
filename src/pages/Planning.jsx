@@ -3,14 +3,17 @@ import Modal from '../components/Modal'
 import './Planning.css'
 
 const CATEGORIES = [
-  { id: 'event',       label: 'Event',        color: '#1B4FA3', bg: '#eff6ff', icon: '📅' },
-  { id: 'fundraiser',  label: 'Fundraiser',   color: '#d97706', bg: '#fffbeb', icon: '💰' },
-  { id: 'camp',        label: 'Camp',         color: '#3AAB35', bg: '#f0fdf4', icon: '⛺' },
-  { id: 'outreach',    label: 'Outreach',     color: '#854883', bg: '#faf5ff', icon: '🎯' },
-  { id: 'campaigners', label: 'Campaigners',  color: '#0891b2', bg: '#ecfeff', icon: '📖' },
-  { id: 'leader',      label: 'Leader Dev',   color: '#e11d48', bg: '#fff1f2', icon: '🌟' },
-  { id: 'admin',       label: 'Admin',        color: '#6b7280', bg: '#f9fafb', icon: '📋' },
-  { id: 'other',       label: 'Other',        color: '#7c3aed', bg: '#f5f3ff', icon: '💡' },
+  { id: 'event',       label: 'Event',          color: '#1B4FA3', bg: '#eff6ff', icon: '📅' },
+  { id: 'auction',     label: 'Auction Items',  color: '#d97706', bg: '#fffbeb', icon: '🏷️' },
+  { id: 'doorprize',   label: 'Door Prizes',    color: '#854883', bg: '#faf5ff', icon: '🎁' },
+  { id: 'decorations', label: 'Decorations',    color: '#e11d48', bg: '#fff1f2', icon: '🎨' },
+  { id: 'food',        label: 'Food',           color: '#3AAB35', bg: '#f0fdf4', icon: '🍽️' },
+  { id: 'location',    label: 'Location',       color: '#0891b2', bg: '#ecfeff', icon: '📍' },
+  { id: 'supplies',    label: 'Supplies',       color: '#7c3aed', bg: '#f5f3ff', icon: '🛒' },
+  { id: 'camp',        label: 'Camp',           color: '#f97316', bg: '#fff7ed', icon: '⛺' },
+  { id: 'outreach',    label: 'Outreach',       color: '#0f766e', bg: '#f0fdfa', icon: '🎯' },
+  { id: 'admin',       label: 'Admin',          color: '#6b7280', bg: '#f9fafb', icon: '📋' },
+  { id: 'other',       label: 'Other',          color: '#64748b', bg: '#f8fafc', icon: '💡' },
 ]
 
 const STATUSES = [
@@ -56,7 +59,7 @@ export default function Planning({ store }) {
   const { addNotification } = store
 
   const [items, setItems] = useState(load)
-  const [view, setView] = useState('board') // board | list | timeline
+  const [view, setView] = useState('list') // list | timeline
   const [filterCat, setFilterCat] = useState('All')
   const [filterStatus, setFilterStatus] = useState('All')
   const [search, setSearch] = useState('')
@@ -150,9 +153,6 @@ export default function Planning({ store }) {
   const complete = items.filter(i => i.status === 'complete').length
   const upcoming = items.filter(i => i.date && daysUntil(i.date) !== null && daysUntil(i.date) >= 0 && daysUntil(i.date) <= 30).length
 
-  // Board: group by status (exclude complete)
-  const boardStatuses = STATUSES.filter(s => s.id !== 'complete')
-
   // Timeline: sorted by date
   const timeline = [...filtered].filter(i => i.date).sort((a, b) => a.date.localeCompare(b.date))
   const noDate   = filtered.filter(i => !i.date)
@@ -195,9 +195,9 @@ export default function Planning({ store }) {
         </div>
         <div className="planning-toolbar-right">
           <div className="planning-view-toggle">
-            {['board','list','timeline'].map(v => (
+            {['list','timeline'].map(v => (
               <button key={v} className={`planning-view-btn ${view===v?'planning-view-btn--active':''}`} onClick={() => setView(v)}>
-                {v === 'board' ? '⊞ Board' : v === 'list' ? '≡ List' : '📅 Timeline'}
+                {v === 'list' ? '≡ List' : '📅 Timeline'}
               </button>
             ))}
           </div>
@@ -230,27 +230,6 @@ export default function Planning({ store }) {
           <div style={{fontSize:48,marginBottom:12}}>📋</div>
           <div style={{fontWeight:700,fontSize:16,color:'var(--gray-700)'}}>No planning items yet</div>
           <div style={{fontSize:14,color:'var(--gray-500)',marginTop:6}}>Click "+ Add Item" to start planning</div>
-        </div>
-      )}
-
-      {/* ── BOARD VIEW ── */}
-      {view === 'board' && filtered.length > 0 && (
-        <div className="planning-board">
-          {boardStatuses.map(st => {
-            const cols = filtered.filter(i => i.status === st.id)
-            return (
-              <div key={st.id} className="planning-col">
-                <div className="planning-col-header" style={{borderTopColor: st.color}}>
-                  <span className="planning-col-label" style={{color: st.color}}>{st.label}</span>
-                  <span className="planning-col-count">{cols.length}</span>
-                </div>
-                <div className="planning-col-body">
-                  {cols.map(item => <PlanCard key={item.id} item={item} catMap={catMap} onClick={() => setViewItem(item)} />)}
-                  {cols.length === 0 && <div className="planning-col-empty">Nothing here yet</div>}
-                </div>
-              </div>
-            )
-          })}
         </div>
       )}
 

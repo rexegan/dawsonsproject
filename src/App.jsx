@@ -25,9 +25,16 @@ const PAGES = { dashboard: Dashboard, prayer: Prayer, planning: Planning, checki
 
 export default function App() {
   const [page, setPage] = useState('dashboard')
+  const [pageProps, setPageProps] = useState({})
   const [mobileOpen, setMobileOpen] = useState(false)
   const [toasts, setToasts] = useState([])
   const store = useStore()
+
+  function navigateTo(newPage, props = {}) {
+    setPage(newPage)
+    setPageProps(props)
+    window.scrollTo(0, 0)
+  }
 
   // Wrap addNotification to show toasts
   const storeWithToast = {
@@ -43,11 +50,11 @@ export default function App() {
 
   return (
     <div className="app-layout">
-      <Sidebar page={page} setPage={setPage} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} store={storeWithToast} />
+      <Sidebar page={page} setPage={p => navigateTo(p)} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} store={storeWithToast} />
       <div className="app-main">
         <Header page={page} onMenuClick={() => setMobileOpen(o => !o)} />
         <div className="app-content">
-          <Page store={storeWithToast} setPage={setPage} />
+          <Page store={storeWithToast} setPage={p => navigateTo(p)} navigateTo={navigateTo} {...pageProps} />
         </div>
       </div>
       <ToastContainer toasts={toasts} onRemove={id => setToasts(t => t.filter(x => x.id !== id))} />

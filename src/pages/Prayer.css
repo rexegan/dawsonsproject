@@ -18,6 +18,8 @@
 .prayer-stat--purple { background: linear-gradient(135deg,#854883,#6b3870); }
 .prayer-stat-val   { font-size: 30px; font-weight: 800; line-height: 1; }
 .prayer-stat-label { font-size: 12px; font-weight: 600; opacity: .88; margin-top: 2px; }
+.prayer-stat--clickable { cursor: pointer; border: none; text-align: left; transition: opacity .15s, transform .1s; }
+.prayer-stat--clickable:hover { opacity: .88; transform: translateY(-1px); }
 
 /* ── Top bar ── */
 .prayer-topbar {

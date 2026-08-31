@@ -30,12 +30,37 @@ const BLANK = {
   person: '', date: '', private: false, followUps: [],
 }
 
+const SEED_REQUESTS = [
+  { id:'pr001', name:'Emma Thornton', category:'Student', status:'Active', request:'Please pray for Emma as she navigates a difficult friendship situation at school. She feels isolated and is struggling to trust people again.', person:'Emma Thornton', date:'2026-08-15', private:false, followUps:[{id:'fu001',text:'Checked in with Emma — she said things are improving slowly.',date:'2026-08-22'}] },
+  { id:'pr002', name:'Jake Morales', category:'Student', status:'Follow-Up Needed', request:'Jake\'s parents are going through a divorce. He\'s been withdrawing from club and from his small group. Pray for peace in his home and that he feels known and loved.', person:'Jake Morales', date:'2026-08-10', private:false, followUps:[] },
+  { id:'pr003', name:'Lily Nakamura', category:'Student', status:'Active', request:'Pray for Lily who is dealing with anxiety around college applications. She\'s a senior and feeling a lot of pressure from family expectations.', person:'Lily Nakamura', date:'2026-08-20', private:false, followUps:[{id:'fu002',text:'Had coffee with Lily. She felt heard. Encouraged her to keep coming to Campaigners.',date:'2026-08-25'}] },
+  { id:'pr004', name:'Marcus Williams', category:'Student', status:'Answered', request:'Marcus was searching spiritually and had a lot of hard questions about faith. Leaders have been meeting with him for months.', person:'Marcus Williams', date:'2026-06-01', private:false, answeredDate:'2026-08-05', followUps:[{id:'fu003',text:'Marcus committed his life to Christ at Frontier Ranch! Incredible week.',date:'2026-08-05'}] },
+  { id:'pr005', name:'Sophia Chen', category:'Student', status:'Active', request:'Sophia lost her grandmother last week and is grieving deeply. Please pray for her and her family during this time of loss.', person:'Sophia Chen', date:'2026-08-28', private:false, followUps:[] },
+  { id:'pr006', name:'Tyler Brooks', category:'Student', status:'Follow-Up Needed', request:'Tyler is struggling with a vaping addiction. His parents reached out to us. Pray for freedom and that he would be surrounded by good community.', person:'Tyler Brooks', date:'2026-08-01', private:false, followUps:[{id:'fu004',text:'Met with Tyler and his dad. He opened up for the first time. Progress!',date:'2026-08-18'}] },
+  { id:'pr007', name:'Aiden Park', category:'Student', status:'Active', request:'Pray for Aiden who just moved here from another state. He doesn\'t know anyone yet and finding his place in a new school has been hard.', person:'Aiden Park', date:'2026-08-26', private:false, followUps:[] },
+  { id:'pr008', name:'Hannah Reeves', category:'Student', status:'Answered', request:'Hannah was not interested in faith at all — kept coming to club for the fun. We prayed she would become curious about Jesus.', person:'Hannah Reeves', date:'2026-05-15', private:false, answeredDate:'2026-08-12', followUps:[{id:'fu005',text:'Hannah asked a leader to explain the gospel after club. God is working!',date:'2026-08-12'}] },
+  { id:'pr009', name:'Ryan Castillo', category:'Leader', status:'Active', request:'Ryan is taking on more leadership responsibility this fall. Pray for wisdom, confidence, and that he would lead from a place of grace and not performance.', person:'Ryan Castillo', date:'2026-08-17', private:false, followUps:[] },
+  { id:'pr010', name:'Ashley Moore', category:'Leader', status:'Follow-Up Needed', request:'Ashley is burning out. She\'s been pouring into kids all summer and needs rest and encouragement. Pray she stays connected to her own faith.', person:'Ashley Moore', date:'2026-08-14', private:false, followUps:[{id:'fu006',text:'Took Ashley to lunch and heard her heart. She appreciated it. Need to keep checking in.',date:'2026-08-21'}] },
+  { id:'pr011', name:'Coach Davis', category:'Leader', status:'Active', request:'Coach Davis just became a volunteer leader after years of coaching at Cleburne High. Pray for his transition into youth ministry.', person:'Davis (Coach)', date:'2026-08-24', private:false, followUps:[] },
+  { id:'pr012', name:'Upcoming Banquet', category:'Area / Ministry', status:'Active', request:'Pray for the fall fundraising banquet — that hearts would be moved to give, the message would be clear, and that new donors would connect with the mission.', person:'', date:'2026-08-19', private:false, followUps:[] },
+  { id:'pr013', name:'Fall Club Launch', category:'Area / Ministry', status:'Active', request:'Pray for the first club night of the fall semester. We\'re expecting a large crowd and want kids to feel welcomed and the Spirit to move.', person:'', date:'2026-08-22', private:false, followUps:[{id:'fu007',text:'62 kids showed up! Great energy. Three asked questions about faith afterward.',date:'2026-08-29'}] },
+  { id:'pr014', name:'Campaigners Growth', category:'Area / Ministry', status:'Follow-Up Needed', request:'We want to double our Campaigners attendance this fall. Pray for leaders with capacity and for students who are hungry to go deeper.', person:'', date:'2026-08-08', private:false, followUps:[] },
+  { id:'pr015', name:'Cleburne High School', category:'School', status:'Active', request:'Pray for an open door at Cleburne High — specifically for lunchroom access and permission to table at events.', person:'', date:'2026-08-11', private:false, followUps:[{id:'fu008',text:'Principal Hartley agreed to a meeting next week!',date:'2026-08-26'}] },
+  { id:'pr016', name:'Joshua Middle School', category:'School', status:'Active', request:'Several WyldLife kids at Joshua Middle are facing bullying. Pray for a culture shift and that our leaders would be a consistent presence.', person:'', date:'2026-08-16', private:false, followUps:[] },
+  { id:'pr017', name:'Frontier Ranch Prep', category:'Camp', status:'Answered', request:'Prayed for 15 kids to sign up for Frontier Ranch before the deadline. We barely had 8 at the time.', person:'', date:'2026-07-01', private:false, answeredDate:'2026-07-28', followUps:[{id:'fu009',text:'God provided! We sent 17 kids! Three made first-time commitments at camp.',date:'2026-07-28'}] },
+  { id:'pr018', name:'Fall Camp Planning', category:'Camp', status:'Planning', request:'Pray for wisdom in choosing the right camp for WyldLife kids this fall. Trying to decide between Crooked Creek and Lake Champion.', person:'', date:'2026-08-23', private:false, followUps:[] },
+  { id:'pr019', name:'Financial Need', category:'Personal', status:'Active', request:'One of our key leaders is facing unexpected medical bills and is stressed. Pray for peace and provision — privately.', person:'', date:'2026-08-18', private:true, followUps:[] },
+  { id:'pr020', name:'Daniel Ortiz', category:'Family', status:'Active', request:'Daniel\'s older brother was recently incarcerated. The family is devastated and Daniel is carrying the weight of it at school. Pray for the whole Ortiz family.', person:'Daniel Ortiz', date:'2026-08-27', private:false, followUps:[] },
+  { id:'pr021', name:'Nguyen Family', category:'Family', status:'Answered', request:'The Nguyen family lost their job and home earlier this summer. We\'ve been praying for stability and provision.', person:'', date:'2026-06-20', private:false, answeredDate:'2026-08-10', followUps:[{id:'fu010',text:'Mr. Nguyen got a job offer! Family moving into new apartment next week. Praise God!',date:'2026-08-10'}] },
+  { id:'pr022', name:'Outreach Prep', category:'Other', status:'Active', request:'We\'re partnering with local churches for a back-to-school outreach at the park. Pray for volunteers, weather, and kids who show up open to connection.', person:'', date:'2026-08-29', private:false, followUps:[] },
+]
+
 export default function Prayer({ store }) {
   const { addNotification } = store
 
   // Local state — persisted to localStorage
   const [requests, setRequests] = useState(() => {
-    try { const v = localStorage.getItem('yl_prayer'); return v ? JSON.parse(v) : [] } catch { return [] }
+    try { const v = localStorage.getItem('yl_prayer'); return v ? JSON.parse(v) : SEED_REQUESTS } catch { return SEED_REQUESTS }
   })
 
   function save(list) {
@@ -166,22 +191,22 @@ export default function Prayer({ store }) {
 
       {/* Stats row */}
       <div className="prayer-stats">
-        <div className="prayer-stat prayer-stat--blue">
+        <button className="prayer-stat prayer-stat--blue prayer-stat--clickable" onClick={() => { setActiveTab('all'); setFilterStatus('All') }}>
           <div className="prayer-stat-val">{totalActive}</div>
           <div className="prayer-stat-label">Active Requests</div>
-        </div>
-        <div className="prayer-stat prayer-stat--amber">
+        </button>
+        <button className="prayer-stat prayer-stat--amber prayer-stat--clickable" onClick={() => { setActiveTab('all'); setFilterStatus('Follow-Up Needed') }}>
           <div className="prayer-stat-val">{followUpNeeded}</div>
           <div className="prayer-stat-label">Follow-Up Needed</div>
-        </div>
-        <div className="prayer-stat prayer-stat--green">
+        </button>
+        <button className="prayer-stat prayer-stat--green prayer-stat--clickable" onClick={() => { setActiveTab('answered'); setFilterStatus('All') }}>
           <div className="prayer-stat-val">{answeredCount}</div>
           <div className="prayer-stat-label">Answered Prayers</div>
-        </div>
-        <div className="prayer-stat prayer-stat--purple">
+        </button>
+        <button className="prayer-stat prayer-stat--purple prayer-stat--clickable" onClick={() => { setActiveTab('answered'); setFilterStatus('All') }}>
           <div className="prayer-stat-val">{recentAnswered}</div>
           <div className="prayer-stat-label">Answered This Month</div>
-        </div>
+        </button>
       </div>
 
       {/* Tab bar + Add button */}

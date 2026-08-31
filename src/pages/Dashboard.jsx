@@ -8,7 +8,7 @@ function getBirthdayISO(s) {
   return s.birthday || (s.notes && (s.notes.match(/DOB (\d{4}-\d{2}-\d{2})/)||[])[1]) || ''
 }
 
-export default function Dashboard({ store, setPage }) {
+export default function Dashboard({ store, setPage, navigateTo }) {
   const { students, events, followUps, attendance, fundraisers, committeeMeetings } = store
   const [tab, setTab] = useState('overview')
   const [viewMeeting, setViewMeeting] = useState(null)
@@ -208,7 +208,7 @@ export default function Dashboard({ store, setPage }) {
             </div>
             {upcomingBirthdays.length === 0 && <p className="empty-msg">No birthdays in the next 30 days</p>}
             {upcomingBirthdays.map(({ student: s, diff, month, day, year }) => (
-              <button key={s.id} className="dd-row dd-row--clickable" onClick={() => setPage('students')}>
+              <button key={s.id} className="dd-row dd-row--clickable" onClick={() => (navigateTo || setPage)('students', navigateTo ? { openStudentId: s.id } : undefined)}>
                 <div className="dd-avatar" style={{background: s.program === 'WyldLife' ? '#3AAB35' : '#1B4FA3'}}>
                   {s.firstName[0]}{s.lastName[0]}
                 </div>
@@ -234,7 +234,7 @@ export default function Dashboard({ store, setPage }) {
             </div>
             {upcomingEvents.length === 0 && <p className="empty-msg">No events in the next 30 days</p>}
             {upcomingEvents.map(e => (
-              <button key={e.id} className="dd-row dd-row--clickable" onClick={() => setPage('events')}>
+              <button key={e.id} className="dd-row dd-row--clickable" onClick={() => (navigateTo || setPage)('events', navigateTo ? { openEventId: e.id } : undefined)}>
                 <div className="dd-event-dot" style={{background: TYPE_COLOR[e.type]||'#999'}} />
                 <div style={{flex:1,textAlign:'left'}}>
                   <div style={{fontWeight:700,fontSize:14}}>{TYPE_EMOJI[e.type]} {e.title}</div>

@@ -8,7 +8,6 @@ const SECTIONS = [
   { id: 'camps', label: '⛺ Camps' },
   { id: 'global', label: '🌍 Global Reach' },
   { id: 'stats', label: '📊 By the Numbers' },
-  { id: 'jc', label: '🏡 Johnson County' },
 ]
 
 const TIMELINE = [
@@ -26,18 +25,18 @@ const TIMELINE = [
 ]
 
 const CAMPS = [
-  { name: 'Malibu Club', location: 'British Columbia, Canada', desc: 'Accessible only by boat, nestled in Princess Louisa Inlet. Often called "the most beautiful place on earth." HS camp.', img: '🏔️', url: 'https://www.younglife.org/find/camp-locations/' },
+  { name: 'Malibu Club', location: 'British Columbia, Canada', desc: 'Accessible only by boat, nestled in Princess Louisa Inlet. Often called "the most beautiful place on earth." HS camp.', img: '🏔️', url: 'https://malibuclub.younglife.org/' },
   { name: 'Crooked Creek Ranch', location: 'Fraser, Colorado', desc: 'A premier property in the Rocky Mountains — the primary middle school / WyldLife destination for Texas areas.', img: '⛰️', url: 'https://crookedcreek.younglife.org/' },
   { name: 'Frontier Ranch', location: 'Buena Vista, Colorado', desc: 'High-country Colorado HS camp with whitewater rafting, horseback riding, and breathtaking views of the Rockies.', img: '🤠', url: 'https://frontierranch.younglife.org/' },
-  { name: 'Castaway Club', location: 'Detroit Lakes, Minnesota', desc: 'A lakeside paradise in the Minnesota north woods. HS camp known for watersports and excellent program.', img: '🌊', url: 'https://www.younglife.org/find/camp-locations/' },
+  { name: 'Castaway Club', location: 'Detroit Lakes, Minnesota', desc: 'A lakeside paradise in the Minnesota north woods. HS camp known for watersports and excellent program.', img: '🌊', url: 'https://castaway.younglife.org/' },
   { name: 'Trail West Lodge', location: 'Buena Vista, Colorado', desc: 'Small, intimate HS camp for deeper discipleship. Stunning Collegiate Peaks backdrop.', img: '🌲', url: 'https://trailwest.younglife.org/' },
   { name: 'Sharptop Cove', location: 'Jasper, Georgia', desc: 'Southern Appalachian beauty. HS camp serving the southeastern U.S.', img: '🏕️', url: 'https://sharptopcove.younglife.org/' },
   { name: 'Woodleaf', location: 'Challenge, California', desc: 'In the Sierra Nevada foothills north of Sacramento. HS camp with stunning outdoor adventures.', img: '🌄', url: 'https://woodleaf.younglife.org/' },
   { name: 'Lake Champion', location: 'Glen Spey, New York', desc: 'Overlooking a beautiful lake in the Hudson Valley. HS camp serving the Northeast.', img: '🏞️', url: 'https://lakechampion.younglife.org/' },
   { name: 'Saranac Village', location: 'Saranac Lake, New York', desc: 'Adirondack lakefront property. Serves the Northeast and Canada.', img: '🛶', url: 'https://saranac.younglife.org/' },
   { name: 'Carolina Point', location: 'Brevard, North Carolina', desc: 'Nestled in the Blue Ridge Mountains with a pristine lake. HS camp for the Southeast.', img: '🌿', url: 'https://carolinapoint.younglife.org/' },
-  { name: 'Washington Family Ranch', location: 'Antelope, Oregon', desc: 'Young Life\'s largest property — over 65,000 acres in the high Oregon desert. Incredible scale and beauty.', img: '🦅', url: 'https://www.younglife.org/find/camp-locations/' },
-  { name: 'Oakbridge', location: 'Goshen, Indiana', desc: 'Midwest base camp with a beautiful lake and rolling hills. HS camp serving the Great Lakes region.', img: '🌾', url: 'https://www.younglife.org/find/camp-locations/' },
+  { name: 'Washington Family Ranch', location: 'Antelope, Oregon', desc: 'Young Life\'s largest property — over 65,000 acres in the high Oregon desert. Incredible scale and beauty.', img: '🦅', url: 'https://washingtonfamilyranch.younglife.org/' },
+  { name: 'Oakbridge', location: 'Ramona, California', desc: 'One hour east of San Diego. WyldLife camp with skate park, archery, and wide-open natural beauty.', img: '🌾', url: 'https://oakbridge.younglife.org/' },
 ]
 
 const PROGRAMS_INFO = [

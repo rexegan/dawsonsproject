@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Modal from '../components/Modal'
 import { formatPhone } from '../utils/phone'
 import './Events.css'
@@ -61,7 +61,7 @@ function fmtDate(d) {
   return dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})
 }
 
-export default function Events({ store }) {
+export default function Events({ store, openEventId }) {
   const { events, leaders, students, getEventAttendance, addEvent, updateEvent, deleteEvent, addNotification } = store
   const [filter, setFilter] = useState('all')
   const [filterType, setFilterType] = useState('All')
@@ -86,6 +86,13 @@ export default function Events({ store }) {
       return true
     })
     .sort((a,b) => filter === 'past' ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date))
+
+  useEffect(() => {
+    if (openEventId) {
+      const e = events.find(e => e.id === openEventId)
+      if (e) openView(e)
+    }
+  }, [openEventId]) // eslint-disable-line
 
   function openAdd() { setForm(EMPTY_EVENT); setEditId(null); setModal('form') }
   function openEdit(e) { setForm({...e}); setEditId(e.id); setModal('form') }

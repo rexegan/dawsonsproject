@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Modal from '../components/Modal'
 import { GRADES } from '../data/initialData'
 import { formatPhone } from '../utils/phone'
@@ -27,7 +27,7 @@ const EMPTY_STUDENT = {
 
 const TAGS = ['interested','campaigners','camp','leadership','multiplier','new','follow-up']
 
-export default function Students({ store }) {
+export default function Students({ store, openStudentId }) {
   const { students, leaders, schools: storeSchools, addStudent, updateStudent, deleteStudent, addNotification } = store
   const [search, setSearch] = useState('')
   const [filterProgram, setFilterProgram] = useState('All')
@@ -74,6 +74,13 @@ export default function Students({ store }) {
   })
 
   const schools = storeSchools && storeSchools.length ? storeSchools : [...new Set(students.map(s => s.school))].sort()
+
+  useEffect(() => {
+    if (openStudentId) {
+      const s = students.find(s => s.id === openStudentId)
+      if (s) openView(s)
+    }
+  }, [openStudentId]) // eslint-disable-line
 
   function openAdd() { setForm(EMPTY_STUDENT); setModal('add') }
   function openEdit(s) { setSelected(s); setForm({ ...s }); setModal('edit') }
