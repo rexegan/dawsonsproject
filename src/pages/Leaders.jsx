@@ -1,11 +1,14 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Modal from '../components/Modal'
 import { formatPhone } from '../utils/phone'
 import './Leaders.css'
 
-const ROLES = ['Area Director','YoungLife Leader','WyldLife Leader','Campaigners Leader','Volunteer','Staff']
+const ROLES = ['Area Director','YoungLife Leader','WyldLife Leader','Campaigners Leader','Committee Member','Volunteer','Staff']
 const COLORS = ['#E8392A','#1B4FA3','#3AAB35','#854883','#d97706','#0891b2','#FF837D','#F3C546']
 const EMPTY = { firstName:'', lastName:'', role:'YoungLife Leader', program:'YoungLife', phone:'', email:'', bio:'', schools:[], initials:'', color:'#1B4FA3' }
+
+function loadOrder() { try { const v = localStorage.getItem('yl_leaders_order'); return v ? JSON.parse(v) : [] } catch { return [] } }
+function saveOrder(arr) { try { localStorage.setItem('yl_leaders_order', JSON.stringify(arr)) } catch {} }
 
 export default function Leaders({ store }) {
   const { leaders, students, followUps, schools: storeSchools, getStudentAttendance, addLeader, updateLeader, deleteLeader, addNotification } = store
@@ -15,8 +18,35 @@ export default function Leaders({ store }) {
   const [viewLeader, setViewLeader] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
   const [filterProgram, setFilterProgram] = useState('All')
+  const [order, setOrder] = useState(loadOrder)
+  const dragId = useRef(null)
+  const dragOverId = useRef(null)
 
-  const filtered = leaders.filter(l => filterProgram === 'All' || l.program === filterProgram || l.program === 'Both')
+  function getSorted(list) {
+    const known = order.filter(id => list.find(l => l.id === id))
+    const rest = list.filter(l => !known.includes(l.id)).map(l => l.id)
+    const ids = [...known, ...rest]
+    return ids.map(id => list.find(l => l.id === id)).filter(Boolean)
+  }
+
+  function onDragStart(id) { dragId.current = id }
+  function onDragOver(e, id) { e.preventDefault(); dragOverId.current = id }
+  function onDrop(allLeaders) {
+    if (!dragId.current || dragId.current === dragOverId.current) return
+    const ids = getSorted(allLeaders).map(l => l.id)
+    const from = ids.indexOf(dragId.current)
+    const to = ids.indexOf(dragOverId.current)
+    if (from === -1 || to === -1) return
+    ids.splice(from, 1)
+    ids.splice(to, 0, dragId.current)
+    setOrder(ids)
+    saveOrder(ids)
+    dragId.current = null
+    dragOverId.current = null
+  }
+
+  const allFiltered = getSorted(leaders.filter(l => filterProgram === 'All' || l.program === filterProgram || l.program === 'Both'))
+  const filtered = allFiltered
 
   function openAdd() { setForm(EMPTY); setEditId(null); setModal('form') }
   function openEdit(l) { setForm({...l, schools: l.schools||[]}); setEditId(l.id); setModal('form') }
@@ -81,7 +111,14 @@ export default function Leaders({ store }) {
           const myStudents = leaderStudents(l.id)
           const myFU = leaderFollowUps(l.id)
           return (
-            <div key={l.id} className="leader-card" onClick={() => openView(l)}>
+            <div key={l.id} className="leader-card"
+              draggable
+              onDragStart={() => onDragStart(l.id)}
+              onDragOver={e => onDragOver(e, l.id)}
+              onDrop={() => onDrop(leaders.filter(x => filterProgram === 'All' || x.program === filterProgram || x.program === 'Both'))}
+              onClick={() => openView(l)}
+            >
+              <div className="leader-drag-handle" onClick={e => e.stopPropagation()}>⠿</div>
               <div className="leader-card-top">
                 <div className="leader-avatar-lg" style={{background: l.color}}>{l.initials}</div>
                 <div>
