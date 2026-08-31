@@ -43,3 +43,22 @@
   background: var(--gray-100); color: var(--gray-700);
   font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px;
 }
+
+/* ── Committee section ── */
+.leaders-committee {
+  background: white; border-radius: var(--radius-lg);
+  padding: 20px; box-shadow: var(--shadow-sm);
+  border-top: 3px solid #1B4FA3;
+}
+.leaders-committee-title {
+  font-size: 16px; font-weight: 800; color: #1B4FA3;
+  margin-bottom: 14px;
+}
+.leaders-committee-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;
+}
+.committee-card {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: var(--gray-50); border-radius: 10px; padding: 16px;
+  border: 1px solid var(--gray-100);
+}

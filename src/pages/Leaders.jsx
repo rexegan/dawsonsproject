@@ -93,7 +93,7 @@ export default function Leaders({ store }) {
               {l.bio && <p className="leader-card-bio">{l.bio}</p>}
               <div className="leader-card-stats">
                 <div className="leader-stat"><span className="ls-val">{myStudents.length}</span><span className="ls-lbl">Students</span></div>
-                <div className="leader-stat"><span className="ls-val">{myFU.filter(f=>!f.completed).length}</span><span className="ls-lbl">Pending FU</span></div>
+                <div className="leader-stat"><span className="ls-val">{myFU.filter(f=>!f.completed).length}</span><span className="ls-lbl">Pending<br/>Follow-up</span></div>
                 <div className="leader-stat"><span className="ls-val">{(l.schools||[]).length}</span><span className="ls-lbl">Schools</span></div>
               </div>
               <div className="leader-card-contact">
@@ -103,6 +103,29 @@ export default function Leaders({ store }) {
             </div>
           )
         })}
+      </div>
+
+      {/* Johnson County YL Committee */}
+      <div className="leaders-committee">
+        <h3 className="leaders-committee-title">Johnson County Young Life Committee</h3>
+        <div className="leaders-committee-grid">
+          {[
+            { name: 'Monica Farum', role: 'Committee Member', phone: '(817) 247-7495', email: 'monicafaram@gmail.com', initials: 'MF', color: '#854883' },
+            { name: 'Rex Russell', role: 'Committee Chair', phone: '(817) 689-4560', email: 'rex@russellwg.com', initials: 'RR', color: '#1B4FA3' },
+          ].map(m => (
+            <div key={m.name} className="committee-card">
+              <div className="leader-avatar-lg" style={{background:m.color,width:44,height:44,fontSize:15,flexShrink:0}}>{m.initials}</div>
+              <div style={{flex:1}}>
+                <div style={{fontWeight:700,fontSize:15,color:'var(--gray-900)'}}>{m.name}</div>
+                <div style={{fontSize:12,color:'var(--gray-500)',marginBottom:8}}>{m.role}</div>
+                <div style={{display:'flex',flexDirection:'column',gap:4}}>
+                  <a href={`tel:${m.phone}`} className="contact-link">📞 {m.phone}</a>
+                  <a href={`mailto:${m.email}`} className="contact-link">✉️ {m.email}</a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Add/Edit Modal */}
