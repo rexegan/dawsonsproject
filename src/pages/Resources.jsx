@@ -709,6 +709,49 @@ const UPDATES_501C3 = [
   },
 ]
 
+function BizForm({ draft, setDraft }) {
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:12}}>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+        <div style={{gridColumn:'1/-1'}}>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Business Name *</div>
+          <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={draft.name} onChange={e=>setDraft(d=>({...d,name:e.target.value}))} placeholder="Business name" />
+        </div>
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Category</div>
+          <select className="settings-input" value={draft.category} onChange={e=>setDraft(d=>({...d,category:e.target.value}))}>
+            {['Restaurant','Retail','Healthcare','Financial','Construction','Real Estate','Automotive','Education','Energy','Agriculture','Professional','Faith & Community','Entertainment','Hospitality'].map(c=><option key={c}>{c}</option>)}
+          </select>
+        </div>
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>City</div>
+          <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={draft.city} onChange={e=>setDraft(d=>({...d,city:e.target.value}))} placeholder="Cleburne" />
+        </div>
+        <div style={{gridColumn:'1/-1'}}>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Address</div>
+          <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={draft.address} onChange={e=>setDraft(d=>({...d,address:e.target.value}))} placeholder="123 Main St, Cleburne, TX 76033" />
+        </div>
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Phone</div>
+          <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={draft.phone} onChange={e=>setDraft(d=>({...d,phone:e.target.value}))} placeholder="(817) 555-0000" />
+        </div>
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Website</div>
+          <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={draft.website} onChange={e=>setDraft(d=>({...d,website:e.target.value}))} placeholder="https://..." />
+        </div>
+        <div style={{gridColumn:'1/-1'}}>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Ownership Type</div>
+          <input className="settings-input" style={{width:'100%',boxSizing:'border-box'}} value={draft.ownership} onChange={e=>setDraft(d=>({...d,ownership:e.target.value}))} placeholder="Local — family owned" />
+        </div>
+        <div style={{gridColumn:'1/-1'}}>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--gray-500)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:3}}>Young Life Notes</div>
+          <textarea className="settings-input" rows={3} style={{width:'100%',boxSizing:'border-box',resize:'vertical'}} value={draft.notes} onChange={e=>setDraft(d=>({...d,notes:e.target.value}))} placeholder="Sponsorship potential, contact info, event ideas…" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function OrgField({ label, value, onChange }) {
   const isTextarea = label === 'Notes'
   return (
@@ -822,6 +865,31 @@ export default function Resources({ store }) {
   const [bizCategory, setBizCategory] = useState('All')
   const [selectedBiz, setSelectedBiz] = useState(null)
   const [bizSearch, setBizSearch] = useState('')
+  const [bizList, setBizList] = useState(() => { try { const v = localStorage.getItem('yl_businesses'); return v ? JSON.parse(v) : BUSINESSES } catch { return BUSINESSES } })
+  const [bizEditOpen, setBizEditOpen] = useState(false)
+  const [bizEditDraft, setBizEditDraft] = useState(null)
+  const [bizAddOpen, setBizAddOpen] = useState(false)
+  const [bizAddDraft, setBizAddDraft] = useState({ name:'', category:'Restaurant', city:'', address:'', phone:'', website:'', ownership:'', notes:'' })
+
+  function bizPersist(list) { try { localStorage.setItem('yl_businesses', JSON.stringify(list)) } catch {} }
+  function bizSaveEdit() {
+    const updated = bizList.map(b => b.id === bizEditDraft.id ? bizEditDraft : b)
+    setBizList(updated); bizPersist(updated)
+    setSelectedBiz(bizEditDraft); setBizEditOpen(false)
+  }
+  function bizDelete(id) {
+    const updated = bizList.filter(b => b.id !== id)
+    setBizList(updated); bizPersist(updated)
+    setSelectedBiz(null); setBizEditOpen(false)
+  }
+  function bizAdd() {
+    if (!bizAddDraft.name.trim()) return
+    const newBiz = { ...bizAddDraft, id: 'bu' + Date.now() }
+    const updated = [newBiz, ...bizList]
+    setBizList(updated); bizPersist(updated)
+    setBizAddOpen(false); setBizAddDraft({ name:'', category:'Restaurant', city:'', address:'', phone:'', website:'', ownership:'', notes:'' })
+    setSelectedBiz(newBiz)
+  }
 
   const { org } = store
   const directorName = org?.areaDirector || 'Theresa Boydston'
@@ -1033,11 +1101,12 @@ export default function Resources({ store }) {
               value={bizSearch}
               onChange={e=>setBizSearch(e.target.value)}
             />
-            <span style={{fontSize:13,color:'var(--gray-500)'}}>{BUSINESSES.filter(b=>(bizCategory==='All'||b.category===bizCategory)&&(!bizSearch||b.name.toLowerCase().includes(bizSearch.toLowerCase())||b.city.toLowerCase().includes(bizSearch.toLowerCase()))).length} businesses</span>
+            <span style={{fontSize:13,color:'var(--gray-500)'}}>{bizList.filter(b=>(bizCategory==='All'||b.category===bizCategory)&&(!bizSearch||b.name.toLowerCase().includes(bizSearch.toLowerCase())||b.city.toLowerCase().includes(bizSearch.toLowerCase()))).length} businesses</span>
+            <button className="btn-primary" style={{fontSize:12,padding:'7px 16px',whiteSpace:'nowrap'}} onClick={()=>setBizAddOpen(true)}>+ Add Business</button>
           </div>
           <div className="resources-filter-bar" style={{flexWrap:'wrap'}}>
             {BIZ_CATEGORIES.map(c=>{
-              const cnt = c==='All' ? BUSINESSES.length : BUSINESSES.filter(b=>b.category===c).length
+              const cnt = c==='All' ? bizList.length : bizList.filter(b=>b.category===c).length
               return (
                 <button key={c} className={`level-chip ${bizCategory===c?'level-chip--active':''}`} onClick={()=>setBizCategory(c)} style={{marginBottom:4}}>
                   {c} <span style={{fontWeight:700,opacity:.75,fontSize:'0.85em'}}>({cnt})</span>
@@ -1046,7 +1115,7 @@ export default function Resources({ store }) {
             })}
           </div>
           <div className="biz-grid">
-            {BUSINESSES.filter(b=>(bizCategory==='All'||b.category===bizCategory)&&(!bizSearch||b.name.toLowerCase().includes(bizSearch.toLowerCase())||b.city.toLowerCase().includes(bizSearch.toLowerCase()))).map(b=>(
+            {bizList.filter(b=>(bizCategory==='All'||b.category===bizCategory)&&(!bizSearch||b.name.toLowerCase().includes(bizSearch.toLowerCase())||b.city.toLowerCase().includes(bizSearch.toLowerCase()))).map(b=>(
               <button key={b.id} className="biz-card" onClick={()=>setSelectedBiz(b)}>
                 <div className="biz-card-header">
                   <span className="biz-cat">{b.category}</span>
@@ -1062,8 +1131,8 @@ export default function Resources({ store }) {
       )}
 
       {/* BUSINESS DETAIL MODAL */}
-      {selectedBiz && (
-        <Modal open title={selectedBiz.name} onClose={()=>setSelectedBiz(null)} size="md">
+      {selectedBiz && !bizEditOpen && (
+        <Modal title={selectedBiz.name} onClose={()=>setSelectedBiz(null)} size="md">
           <div style={{display:'flex',flexDirection:'column',gap:14}}>
             <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
               <span className="biz-cat">{selectedBiz.category}</span>
@@ -1082,8 +1151,32 @@ export default function Resources({ store }) {
             )}
             <div className="modal-actions">
               <button className="btn-secondary" onClick={()=>setSelectedBiz(null)}>Close</button>
+              <button className="btn-secondary" onClick={()=>{ setBizEditDraft({...selectedBiz}); setBizEditOpen(true) }}>✏️ Edit</button>
               {selectedBiz.website && <button className="btn-primary" onClick={()=>window.open(selectedBiz.website,'_blank')}>Visit Website →</button>}
             </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* BUSINESS EDIT MODAL */}
+      {bizEditOpen && bizEditDraft && (
+        <Modal title="Edit Business" onClose={()=>setBizEditOpen(false)} size="md">
+          <BizForm draft={bizEditDraft} setDraft={setBizEditDraft} />
+          <div className="modal-actions" style={{marginTop:16}}>
+            <button className="btn-danger" style={{marginRight:'auto'}} onClick={()=>{ if(window.confirm('Delete this business?')) bizDelete(bizEditDraft.id) }}>Delete</button>
+            <button className="btn-secondary" onClick={()=>setBizEditOpen(false)}>Cancel</button>
+            <button className="btn-primary" onClick={bizSaveEdit} disabled={!bizEditDraft.name.trim()}>Save Changes</button>
+          </div>
+        </Modal>
+      )}
+
+      {/* ADD BUSINESS MODAL */}
+      {bizAddOpen && (
+        <Modal title="Add Business" onClose={()=>setBizAddOpen(false)} size="md">
+          <BizForm draft={bizAddDraft} setDraft={setBizAddDraft} />
+          <div className="modal-actions" style={{marginTop:16}}>
+            <button className="btn-secondary" onClick={()=>setBizAddOpen(false)}>Cancel</button>
+            <button className="btn-primary" onClick={bizAdd} disabled={!bizAddDraft.name.trim()}>Add Business</button>
           </div>
         </Modal>
       )}
