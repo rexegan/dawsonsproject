@@ -872,29 +872,39 @@ export default function Resources({ store }) {
   const [bizAddDraft, setBizAddDraft] = useState({ name:'', category:'Restaurant', city:'', address:'', phone:'', website:'', ownership:'', notes:'' })
   const [bizSelectMode, setBizSelectMode] = useState(false)
   const [bizSelected, setBizSelected] = useState(new Set())
+  const [bizPreview, setBizPreview] = useState(null) // array of rows to preview/download
 
   function bizToggleSelect(id) { setBizSelected(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s }) }
   function bizSelectAll(list) { setBizSelected(new Set(list.map(b => b.id))) }
-  function bizDownloadCSV() {
-    const list = bizList.filter(b => bizSelected.size === 0 || bizSelected.has(b.id))
-    const rows = [['Name','Street Address','City','State','ZIP']]
-    list.forEach(b => {
+
+  function bizParseRows(list) {
+    return list.map(b => {
       const addr = b.address || ''
       const parts = addr.split(',').map(s => s.trim())
-      let street = parts[0] || ''
-      let city = b.city || ''
-      let state = 'TX'
-      let zip = ''
-      const last = parts[parts.length - 1] || ''
-      const stateZip = last.match(/([A-Z]{2})\s+(\d{5}(-\d{4})?)/)
+      const street = parts[0] || ''
+      const city = b.city || ''
+      let state = 'TX', zip = ''
+      const stateZip = (parts[parts.length - 1] || '').match(/([A-Z]{2})\s+(\d{5}(-\d{4})?)/)
       if (stateZip) { state = stateZip[1]; zip = stateZip[2] }
-      rows.push([b.name, street, city, state, zip])
+      return { name: b.name, street, city, state, zip }
     })
-    const csv = rows.map(r => r.map(v => `"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n')
+  }
+
+  function bizOpenPreview() {
+    const list = bizList.filter(b => bizSelected.has(b.id))
+    setBizPreview(bizParseRows(list))
+  }
+
+  function bizTriggerDownload(rows) {
+    const headers = ['Name','Street Address','City','State','ZIP']
+    const csv = [headers, ...rows.map(r => [r.name, r.street, r.city, r.state, r.zip])]
+      .map(r => r.map(v => `"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n')
     const a = document.createElement('a')
     a.href = URL.createObjectURL(new Blob([csv], { type:'text/csv' }))
-    a.download = 'yl-businesses.csv'
+    a.download = 'yl-mailing-labels.csv'
+    document.body.appendChild(a)
     a.click()
+    document.body.removeChild(a)
   }
 
   function bizPersist(list) { try { localStorage.setItem('yl_businesses', JSON.stringify(list)) } catch {} }
@@ -1139,7 +1149,7 @@ export default function Resources({ store }) {
                 return <>
                   <button className="btn-secondary" style={{fontSize:12,padding:'5px 12px'}} onClick={()=>bizSelectAll(visible)}>Select All ({visible.length})</button>
                   <button className="btn-secondary" style={{fontSize:12,padding:'5px 12px'}} onClick={()=>setBizSelected(new Set())}>Clear</button>
-                  <button className="btn-primary" style={{fontSize:12,padding:'5px 14px'}} disabled={bizSelected.size===0} onClick={bizDownloadCSV}>
+                  <button className="btn-primary" style={{fontSize:12,padding:'5px 14px'}} disabled={bizSelected.size===0} onClick={bizOpenPreview}>
                     ⬇ Download {bizSelected.size > 0 ? `(${bizSelected.size})` : ''} CSV
                   </button>
                   <button className="btn-secondary" style={{fontSize:12,padding:'5px 12px'}} onClick={()=>{ setBizSelectMode(false); setBizSelected(new Set()) }}>Cancel</button>
@@ -1417,6 +1427,41 @@ export default function Resources({ store }) {
           />
         </Modal>
       )}
+      {/* MAILING LABEL PREVIEW MODAL */}
+      {bizPreview && (
+        <Modal title={`Mailing Label Preview — ${bizPreview.length} business${bizPreview.length!==1?'es':''}`} onClose={()=>setBizPreview(null)} size="lg">
+          <div style={{display:'flex',flexDirection:'column',gap:16}}>
+            <p style={{fontSize:13,color:'var(--gray-600)',margin:0}}>Review the addresses below, then click Download CSV to save the file for printing mailing labels.</p>
+            <div style={{overflowX:'auto'}}>
+              <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
+                <thead>
+                  <tr style={{background:'var(--gray-50)',textAlign:'left'}}>
+                    {['Name','Street Address','City','State','ZIP'].map(h=>(
+                      <th key={h} style={{padding:'8px 12px',fontWeight:700,color:'var(--gray-600)',borderBottom:'2px solid var(--gray-200)',whiteSpace:'nowrap'}}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {bizPreview.map((r,i)=>(
+                    <tr key={i} style={{borderBottom:'1px solid var(--gray-100)'}}>
+                      <td style={{padding:'8px 12px',color:'var(--gray-900)',fontWeight:600}}>{r.name}</td>
+                      <td style={{padding:'8px 12px',color:'var(--gray-700)'}}>{r.street}</td>
+                      <td style={{padding:'8px 12px',color:'var(--gray-700)'}}>{r.city}</td>
+                      <td style={{padding:'8px 12px',color:'var(--gray-700)'}}>{r.state}</td>
+                      <td style={{padding:'8px 12px',color:'var(--gray-700)'}}>{r.zip}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={()=>setBizPreview(null)}>Close</button>
+              <button className="btn-primary" onClick={()=>bizTriggerDownload(bizPreview)}>⬇ Download CSV</button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
       {orgModal === 'studentleaders' && (
         <Modal open title="Student Leaders in Training" onClose={() => { setOrgModal(false); setOrgEditDraft(null) }} size="xl">
           <OrgListModal

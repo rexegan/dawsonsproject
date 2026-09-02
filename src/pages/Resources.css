@@ -23,7 +23,8 @@
 .resources-filter-bar { display: flex; gap: 8px; flex-wrap: wrap; }
 .level-chip { padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--gray-200); background: white; color: var(--gray-600); transition: all .15s; }
 .level-chip:hover { border-color: #1B4FA3; color: #1B4FA3; }
-.level-chip--active { background: #1B4FA3; color: white; border-color: #1B4FA3; }
+.level-chip--active { background: #1B4FA3; color: white !important; border-color: #1B4FA3; }
+.level-chip--active:hover { background: #1B4FA3; color: white !important; border-color: #1B4FA3; }
 
 .news-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap: 14px; }
 .news-card {
