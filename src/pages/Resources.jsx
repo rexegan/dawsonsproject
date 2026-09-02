@@ -52,42 +52,42 @@ const CAMPS = [
   {
     id:'c1', name:'Frontier Ranch', type:'YoungLife', state:'CO',
     address:'1000 Frontier Ranch Rd, Buena Vista, CO 81211',
-    phone:'(719) 395-6343', website:'https://younglife.org/camps/',
+    phone:'(719) 395-6343', website:'https://younglife.org',
     description:'High-adventure camp in the Colorado Rockies. The flagship YoungLife camp offering whitewater rafting, rock climbing, zip lines, and more.',
     capacity:720, season:'June–August',
   },
   {
     id:'c2', name:'Windy Gap', type:'YoungLife', state:'NC',
     address:'1061 Camp Windy Gap Rd, Ridgecrest, NC 28770',
-    phone:'(828) 686-2451', website:'https://younglife.org/camps/',
+    phone:'(828) 686-2451', website:'https://younglife.org',
     description:'Blue Ridge Mountain camp known for its creative programming, excellent food, and life-changing community.',
     capacity:500, season:'May–October',
   },
   {
     id:'c3', name:'Woodleaf', type:'YoungLife', state:'CA',
     address:'14911 Challenge Cut Off Rd, Challenge, CA 95925',
-    phone:'(530) 675-2209', website:'https://younglife.org/camps/',
+    phone:'(530) 675-2209', website:'https://younglife.org',
     description:'Northern California camp set on 700 acres in the Feather River Canyon. Features a waterslide, rappelling, and horseback riding.',
     capacity:540, season:'June–August',
   },
   {
     id:'c4', name:'Washington Family Ranch', type:'YoungLife', state:'OR',
     address:'87500 Camp Hancock Rd, Antelope, OR 97001',
-    phone:'(541) 489-3344', website:'https://younglife.org/camps/',
+    phone:'(541) 489-3344', website:'https://younglife.org',
     description:'Expansive high desert camp in central Oregon with world-class facilities including a 500-seat dining hall and state-of-the-art recreation.',
     capacity:900, season:'June–August',
   },
   {
     id:'c5', name:'Crooked Creek Ranch', type:'WyldLife', state:'CO',
     address:'49390 Hwy 125, Granby, CO 80446',
-    phone:'(970) 887-3342', website:'https://younglife.org/camps/',
+    phone:'(970) 887-3342', website:'https://younglife.org',
     description:'Premier WyldLife camp designed specifically for middle school students in the Colorado mountains.',
     capacity:480, season:'June–August',
   },
   {
     id:'c6', name:'SharpTop Cove', type:'WyldLife', state:'GA',
     address:'1 SharpTop Cove Ln, Jasper, GA 30143',
-    phone:'(706) 268-1010', website:'https://younglife.org/camps/',
+    phone:'(706) 268-1010', website:'https://younglife.org',
     description:'Georgia mountain camp serving WyldLife middle schoolers with a zipline, waterslide, rock wall, and incredible program.',
     capacity:400, season:'June–August',
   },
@@ -1409,7 +1409,7 @@ export default function Resources({ store }) {
             </div>
             <div className="modal-actions">
               <button className="btn-secondary" onClick={() => setSelectedCamp(null)}>Close</button>
-              <button className="btn-primary" onClick={() => window.open(selectedCamp.website,'_blank')}>Visit Website →</button>
+              <button className="btn-primary" onClick={() => window.open(selectedCamp.website,'_blank')}>younglife.org →</button>
             </div>
           </div>
         </Modal>
