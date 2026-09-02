@@ -900,7 +900,7 @@ export default function Resources({ store }) {
     const csv = [headers, ...rows.map(r => [r.name, r.street, r.city, r.state, r.zip])]
       .map(r => r.map(v => `"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n')
     const a = document.createElement('a')
-    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv)
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent('﻿' + csv)
     a.download = 'yl-mailing-labels.csv'
     document.body.appendChild(a)
     a.click()
@@ -1434,6 +1434,9 @@ export default function Resources({ store }) {
         <Modal title={`Mailing Label Preview — ${bizPreview.length} business${bizPreview.length!==1?'es':''}`} onClose={()=>setBizPreview(null)} size="lg">
           <div style={{display:'flex',flexDirection:'column',gap:16}}>
             <p style={{fontSize:13,color:'var(--gray-600)',margin:0}}>Review the addresses below, then click Download CSV to save the file for printing mailing labels.</p>
+            <div style={{background:'#fef9ec',border:'1px solid #fde68a',borderRadius:8,padding:'10px 14px',fontSize:12,color:'var(--gray-700)'}}>
+              💡 <strong>On a Mac?</strong> After downloading, right-click the file and choose <strong>Open With → Microsoft Excel</strong> to use it for label printing.
+            </div>
             <div style={{overflowX:'auto'}}>
               <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
                 <thead>
