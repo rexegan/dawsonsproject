@@ -14,7 +14,8 @@
   transition: all .15s; cursor: pointer;
 }
 .resources-tab:hover { border-color: #1B4FA3; color: #1B4FA3; }
-.resources-tab--active { background: #1B4FA3; color: white; border-color: #1B4FA3; }
+.resources-tab--active { background: #1B4FA3; color: white !important; border-color: #1B4FA3; }
+.resources-tab--active:hover { background: #1B4FA3; color: white !important; }
 
 .resources-section { display: flex; flex-direction: column; gap: 16px; }
 
