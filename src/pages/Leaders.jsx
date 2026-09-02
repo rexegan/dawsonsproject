@@ -116,7 +116,7 @@ export default function Leaders({ store }) {
               onDragStart={() => onDragStart(l.id)}
               onDragOver={e => onDragOver(e, l.id)}
               onDrop={() => onDrop(leaders.filter(x => filterProgram === 'All' || x.program === filterProgram || x.program === 'Both'))}
-              onClick={() => openView(l)}
+              onClick={() => openEdit(l)}
             >
               <div className="leader-drag-handle" onClick={e => e.stopPropagation()}>⠿</div>
               <div className="leader-card-top">
