@@ -900,7 +900,7 @@ export default function Resources({ store }) {
     const csv = [headers, ...rows.map(r => [r.name, r.street, r.city, r.state, r.zip])]
       .map(r => r.map(v => `"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n')
     const a = document.createElement('a')
-    a.href = URL.createObjectURL(new Blob([csv], { type:'text/csv' }))
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv)
     a.download = 'yl-mailing-labels.csv'
     document.body.appendChild(a)
     a.click()
