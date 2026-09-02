@@ -1183,14 +1183,16 @@ export default function Resources({ store }) {
                 className={`biz-card${bizSelectMode && bizSelected.has(b.id) ? ' biz-card--selected' : ''}`}
                 onClick={()=> bizSelectMode ? bizToggleSelect(b.id) : setSelectedBiz(b)}
               >
-                {bizSelectMode && (
-                  <div style={{position:'absolute',top:10,right:10,width:18,height:18,borderRadius:4,border:'2px solid',borderColor:bizSelected.has(b.id)?'#1B4FA3':'var(--gray-300)',background:bizSelected.has(b.id)?'#1B4FA3':'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,color:'white',fontWeight:800}}>
-                    {bizSelected.has(b.id)?'✓':''}
-                  </div>
-                )}
                 <div className="biz-card-header">
                   <span className="biz-cat">{b.category}</span>
-                  <span className="biz-city">{b.city}</span>
+                  <div style={{display:'flex',alignItems:'center',gap:6}}>
+                    <span className="biz-city">{b.city}</span>
+                    {bizSelectMode && (
+                      <div style={{width:18,height:18,borderRadius:4,border:'2px solid',borderColor:bizSelected.has(b.id)?'#1B4FA3':'var(--gray-300)',background:bizSelected.has(b.id)?'#1B4FA3':'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,color:'white',fontWeight:800,flexShrink:0}}>
+                        {bizSelected.has(b.id)?'✓':''}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="biz-name">{b.name}</div>
                 <div className="biz-address">{b.address}</div>
