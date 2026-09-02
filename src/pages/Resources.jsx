@@ -870,6 +870,32 @@ export default function Resources({ store }) {
   const [bizEditDraft, setBizEditDraft] = useState(null)
   const [bizAddOpen, setBizAddOpen] = useState(false)
   const [bizAddDraft, setBizAddDraft] = useState({ name:'', category:'Restaurant', city:'', address:'', phone:'', website:'', ownership:'', notes:'' })
+  const [bizSelectMode, setBizSelectMode] = useState(false)
+  const [bizSelected, setBizSelected] = useState(new Set())
+
+  function bizToggleSelect(id) { setBizSelected(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s }) }
+  function bizSelectAll(list) { setBizSelected(new Set(list.map(b => b.id))) }
+  function bizDownloadCSV() {
+    const list = bizList.filter(b => bizSelected.size === 0 || bizSelected.has(b.id))
+    const rows = [['Name','Street Address','City','State','ZIP']]
+    list.forEach(b => {
+      const addr = b.address || ''
+      const parts = addr.split(',').map(s => s.trim())
+      let street = parts[0] || ''
+      let city = b.city || ''
+      let state = 'TX'
+      let zip = ''
+      const last = parts[parts.length - 1] || ''
+      const stateZip = last.match(/([A-Z]{2})\s+(\d{5}(-\d{4})?)/)
+      if (stateZip) { state = stateZip[1]; zip = stateZip[2] }
+      rows.push([b.name, street, city, state, zip])
+    })
+    const csv = rows.map(r => r.map(v => `"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n')
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(new Blob([csv], { type:'text/csv' }))
+    a.download = 'yl-businesses.csv'
+    a.click()
+  }
 
   function bizPersist(list) { try { localStorage.setItem('yl_businesses', JSON.stringify(list)) } catch {} }
   function bizSaveEdit() {
@@ -917,6 +943,15 @@ export default function Resources({ store }) {
             {t.label}
           </button>
         ))}
+        {tab === 'businesses' && (
+          <button
+            className={`resources-tab${bizSelectMode ? ' resources-tab--download-active' : ''}`}
+            style={{marginLeft:'auto',background:bizSelectMode?'#1B4FA3':'none',color:bizSelectMode?'white':'#1B4FA3',border:'1.5px solid #1B4FA3',borderRadius:20,padding:'5px 16px',fontWeight:700,fontSize:13,cursor:'pointer',whiteSpace:'nowrap'}}
+            onClick={() => { setBizSelectMode(m => !m); setBizSelected(new Set()) }}
+          >
+            ⬇ Download
+          </button>
+        )}
       </div>
 
       {/* NEWS TAB */}
@@ -1094,6 +1129,24 @@ export default function Resources({ store }) {
       {/* BUSINESSES TAB */}
       {tab === 'businesses' && (
         <div className="resources-section">
+          {bizSelectMode && (
+            <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap',background:'#eff6ff',border:'1.5px solid #bfdbfe',borderRadius:10,padding:'10px 16px'}}>
+              <span style={{fontSize:13,fontWeight:700,color:'#1B4FA3',flex:1}}>
+                {bizSelected.size === 0 ? 'Click businesses below to select them for download' : `${bizSelected.size} selected`}
+              </span>
+              {(() => {
+                const visible = bizList.filter(b=>(bizCategory==='All'||b.category===bizCategory)&&(!bizSearch||b.name.toLowerCase().includes(bizSearch.toLowerCase())||b.city.toLowerCase().includes(bizSearch.toLowerCase())))
+                return <>
+                  <button className="btn-secondary" style={{fontSize:12,padding:'5px 12px'}} onClick={()=>bizSelectAll(visible)}>Select All ({visible.length})</button>
+                  <button className="btn-secondary" style={{fontSize:12,padding:'5px 12px'}} onClick={()=>setBizSelected(new Set())}>Clear</button>
+                  <button className="btn-primary" style={{fontSize:12,padding:'5px 14px'}} disabled={bizSelected.size===0} onClick={bizDownloadCSV}>
+                    ⬇ Download {bizSelected.size > 0 ? `(${bizSelected.size})` : ''} CSV
+                  </button>
+                  <button className="btn-secondary" style={{fontSize:12,padding:'5px 12px'}} onClick={()=>{ setBizSelectMode(false); setBizSelected(new Set()) }}>Cancel</button>
+                </>
+              })()}
+            </div>
+          )}
           <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}>
             <input
               style={{flex:'1 1 200px',padding:'7px 12px',border:'1.5px solid var(--gray-200)',borderRadius:8,fontSize:13}}
@@ -1102,7 +1155,7 @@ export default function Resources({ store }) {
               onChange={e=>setBizSearch(e.target.value)}
             />
             <span style={{fontSize:13,color:'var(--gray-500)'}}>{bizList.filter(b=>(bizCategory==='All'||b.category===bizCategory)&&(!bizSearch||b.name.toLowerCase().includes(bizSearch.toLowerCase())||b.city.toLowerCase().includes(bizSearch.toLowerCase()))).length} businesses</span>
-            <button className="btn-primary" style={{fontSize:12,padding:'7px 16px',whiteSpace:'nowrap'}} onClick={()=>setBizAddOpen(true)}>+ Add Business</button>
+            {!bizSelectMode && <button className="btn-primary" style={{fontSize:12,padding:'7px 16px',whiteSpace:'nowrap'}} onClick={()=>setBizAddOpen(true)}>+ Add Business</button>}
           </div>
           <div className="resources-filter-bar" style={{flexWrap:'wrap'}}>
             {BIZ_CATEGORIES.map(c=>{
@@ -1116,7 +1169,15 @@ export default function Resources({ store }) {
           </div>
           <div className="biz-grid">
             {bizList.filter(b=>(bizCategory==='All'||b.category===bizCategory)&&(!bizSearch||b.name.toLowerCase().includes(bizSearch.toLowerCase())||b.city.toLowerCase().includes(bizSearch.toLowerCase()))).map(b=>(
-              <button key={b.id} className="biz-card" onClick={()=>setSelectedBiz(b)}>
+              <button key={b.id}
+                className={`biz-card${bizSelectMode && bizSelected.has(b.id) ? ' biz-card--selected' : ''}`}
+                onClick={()=> bizSelectMode ? bizToggleSelect(b.id) : setSelectedBiz(b)}
+              >
+                {bizSelectMode && (
+                  <div style={{position:'absolute',top:10,right:10,width:18,height:18,borderRadius:4,border:'2px solid',borderColor:bizSelected.has(b.id)?'#1B4FA3':'var(--gray-300)',background:bizSelected.has(b.id)?'#1B4FA3':'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,color:'white',fontWeight:800}}>
+                    {bizSelected.has(b.id)?'✓':''}
+                  </div>
+                )}
                 <div className="biz-card-header">
                   <span className="biz-cat">{b.category}</span>
                   <span className="biz-city">{b.city}</span>
