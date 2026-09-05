@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Modal from '../components/Modal'
 import { formatPhone } from '../utils/phone'
 import './Leaders.css'
@@ -8,109 +8,104 @@ const COLORS = ['#E8392A','#1B4FA3','#3AAB35','#854883','#d97706','#0891b2','#FF
 const EMPTY = { firstName:'', lastName:'', role:'YoungLife Leader', program:'YoungLife', phone:'', email:'', bio:'', schools:[], initials:'', color:'#1B4FA3' }
 
 const DEFAULT_COMMITTEE = [
-  { id:'cm1', name: 'Monica Farum', role: 'Committee Member', phone: '(817) 247-7495', email: 'monicafaram@gmail.com', initials: 'MF', color: '#854883' },
-  { id:'cm2', name: 'Rex Russell', role: 'Committee Chair', phone: '(817) 689-4560', email: 'rex@russellwg.com', initials: 'RR', color: '#1B4FA3' },
-  { id:'cm3', name: 'Brenda Henderson', role: 'Committee Member', phone: '(817) 781-3628', email: 'auntb22@sbcglobal.net', initials: 'BH', color: '#0891b2' },
+  { id:'cm1', name:'Monica Farum', role:'Committee Member', phone:'(817) 247-7495', email:'monicafaram@gmail.com', initials:'MF', color:'#854883' },
+  { id:'cm2', name:'Rex Russell', role:'Committee Chair', phone:'(817) 689-4560', email:'rex@russellwg.com', initials:'RR', color:'#1B4FA3' },
+  { id:'cm3', name:'Brenda Henderson', role:'Committee Member', phone:'(817) 781-3628', email:'auntb22@sbcglobal.net', initials:'BH', color:'#0891b2' },
 ]
 
-function loadOrder(key, def) {
-  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def } catch { return def }
-}
-function saveOrder(key, arr) { try { localStorage.setItem(key, JSON.stringify(arr)) } catch {} }
+function load(key, def) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def } catch { return def } }
+function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)) } catch {} }
 
-function reorder(list, fromId, toId) {
-  const ids = list.map(l => l.id)
-  const from = ids.indexOf(fromId)
-  const to = ids.indexOf(toId)
-  if (from === -1 || to === -1 || from === to) return list
-  const next = [...list]
-  const [moved] = next.splice(from, 1)
-  next.splice(to, 0, moved)
+function applyOrder(leaders, orderIds) {
+  const known = orderIds.map(id => leaders.find(l => l.id === id)).filter(Boolean)
+  const rest = leaders.filter(l => !orderIds.includes(l.id))
+  return [...known, ...rest]
+}
+
+function moveItem(arr, fromId, toId) {
+  const from = arr.findIndex(x => x.id === fromId)
+  const to = arr.findIndex(x => x.id === toId)
+  if (from === -1 || to === -1 || from === to) return arr
+  const next = [...arr]
+  const [item] = next.splice(from, 1)
+  next.splice(to, 0, item)
   return next
-}
-
-function useDragSort(items, setItems, onSave) {
-  const dragId = useRef(null)
-  const didDrag = useRef(false)
-
-  function onDragStart(e, id) {
-    dragId.current = id
-    didDrag.current = false
-    e.dataTransfer.effectAllowed = 'move'
-    // small timeout so the drag ghost doesn't show a half-moved card
-    setTimeout(() => { e.target.style.opacity = '0.5' }, 0)
-  }
-  function onDragOver(e, id) {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = 'move'
-    if (dragId.current && dragId.current !== id) {
-      didDrag.current = true
-      setItems(prev => reorder(prev, dragId.current, id))
-      dragId.current = id
-    }
-  }
-  function onDrop(e) {
-    e.preventDefault()
-  }
-  function onDragEnd(e) {
-    e.target.style.opacity = ''
-    onSave(items)
-    dragId.current = null
-  }
-  function wasDragged() { return didDrag.current }
-
-  return { onDragStart, onDragOver, onDrop, onDragEnd, wasDragged }
 }
 
 export default function Leaders({ store }) {
   const { leaders, students, followUps, schools: storeSchools, addLeader, updateLeader, deleteLeader, addNotification } = store
+
   const [modal, setModal] = useState(null)
   const [form, setForm] = useState(EMPTY)
   const [editId, setEditId] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
   const [filterProgram, setFilterProgram] = useState('All')
+  const [order, setOrder] = useState(() => load('yl_leaders_order', []))
+  const [committee, setCommittee] = useState(() => load('yl_committee_order', DEFAULT_COMMITTEE))
 
-  // Leader card order — stored as sorted array of leader objects
-  const [sortedLeaders, setSortedLeaders] = useState(() => {
-    const order = loadOrder('yl_leaders_order', [])
-    if (!order.length) return leaders
-    const known = order.map(id => leaders.find(l => l.id === id)).filter(Boolean)
-    const rest = leaders.filter(l => !order.includes(l.id))
-    return [...known, ...rest]
-  })
+  // Keep order in sync when leaders are added/removed
+  useEffect(() => {
+    setOrder(prev => {
+      const valid = prev.filter(id => leaders.find(l => l.id === id))
+      const newIds = leaders.filter(l => !prev.includes(l.id)).map(l => l.id)
+      return [...valid, ...newIds]
+    })
+  }, [leaders.map(l => l.id).join(',')])  // eslint-disable-line
 
-  // Keep sortedLeaders in sync when store leaders change (add/delete)
-  const leaderIds = leaders.map(l => l.id).join(',')
-  const sortedIds = sortedLeaders.map(l => l.id).join(',')
-  if (leaderIds !== sortedIds) {
-    const merged = [
-      ...sortedLeaders.filter(l => leaders.find(x => x.id === l.id)).map(sl => leaders.find(x => x.id === sl.id)),
-      ...leaders.filter(l => !sortedLeaders.find(sl => sl.id === l.id)),
-    ]
-    // Apply any field updates from store
-    setSortedLeaders(merged)
+  const sorted = applyOrder(leaders, order)
+  const filtered = sorted.filter(l => filterProgram === 'All' || l.program === filterProgram || l.program === 'Both')
+
+  // Drag state for leader cards
+  const leaderDragId = useRef(null)
+  const leaderDidDrag = useRef(false)
+
+  function leaderDragStart(e, id) {
+    leaderDragId.current = id
+    leaderDidDrag.current = false
+    e.dataTransfer.effectAllowed = 'move'
+    setTimeout(() => { if (e.target) e.target.style.opacity = '0.5' }, 0)
+  }
+  function leaderDragOver(e, id) {
+    e.preventDefault()
+    if (!leaderDragId.current || leaderDragId.current === id) return
+    leaderDidDrag.current = true
+    setOrder(prev => {
+      const next = moveItem(applyOrder(leaders, prev), leaderDragId.current, id).map(l => l.id)
+      leaderDragId.current = id
+      return next
+    })
+  }
+  function leaderDragEnd(e) {
+    if (e.target) e.target.style.opacity = ''
+    save('yl_leaders_order', order)
+    leaderDragId.current = null
   }
 
-  const leaderDrag = useDragSort(
-    filtered,
-    (next) => {
-      setSortedLeaders(prev => {
-        const unfilteredItems = prev.filter(l => !(filterProgram === 'All' || l.program === filterProgram || l.program === 'Both'))
-        return [...next, ...unfilteredItems]
-      })
-    },
-    (items) => saveOrder('yl_leaders_order', items.map(l => l.id))
-  )
+  // Drag state for committee
+  const cmDragId = useRef(null)
+  const cmDidDrag = useRef(false)
 
-  // Committee order
-  const [committee, setCommittee] = useState(() => loadOrder('yl_committee_order', DEFAULT_COMMITTEE))
-  const committeeDrag = useDragSort(
-    committee,
-    setCommittee,
-    (items) => saveOrder('yl_committee_order', items)
-  )
-
-  const filtered = sortedLeaders.filter(l => filterProgram === 'All' || l.program === filterProgram || l.program === 'Both')
+  function cmDragStart(e, id) {
+    cmDragId.current = id
+    cmDidDrag.current = false
+    e.dataTransfer.effectAllowed = 'move'
+    setTimeout(() => { if (e.target) e.target.style.opacity = '0.5' }, 0)
+  }
+  function cmDragOver(e, id) {
+    e.preventDefault()
+    if (!cmDragId.current || cmDragId.current === id) return
+    cmDidDrag.current = true
+    setCommittee(prev => {
+      const next = moveItem(prev, cmDragId.current, id)
+      cmDragId.current = id
+      return next
+    })
+  }
+  function cmDragEnd(e) {
+    if (e.target) e.target.style.opacity = ''
+    save('yl_committee_order', committee)
+    cmDragId.current = null
+  }
 
   function openAdd() { setForm(EMPTY); setEditId(null); setModal('form') }
   function openEdit(l) { setForm({...l, schools: l.schools||[]}); setEditId(l.id); setModal('form') }
@@ -131,13 +126,8 @@ export default function Leaders({ store }) {
     if (!form.firstName || !form.lastName) return
     const initials = (form.firstName[0]||'') + (form.lastName[0]||'')
     const payload = { ...form, initials }
-    if (editId) {
-      updateLeader(editId, payload)
-      addNotification('Leader updated!')
-    } else {
-      addLeader(payload)
-      addNotification('Leader added!')
-    }
+    if (editId) { updateLeader(editId, payload); addNotification('Leader updated!') }
+    else { addLeader(payload); addNotification('Leader added!') }
     setModal(null)
   }
 
@@ -148,8 +138,8 @@ export default function Leaders({ store }) {
     addNotification('Leader removed','error')
   }
 
-  function leaderStudents(leaderId) { return students.filter(s => s.leaderId === leaderId) }
-  function leaderFollowUps(leaderId) { return followUps.filter(f => f.leaderId === leaderId) }
+  function leaderStudents(id) { return students.filter(s => s.leaderId === id) }
+  function leaderFollowUps(id) { return followUps.filter(f => f.leaderId === id) }
 
   return (
     <div className="leaders-page">
@@ -171,11 +161,11 @@ export default function Leaders({ store }) {
           return (
             <div key={l.id} className="leader-card"
               draggable
-              onDragStart={e => leaderDrag.onDragStart(e, l.id)}
-              onDragOver={e => leaderDrag.onDragOver(e, l.id)}
-              onDrop={leaderDrag.onDrop}
-              onDragEnd={leaderDrag.onDragEnd}
-              onClick={() => { if (!leaderDrag.wasDragged()) openEdit(l) }}
+              onDragStart={e => leaderDragStart(e, l.id)}
+              onDragOver={e => leaderDragOver(e, l.id)}
+              onDrop={e => e.preventDefault()}
+              onDragEnd={leaderDragEnd}
+              onClick={() => { if (!leaderDidDrag.current) openEdit(l) }}
             >
               <div className="leader-drag-handle" title="Drag to reorder">⠿</div>
               <div className="leader-card-top">
@@ -208,13 +198,13 @@ export default function Leaders({ store }) {
           {committee.map(m => (
             <div key={m.id} className="committee-card"
               draggable
-              onDragStart={e => committeeDrag.onDragStart(e, m.id)}
-              onDragOver={e => committeeDrag.onDragOver(e, m.id)}
-              onDrop={committeeDrag.onDrop}
-              onDragEnd={committeeDrag.onDragEnd}
+              onDragStart={e => cmDragStart(e, m.id)}
+              onDragOver={e => cmDragOver(e, m.id)}
+              onDrop={e => e.preventDefault()}
+              onDragEnd={cmDragEnd}
               style={{cursor:'grab'}}
             >
-              <div className="leader-drag-handle" style={{position:'static',marginRight:2,fontSize:16,color:'var(--gray-300)'}} title="Drag to reorder">⠿</div>
+              <div style={{color:'var(--gray-300)',fontSize:18,lineHeight:1,cursor:'grab',userSelect:'none',paddingRight:4,alignSelf:'center'}}>⠿</div>
               <div className="leader-avatar-lg" style={{background:m.color,width:44,height:44,fontSize:15,flexShrink:0}}>{m.initials}</div>
               <div style={{flex:1}}>
                 <div style={{fontWeight:700,fontSize:15,color:'var(--gray-900)'}}>{m.name}</div>
@@ -229,7 +219,6 @@ export default function Leaders({ store }) {
         </div>
       </div>
 
-      {/* Add/Edit Modal */}
       {modal === 'form' && (
         <Modal title={editId ? 'Edit Leader' : 'Add Leader'} onClose={() => setModal(null)} size="lg">
           <div className="form-grid">
