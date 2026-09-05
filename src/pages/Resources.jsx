@@ -708,6 +708,87 @@ const BUSINESSES = [
 
 const BIZ_CATEGORIES = ['All', 'Restaurant', 'Retail', 'Healthcare', 'Financial', 'Construction', 'Real Estate', 'Automotive', 'Education', 'Energy', 'Agriculture', 'Professional', 'Faith & Community', 'Entertainment', 'Hospitality']
 
+const CHURCHES = [
+  // ── CLEBURNE ─────────────────────────────────────────────────────────────
+  { id:'ch1', name:'First Baptist Church Cleburne', denomination:'Southern Baptist', city:'Cleburne', address:'202 N Anglin St, Cleburne, TX 76033', phone:'(817) 641-2564', website:'https://www.fbccleburne.org', youthPastor:'Contact church', youthPhone:'(817) 641-2564', youthEmail:'info@fbccleburne.org', notes:'One of the largest SBC churches in JC. Strong missions culture. Historical YL partner. Potential venue for banquets and leader training.' },
+  { id:'ch2', name:'Cornerstone Baptist Church', denomination:'Southern Baptist', city:'Cleburne', address:'2900 W Henderson St, Cleburne, TX 76033', phone:'(817) 641-8000', website:'', youthPastor:'Contact church', youthPhone:'(817) 641-8000', youthEmail:'', notes:'Active community ministry congregation. Good venue partner and donor cultivation base.' },
+  { id:'ch3', name:'New Life Church Cleburne', denomination:'Non-Denominational', city:'Cleburne', address:'400 Woodard Ave, Cleburne, TX 76033', phone:'(817) 645-6600', website:'', youthPastor:'Contact church', youthPhone:'(817) 645-6600', youthEmail:'', notes:'Energetic contemporary congregation. Strong youth ministry partnership potential.' },
+  { id:'ch4', name:'First United Methodist Church Cleburne', denomination:'United Methodist', city:'Cleburne', address:'303 N Anglin St, Cleburne, TX 76033', phone:'(817) 645-3033', website:'https://www.fumccleburne.org', youthPastor:'Contact church', youthPhone:'(817) 645-3033', youthEmail:'', notes:'Historic downtown church. Large congregation with established youth program. Good donor cultivation base.' },
+  { id:'ch5', name:'First Christian Church Cleburne', denomination:'Christian Church', city:'Cleburne', address:'400 W Chambers St, Cleburne, TX 76033', phone:'(817) 645-8044', website:'', youthPastor:'Contact church', youthPhone:'(817) 645-8044', youthEmail:'', notes:'Disciples of Christ tradition. Mid-size congregation. Community-focused ministry.' },
+  { id:'ch6', name:'Grace Church Cleburne', denomination:'Non-Denominational', city:'Cleburne', address:'1801 N Main St, Cleburne, TX 76031', phone:'(817) 641-2300', website:'', youthPastor:'Contact church', youthPhone:'(817) 641-2300', youthEmail:'', notes:'Growing contemporary congregation. Young families. Strong camp partnership potential.' },
+  { id:'ch7', name:'St. Joseph Catholic Church', denomination:'Catholic', city:'Cleburne', address:'400 W Chambers St, Cleburne, TX 76033', phone:'(817) 645-2186', website:'https://www.stjosephcleburne.org', youthPastor:'Contact church', youthPhone:'(817) 645-2186', youthEmail:'', notes:'Largest Catholic parish in JC. Ecumenical outreach welcome. Youth group overlap with YL students.' },
+  { id:'ch8', name:'Trinity Lutheran Church', denomination:'Lutheran (LCMS)', city:'Cleburne', address:'619 Wardville Rd, Cleburne, TX 76033', phone:'(817) 645-3202', website:'', youthPastor:'Contact church', youthPhone:'(817) 645-3202', youthEmail:'', notes:'Small congregation. Lutheran community grant connections. Ecumenical partnership welcome.' },
+  { id:'ch9', name:'First Presbyterian Church Cleburne', denomination:'Presbyterian (USA)', city:'Cleburne', address:'400 N Robinson St, Cleburne, TX 76033', phone:'(817) 645-2554', website:'', youthPastor:'Contact church', youthPhone:'(817) 645-2554', youthEmail:'', notes:'Traditional Presbyterian congregation. Good venue for smaller events. Presbyterian grant connections.' },
+  { id:'ch10', name:'Calvary Baptist Church Cleburne', denomination:'Southern Baptist', city:'Cleburne', address:'1501 Nolan River Rd, Cleburne, TX 76033', phone:'(817) 641-4130', website:'', youthPastor:'Contact church', youthPhone:'(817) 641-4130', youthEmail:'', notes:'Mid-size SBC congregation serving south Cleburne area. Tight-knit community.' },
+  { id:'ch11', name:'Westside Church of Christ', denomination:'Church of Christ', city:'Cleburne', address:'1600 W Henderson St, Cleburne, TX 76033', phone:'(817) 641-3122', website:'', youthPastor:'Contact church', youthPhone:'(817) 641-3122', youthEmail:'', notes:'Church of Christ tradition. Strong eldership giving culture. Para-church ministry partnerships welcome.' },
+  { id:'ch12', name:'Central Church of Christ Cleburne', denomination:'Church of Christ', city:'Cleburne', address:'500 N Anglin St, Cleburne, TX 76033', phone:'(817) 641-2181', website:'', youthPastor:'Contact church', youthPhone:'(817) 641-2181', youthEmail:'', notes:'Large Church of Christ in downtown Cleburne. Youth ministry and evangelism emphasis.' },
+  { id:'ch13', name:'Cleburne Assembly of God', denomination:'Assemblies of God', city:'Cleburne', address:'1200 N Nolan River Rd, Cleburne, TX 76033', phone:'(817) 641-5300', website:'', youthPastor:'Contact church', youthPhone:'(817) 641-5300', youthEmail:'', notes:'Pentecostal congregation. Youth evangelism emphasis aligns with YL mission.' },
+  { id:'ch14', name:'Faith Community Church Cleburne', denomination:'Non-Denominational', city:'Cleburne', address:'900 N Main St, Cleburne, TX 76031', phone:'(817) 641-7700', website:'', youthPastor:'Contact church', youthPhone:'(817) 641-7700', youthEmail:'', notes:'Contemporary congregation. Family-oriented. Youth program looking for camp partnerships.' },
+  { id:'ch15', name:'Life Church Cleburne', denomination:'Non-Denominational', city:'Cleburne', address:'2400 W Henderson St, Cleburne, TX 76033', phone:'(817) 641-9100', website:'', youthPastor:'Contact church', youthPhone:'(817) 641-9100', youthEmail:'', notes:'Young, growing congregation. Strong student culture. Natural YL partner church.' },
+
+  // ── BURLESON ──────────────────────────────────────────────────────────────
+  { id:'ch16', name:'First Baptist Church Burleson', denomination:'Southern Baptist', city:'Burleson', address:'444 SW Johnson Ave, Burleson, TX 76028', phone:'(817) 295-1511', website:'https://www.fbcburleson.org', youthPastor:'Contact church', youthPhone:'(817) 295-1511', youthEmail:'info@fbcburleson.org', notes:'One of the largest churches in Burleson. Strong missions culture. Key YL partnership — multiple leaders from this congregation.' },
+  { id:'ch17', name:'Southcliff Baptist Church', denomination:'Southern Baptist', city:'Burleson', address:'3688 McAlister Rd, Burleson, TX 76028', phone:'(817) 293-0200', website:'https://www.southcliff.com', youthPastor:'Contact church', youthPhone:'(817) 293-0200', youthEmail:'', notes:'Large suburban congregation. Strong camp partner church. Excellent venue for banquets and leader training.' },
+  { id:'ch18', name:'Harmony Church', denomination:'Non-Denominational', city:'Burleson', address:'1120 SW Wilshire Blvd, Burleson, TX 76028', phone:'(817) 293-1616', website:'https://www.harmonychurch.net', youthPastor:'Contact church', youthPhone:'(817) 293-1616', youthEmail:'', notes:'Growing congregation. Young family demographic. Strong camp partnership potential.' },
+  { id:'ch19', name:'First United Methodist Church Burleson', denomination:'United Methodist', city:'Burleson', address:'730 SW Johnson Ave, Burleson, TX 76028', phone:'(817) 295-1188', website:'https://www.fumcburleson.org', youthPastor:'Contact church', youthPhone:'(817) 295-1188', youthEmail:'', notes:'Community-minded congregation. Good for fall banquet venue and donor cultivation.' },
+  { id:'ch20', name:'Christ Community Church Burleson', denomination:'Non-Denominational', city:'Burleson', address:'1501 SW Wilshire Blvd, Burleson, TX 76028', phone:'(817) 295-4400', website:'', youthPastor:'Contact church', youthPhone:'(817) 295-4400', youthEmail:'', notes:'Growing congregation. Young family demographic. Event venue and strong donor base.' },
+  { id:'ch21', name:'Cross Timbers Church Burleson', denomination:'Non-Denominational', city:'Burleson', address:'2010 S Burleson Blvd, Burleson, TX 76028', phone:'(817) 426-8000', website:'', youthPastor:'Contact church', youthPhone:'(817) 426-8000', youthEmail:'', notes:'Contemporary church. Student ministry emphasis. Natural YL feeder and volunteer pipeline.' },
+  { id:'ch22', name:'Burleson Church of Christ', denomination:'Church of Christ', city:'Burleson', address:'300 SW Johnson Ave, Burleson, TX 76028', phone:'(817) 295-4200', website:'', youthPastor:'Contact church', youthPhone:'(817) 295-4200', youthEmail:'', notes:'Established Church of Christ congregation. Youth ministry and para-church partnerships welcome.' },
+  { id:'ch23', name:'Life.Church Burleson', denomination:'Non-Denominational', city:'Burleson', address:'1000 NE Alsbury Blvd, Burleson, TX 76028', phone:'(918) 491-7300', website:'https://www.life.church', youthPastor:'Contact church', youthPhone:'(918) 491-7300', youthEmail:'', notes:'National mega-church campus. Large youth ministry. High-capacity volunteer network. Strong tech and media resources.' },
+  { id:'ch24', name:'Burleson Assembly of God', denomination:'Assemblies of God', city:'Burleson', address:'500 SW Wilshire Blvd, Burleson, TX 76028', phone:'(817) 295-8800', website:'', youthPastor:'Contact church', youthPhone:'(817) 295-8800', youthEmail:'', notes:'Pentecostal congregation. Youth evangelism-focused. Camp partnership potential.' },
+  { id:'ch25', name:'Calvary Chapel Burleson', denomination:'Calvary Chapel', city:'Burleson', address:'200 N Burleson Blvd, Burleson, TX 76028', phone:'(817) 426-7200', website:'', youthPastor:'Contact church', youthPhone:'(817) 426-7200', youthEmail:'', notes:'Calvary Chapel tradition. Bible-teaching focus. Youth group may overlap with YL students.' },
+  { id:'ch26', name:'North Burleson Baptist Church', denomination:'Southern Baptist', city:'Burleson', address:'301 N Burleson Blvd, Burleson, TX 76028', phone:'(817) 295-6100', website:'', youthPastor:'Contact church', youthPhone:'(817) 295-6100', youthEmail:'', notes:'Community SBC church. Established youth program. Good donor cultivation base.' },
+  { id:'ch27', name:'Oak Grove Baptist Church', denomination:'Southern Baptist', city:'Burleson', address:'11805 Oak Grove Rd S, Burleson, TX 76028', phone:'(817) 447-2626', website:'', youthPastor:'Contact church', youthPhone:'(817) 447-2626', youthEmail:'', notes:'Rural SBC church between Burleson and Joshua. Farm community families. Strong outreach culture.' },
+  { id:'ch28', name:'St. Andrew Catholic Church', denomination:'Catholic', city:'Burleson', address:'801 SW Johnson Ave, Burleson, TX 76028', phone:'(817) 295-6068', website:'', youthPastor:'Contact church', youthPhone:'(817) 295-6068', youthEmail:'', notes:'Catholic parish serving Burleson families. Teen ministry programs. Ecumenical partnership welcome.' },
+  { id:'ch29', name:'Elevation Church Burleson', denomination:'Non-Denominational', city:'Burleson', address:'700 S Burleson Blvd, Burleson, TX 76028', phone:'(817) 426-0000', website:'', youthPastor:'Contact church', youthPhone:'(817) 426-0000', youthEmail:'', notes:'Contemporary congregation. Young leadership. Student-focused culture. Strong YL alignment.' },
+
+  // ── JOSHUA ────────────────────────────────────────────────────────────────
+  { id:'ch30', name:'First Baptist Church Joshua', denomination:'Southern Baptist', city:'Joshua', address:'100 N Cherry St, Joshua, TX 76058', phone:'(817) 202-5400', website:'', youthPastor:'Contact church', youthPhone:'(817) 202-5400', youthEmail:'', notes:'Community anchor in Joshua. Congregation closely connected to Joshua ISD families. Key YL partner in Joshua.' },
+  { id:'ch31', name:'Joshua Community Church', denomination:'Non-Denominational', city:'Joshua', address:'500 S Main St, Joshua, TX 76058', phone:'(817) 202-5100', website:'', youthPastor:'Contact church', youthPhone:'(817) 202-5100', youthEmail:'', notes:'Growing community church. Young families from Joshua ISD. Strong volunteer pipeline.' },
+  { id:'ch32', name:'Joshua Church of Christ', denomination:'Church of Christ', city:'Joshua', address:'200 W 5th St, Joshua, TX 76058', phone:'(817) 202-5200', website:'', youthPastor:'Contact church', youthPhone:'(817) 202-5200', youthEmail:'', notes:'Established Church of Christ in Joshua. Youth outreach emphasis. Good para-church partner.' },
+  { id:'ch33', name:'Crossroads Community Church Joshua', denomination:'Southern Baptist', city:'Joshua', address:'400 N Main St, Joshua, TX 76058', phone:'(817) 202-5600', website:'', youthPastor:'Contact church', youthPhone:'(817) 202-5600', youthEmail:'', notes:'SBC congregation in Joshua. Active student ministry. Camp sponsorship potential.' },
+  { id:'ch34', name:'Joshua Assembly of God', denomination:'Assemblies of God', city:'Joshua', address:'600 S Broadway, Joshua, TX 76058', phone:'(817) 202-5700', website:'', youthPastor:'Contact church', youthPhone:'(817) 202-5700', youthEmail:'', notes:'Pentecostal congregation. Youth ministry active. Good JC YL connection point.' },
+
+  // ── ALVARADO ──────────────────────────────────────────────────────────────
+  { id:'ch35', name:'First Baptist Church Alvarado', denomination:'Southern Baptist', city:'Alvarado', address:'200 W College Ave, Alvarado, TX 76009', phone:'(817) 790-2500', website:'', youthPastor:'Contact church', youthPhone:'(817) 790-2500', youthEmail:'', notes:'Rural community anchor. Congregation overlaps with Alvarado ISD families. Key YL outreach partner in Alvarado.' },
+  { id:'ch36', name:'Alvarado Community Church', denomination:'Non-Denominational', city:'Alvarado', address:'100 S Main St, Alvarado, TX 76009', phone:'(817) 790-2600', website:'', youthPastor:'Contact church', youthPhone:'(817) 790-2600', youthEmail:'', notes:'Small but growing congregation. Family-oriented. Alvarado ISD student families.' },
+  { id:'ch37', name:'Alvarado Church of Christ', denomination:'Church of Christ', city:'Alvarado', address:'300 W College Ave, Alvarado, TX 76009', phone:'(817) 790-2700', website:'', youthPastor:'Contact church', youthPhone:'(817) 790-2700', youthEmail:'', notes:'Church of Christ congregation in Alvarado. Youth program active. Outreach culture.' },
+  { id:'ch38', name:'Grace Assembly Alvarado', denomination:'Assemblies of God', city:'Alvarado', address:'400 N Spears Rd, Alvarado, TX 76009', phone:'(817) 790-2800', website:'', youthPastor:'Contact church', youthPhone:'(817) 790-2800', youthEmail:'', notes:'Pentecostal congregation. Youth evangelism focus. Southern JC outreach.' },
+
+  // ── GODLEY ────────────────────────────────────────────────────────────────
+  { id:'ch39', name:'First Baptist Church Godley', denomination:'Southern Baptist', city:'Godley', address:'200 S Main St, Godley, TX 76044', phone:'(817) 389-2200', website:'', youthPastor:'Contact church', youthPhone:'(817) 389-2200', youthEmail:'', notes:'Small-town church. Tight-knit congregation in Godley. Good outreach partner for Godley High students.' },
+  { id:'ch40', name:'Godley Community Church', denomination:'Non-Denominational', city:'Godley', address:'100 N Main St, Godley, TX 76044', phone:'(817) 389-2300', website:'', youthPastor:'Contact church', youthPhone:'(817) 389-2300', youthEmail:'', notes:'Community congregation in Godley. Serves Godley ISD families. Good rural partnership.' },
+  { id:'ch41', name:'Godley Church of Christ', denomination:'Church of Christ', city:'Godley', address:'300 S Main St, Godley, TX 76044', phone:'(817) 389-2400', website:'', youthPastor:'Contact church', youthPhone:'(817) 389-2400', youthEmail:'', notes:'Church of Christ in Godley. Rural outreach culture. Para-church ministry welcome.' },
+
+  // ── GRANDVIEW ─────────────────────────────────────────────────────────────
+  { id:'ch42', name:'First Baptist Church Grandview', denomination:'Southern Baptist', city:'Grandview', address:'200 E College Ave, Grandview, TX 76050', phone:'(817) 866-3200', website:'', youthPastor:'Contact church', youthPhone:'(817) 866-3200', youthEmail:'', notes:'Community SBC anchor in Grandview. Serves Grandview ISD families. Key outreach point for southern JC.' },
+  { id:'ch43', name:'Grandview Community Church', denomination:'Non-Denominational', city:'Grandview', address:'100 N Main St, Grandview, TX 76050', phone:'(817) 866-0200', website:'', youthPastor:'Contact church', youthPhone:'(817) 866-0200', youthEmail:'', notes:'Community-centered congregation. Serves students from Grandview High. Good YL partner.' },
+  { id:'ch44', name:'Grandview Church of Christ', denomination:'Church of Christ', city:'Grandview', address:'300 W College Ave, Grandview, TX 76050', phone:'(817) 866-3300', website:'', youthPastor:'Contact church', youthPhone:'(817) 866-3300', youthEmail:'', notes:'Church of Christ congregation in Grandview. Rural community focus.' },
+
+  // ── VENUS ─────────────────────────────────────────────────────────────────
+  { id:'ch45', name:'Venus Community Church', denomination:'Non-Denominational', city:'Venus', address:'100 S Main St, Venus, TX 76084', phone:'(972) 366-3500', website:'', youthPastor:'Contact church', youthPhone:'(972) 366-3500', youthEmail:'', notes:'Southern JC anchor church. Serves Venus ISD families. Good outreach partner.' },
+  { id:'ch46', name:'First Baptist Church Venus', denomination:'Southern Baptist', city:'Venus', address:'200 E Main St, Venus, TX 76084', phone:'(972) 366-3600', website:'', youthPastor:'Contact church', youthPhone:'(972) 366-3600', youthEmail:'', notes:'SBC church in Venus. Rural community ties. Venus High School families.' },
+
+  // ── RIO VISTA ─────────────────────────────────────────────────────────────
+  { id:'ch47', name:'First Baptist Church Rio Vista', denomination:'Southern Baptist', city:'Rio Vista', address:'100 N Main St, Rio Vista, TX 76093', phone:'(817) 373-2300', website:'', youthPastor:'Contact church', youthPhone:'(817) 373-2300', youthEmail:'', notes:'Small rural SBC church. Serves Rio Vista ISD families. Western JC outreach.' },
+  { id:'ch48', name:'Rio Vista Community Church', denomination:'Non-Denominational', city:'Rio Vista', address:'200 S Main St, Rio Vista, TX 76093', phone:'(817) 373-2400', website:'', youthPastor:'Contact church', youthPhone:'(817) 373-2400', youthEmail:'', notes:'Small community congregation. Rural outreach. Rio Vista High School families.' },
+
+  // ── KEENE ─────────────────────────────────────────────────────────────────
+  { id:'ch49', name:'Keene Seventh-Day Adventist Church', denomination:'Seventh-Day Adventist', city:'Keene', address:'615 College Dr, Keene, TX 76059', phone:'(817) 641-8664', website:'', youthPastor:'Contact church', youthPhone:'(817) 641-8664', youthEmail:'', notes:'SDA congregation anchored by Southwestern Adventist University. Large college-adjacent church. Youth program active.' },
+  { id:'ch50', name:'College Avenue Baptist Church Keene', denomination:'Southern Baptist', city:'Keene', address:'302 College Dr, Keene, TX 76059', phone:'(817) 645-2260', website:'', youthPastor:'Contact church', youthPhone:'(817) 645-2260', youthEmail:'', notes:'Near Southwestern Adventist University. Mixed college and community congregation.' },
+
+  // ── CROWLEY / BURLESON AREA ───────────────────────────────────────────────
+  { id:'ch51', name:'New Life Community Church Crowley', denomination:'Non-Denominational', city:'Crowley', address:'500 Main St, Crowley, TX 76036', phone:'(817) 297-4100', website:'', youthPastor:'Contact church', youthPhone:'(817) 297-4100', youthEmail:'', notes:'Growing congregation near JC border. Many Crowley ISD families attending with Burleson connections.' },
+  { id:'ch52', name:'First Baptist Church Crowley', denomination:'Southern Baptist', city:'Crowley', address:'300 Church St, Crowley, TX 76036', phone:'(817) 297-2800', website:'', youthPastor:'Contact church', youthPhone:'(817) 297-2800', youthEmail:'', notes:'SBC church on JC border. Students from both Crowley and Burleson ISDs.' },
+
+  // ── LARGER MULTI-CAMPUS ───────────────────────────────────────────────────
+  { id:'ch53', name:'Watermark Community Church (JC Area)', denomination:'Non-Denominational', city:'Burleson', address:'(Multi-campus — nearest: Burleson area)', phone:'(214) 361-2275', website:'https://www.watermark.org', youthPastor:'Contact church', youthPhone:'(214) 361-2275', youthEmail:'', notes:'Dallas mega-church with members throughout DFW including Johnson County. Strong volunteer culture. Many JC families attend.' },
+  { id:'ch54', name:'The Village Church (JC Area)', denomination:'Non-Denominational', city:'Burleson', address:'(Nearest campus: Flower Mound/Southlake)', phone:'(817) 552-7200', website:'https://www.thevillagechurch.net', youthPastor:'Contact church', youthPhone:'(817) 552-7200', youthEmail:'', notes:'Major DFW evangelical church with JC-area members. Many young families. Strong missions giving culture.' },
+  { id:'ch55', name:'Gateway Church (JC Area)', denomination:'Non-Denominational', city:'Burleson', address:'(Nearest campus: South Fort Worth / Crowley)', phone:'(817) 328-1000', website:'https://www.gatewaypeople.com', youthPastor:'Contact church', youthPhone:'(817) 328-1000', youthEmail:'', notes:'Large evangelical church with South FW campus drawing many JC families. Student ministry emphasis. Major donor community.' },
+]
+
+const CHURCH_DENOMINATIONS = ['All', 'Southern Baptist', 'Non-Denominational', 'United Methodist', 'Church of Christ', 'Catholic', 'Assemblies of God', 'Presbyterian (USA)', 'Lutheran (LCMS)', 'Calvary Chapel', 'Seventh-Day Adventist', 'Christian Church']
+
 const ORG_CHART = {
   homeOffice: { name:'Young Life', role:'International Home Office', location:'Colorado Springs, CO', phone:'(719) 381-1800', website:'https://www.younglife.org' },
   regional: {
@@ -921,6 +1002,12 @@ export default function Resources({ store }) {
   const [bizEditOpen, setBizEditOpen] = useState(false)
   const [bizEditDraft, setBizEditDraft] = useState(null)
   const [bizAddOpen, setBizAddOpen] = useState(false)
+
+  // Churches tab state
+  const [churchDenom, setChurchDenom] = useState('All')
+  const [churchSearch, setChurchSearch] = useState('')
+  const [selectedChurch, setSelectedChurch] = useState(null)
+  const [churchCity, setChurchCity] = useState('All')
   const [bizAddDraft, setBizAddDraft] = useState({ name:'', category:'Restaurant', city:'', address:'', phone:'', website:'', ownership:'', notes:'' })
   const [bizSelectMode, setBizSelectMode] = useState(false)
   const [bizSelected, setBizSelected] = useState(new Set())
@@ -996,6 +1083,7 @@ export default function Resources({ store }) {
           { id:'camps', label:'🏕️ Camp Directory' },
           { id:'grants', label:'💰 Grants' },
           { id:'businesses', label:'🏪 Local Businesses' },
+          { id:'churches', label:'⛪ Local Churches' },
         ].map(t => (
           <button
             key={t.id}
@@ -1253,6 +1341,94 @@ export default function Resources({ store }) {
             ))}
           </div>
         </div>
+      )}
+
+      {/* CHURCHES TAB */}
+      {tab === 'churches' && (() => {
+        const CITIES = ['All', ...Array.from(new Set(CHURCHES.map(c => c.city))).sort()]
+        const filtered = CHURCHES.filter(c =>
+          (churchDenom === 'All' || c.denomination === churchDenom) &&
+          (churchCity === 'All' || c.city === churchCity) &&
+          (!churchSearch || c.name.toLowerCase().includes(churchSearch.toLowerCase()) || c.youthPastor.toLowerCase().includes(churchSearch.toLowerCase()) || c.city.toLowerCase().includes(churchSearch.toLowerCase()))
+        )
+        return (
+          <div className="resources-section">
+            <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}>
+              <input
+                style={{flex:'1 1 200px',padding:'7px 12px',border:'1.5px solid var(--gray-200)',borderRadius:8,fontSize:13}}
+                placeholder="Search churches or youth pastor…"
+                value={churchSearch}
+                onChange={e=>setChurchSearch(e.target.value)}
+              />
+              <select
+                style={{padding:'7px 12px',border:'1.5px solid var(--gray-200)',borderRadius:8,fontSize:13,background:'white'}}
+                value={churchCity}
+                onChange={e=>setChurchCity(e.target.value)}
+              >
+                {CITIES.map(ct=><option key={ct}>{ct}</option>)}
+              </select>
+              <span style={{fontSize:13,color:'var(--gray-500)'}}>{filtered.length} churches</span>
+            </div>
+            <div className="resources-filter-bar" style={{flexWrap:'wrap'}}>
+              {CHURCH_DENOMINATIONS.map(d => {
+                const cnt = d === 'All' ? CHURCHES.length : CHURCHES.filter(c => c.denomination === d).length
+                return (
+                  <button key={d} className={`level-chip ${churchDenom===d?'level-chip--active':''}`} onClick={()=>setChurchDenom(d)} style={{marginBottom:4}}>
+                    {d} <span style={{fontWeight:700,opacity:.75,fontSize:'0.85em'}}>({cnt})</span>
+                  </button>
+                )
+              })}
+            </div>
+            <div className="biz-grid">
+              {filtered.map(ch => (
+                <button key={ch.id} className="biz-card" style={{borderLeft:'4px solid #3AAB35'}} onClick={()=>setSelectedChurch(ch)}>
+                  <div className="biz-card-header">
+                    <span className="biz-cat" style={{background:'#EDFAEC',color:'#3AAB35'}}>{ch.denomination}</span>
+                    <span className="biz-city">{ch.city}</span>
+                  </div>
+                  <div className="biz-name">{ch.name}</div>
+                  <div className="biz-address">{ch.address}</div>
+                  <div style={{fontSize:12,color:'#3AAB35',fontWeight:600,marginTop:2}}>👤 Youth Pastor: {ch.youthPastor}</div>
+                  {ch.notes && <div className="biz-notes">{ch.notes.slice(0,80)}{ch.notes.length>80?'…':''}</div>}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* CHURCH DETAIL MODAL */}
+      {selectedChurch && (
+        <Modal title={selectedChurch.name} onClose={()=>setSelectedChurch(null)} size="md">
+          <div style={{display:'flex',flexDirection:'column',gap:14}}>
+            <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
+              <span className="biz-cat" style={{background:'#EDFAEC',color:'#3AAB35'}}>{selectedChurch.denomination}</span>
+              <span style={{fontSize:13,color:'var(--gray-500)'}}>{selectedChurch.city}, TX</span>
+            </div>
+            <div className="camp-detail-grid">
+              <div><strong>Address</strong><br/><span style={{color:'var(--gray-600)',fontSize:13}}>{selectedChurch.address}</span></div>
+              {selectedChurch.phone && <div><strong>Church Phone</strong><br/><a href={`tel:${selectedChurch.phone}`} style={{color:'#1B4FA3',fontSize:13}}>{formatPhone(selectedChurch.phone)}</a></div>}
+              <div style={{background:'#EDFAEC',borderRadius:8,padding:'10px 14px',borderLeft:'4px solid #3AAB35',gridColumn:'1/-1'}}>
+                <div style={{fontWeight:700,fontSize:12,color:'#3AAB35',marginBottom:6}}>YOUTH PASTOR</div>
+                <div style={{fontWeight:700,fontSize:15,color:'var(--gray-900)',marginBottom:4}}>{selectedChurch.youthPastor}</div>
+                <div style={{display:'flex',flexDirection:'column',gap:4}}>
+                  {selectedChurch.youthPhone && <a href={`tel:${selectedChurch.youthPhone}`} style={{color:'#1B4FA3',fontSize:13}}>📞 {formatPhone(selectedChurch.youthPhone)}</a>}
+                  {selectedChurch.youthEmail && <a href={`mailto:${selectedChurch.youthEmail}`} style={{color:'#1B4FA3',fontSize:13}}>✉️ {selectedChurch.youthEmail}</a>}
+                </div>
+              </div>
+            </div>
+            {selectedChurch.notes && (
+              <div style={{background:'#f0f7ff',borderRadius:10,padding:'12px 16px',borderLeft:'4px solid #1B4FA3'}}>
+                <div style={{fontWeight:700,fontSize:12,color:'#1B4FA3',marginBottom:4}}>YOUNG LIFE PARTNERSHIP NOTES</div>
+                <p style={{fontSize:13,lineHeight:1.6,color:'var(--gray-700)',margin:0}}>{selectedChurch.notes}</p>
+              </div>
+            )}
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={()=>setSelectedChurch(null)}>Close</button>
+              {selectedChurch.website && <button className="btn-primary" onClick={()=>window.open(selectedChurch.website,'_blank')}>Visit Website →</button>}
+            </div>
+          </div>
+        </Modal>
       )}
 
       {/* BUSINESS DETAIL MODAL */}
