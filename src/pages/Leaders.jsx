@@ -7,50 +7,113 @@ const ROLES = ['Area Director','YoungLife Leader','WyldLife Leader','Campaigners
 const COLORS = ['#E8392A','#1B4FA3','#3AAB35','#854883','#d97706','#0891b2','#FF837D','#F3C546']
 const EMPTY = { firstName:'', lastName:'', role:'YoungLife Leader', program:'YoungLife', phone:'', email:'', bio:'', schools:[], initials:'', color:'#1B4FA3' }
 
-function loadOrder() { try { const v = localStorage.getItem('yl_leaders_order'); return v ? JSON.parse(v) : [] } catch { return [] } }
-function saveOrder(arr) { try { localStorage.setItem('yl_leaders_order', JSON.stringify(arr)) } catch {} }
+const DEFAULT_COMMITTEE = [
+  { id:'cm1', name: 'Monica Farum', role: 'Committee Member', phone: '(817) 247-7495', email: 'monicafaram@gmail.com', initials: 'MF', color: '#854883' },
+  { id:'cm2', name: 'Rex Russell', role: 'Committee Chair', phone: '(817) 689-4560', email: 'rex@russellwg.com', initials: 'RR', color: '#1B4FA3' },
+  { id:'cm3', name: 'Brenda Henderson', role: 'Committee Member', phone: '(817) 781-3628', email: 'auntb22@sbcglobal.net', initials: 'BH', color: '#0891b2' },
+]
+
+function loadOrder(key, def) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def } catch { return def }
+}
+function saveOrder(key, arr) { try { localStorage.setItem(key, JSON.stringify(arr)) } catch {} }
+
+function reorder(list, fromId, toId) {
+  const ids = list.map(l => l.id)
+  const from = ids.indexOf(fromId)
+  const to = ids.indexOf(toId)
+  if (from === -1 || to === -1 || from === to) return list
+  const next = [...list]
+  const [moved] = next.splice(from, 1)
+  next.splice(to, 0, moved)
+  return next
+}
+
+function useDragSort(items, setItems, onSave) {
+  const dragId = useRef(null)
+  const didDrag = useRef(false)
+
+  function onDragStart(e, id) {
+    dragId.current = id
+    didDrag.current = false
+    e.dataTransfer.effectAllowed = 'move'
+    // small timeout so the drag ghost doesn't show a half-moved card
+    setTimeout(() => { e.target.style.opacity = '0.5' }, 0)
+  }
+  function onDragOver(e, id) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (dragId.current && dragId.current !== id) {
+      didDrag.current = true
+      setItems(prev => reorder(prev, dragId.current, id))
+      dragId.current = id
+    }
+  }
+  function onDrop(e) {
+    e.preventDefault()
+  }
+  function onDragEnd(e) {
+    e.target.style.opacity = ''
+    onSave(items)
+    dragId.current = null
+  }
+  function wasDragged() { return didDrag.current }
+
+  return { onDragStart, onDragOver, onDrop, onDragEnd, wasDragged }
+}
 
 export default function Leaders({ store }) {
-  const { leaders, students, followUps, schools: storeSchools, getStudentAttendance, addLeader, updateLeader, deleteLeader, addNotification } = store
+  const { leaders, students, followUps, schools: storeSchools, addLeader, updateLeader, deleteLeader, addNotification } = store
   const [modal, setModal] = useState(null)
   const [form, setForm] = useState(EMPTY)
   const [editId, setEditId] = useState(null)
-  const [viewLeader, setViewLeader] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
   const [filterProgram, setFilterProgram] = useState('All')
-  const [order, setOrder] = useState(loadOrder)
-  const dragId = useRef(null)
-  const dragOverId = useRef(null)
 
-  function getSorted(list) {
-    const known = order.filter(id => list.find(l => l.id === id))
-    const rest = list.filter(l => !known.includes(l.id)).map(l => l.id)
-    const ids = [...known, ...rest]
-    return ids.map(id => list.find(l => l.id === id)).filter(Boolean)
+  // Leader card order — stored as sorted array of leader objects
+  const [sortedLeaders, setSortedLeaders] = useState(() => {
+    const order = loadOrder('yl_leaders_order', [])
+    if (!order.length) return leaders
+    const known = order.map(id => leaders.find(l => l.id === id)).filter(Boolean)
+    const rest = leaders.filter(l => !order.includes(l.id))
+    return [...known, ...rest]
+  })
+
+  // Keep sortedLeaders in sync when store leaders change (add/delete)
+  const leaderIds = leaders.map(l => l.id).join(',')
+  const sortedIds = sortedLeaders.map(l => l.id).join(',')
+  if (leaderIds !== sortedIds) {
+    const merged = [
+      ...sortedLeaders.filter(l => leaders.find(x => x.id === l.id)).map(sl => leaders.find(x => x.id === sl.id)),
+      ...leaders.filter(l => !sortedLeaders.find(sl => sl.id === l.id)),
+    ]
+    // Apply any field updates from store
+    setSortedLeaders(merged)
   }
 
-  function onDragStart(id) { dragId.current = id }
-  function onDragOver(e, id) { e.preventDefault(); dragOverId.current = id }
-  function onDrop(allLeaders) {
-    if (!dragId.current || dragId.current === dragOverId.current) return
-    const ids = getSorted(allLeaders).map(l => l.id)
-    const from = ids.indexOf(dragId.current)
-    const to = ids.indexOf(dragOverId.current)
-    if (from === -1 || to === -1) return
-    ids.splice(from, 1)
-    ids.splice(to, 0, dragId.current)
-    setOrder(ids)
-    saveOrder(ids)
-    dragId.current = null
-    dragOverId.current = null
-  }
+  const leaderDrag = useDragSort(
+    filtered,
+    (next) => {
+      setSortedLeaders(prev => {
+        const unfilteredItems = prev.filter(l => !(filterProgram === 'All' || l.program === filterProgram || l.program === 'Both'))
+        return [...next, ...unfilteredItems]
+      })
+    },
+    (items) => saveOrder('yl_leaders_order', items.map(l => l.id))
+  )
 
-  const allFiltered = getSorted(leaders.filter(l => filterProgram === 'All' || l.program === filterProgram || l.program === 'Both'))
-  const filtered = allFiltered
+  // Committee order
+  const [committee, setCommittee] = useState(() => loadOrder('yl_committee_order', DEFAULT_COMMITTEE))
+  const committeeDrag = useDragSort(
+    committee,
+    setCommittee,
+    (items) => saveOrder('yl_committee_order', items)
+  )
+
+  const filtered = sortedLeaders.filter(l => filterProgram === 'All' || l.program === filterProgram || l.program === 'Both')
 
   function openAdd() { setForm(EMPTY); setEditId(null); setModal('form') }
   function openEdit(l) { setForm({...l, schools: l.schools||[]}); setEditId(l.id); setModal('form') }
-  function openView(l) { setViewLeader(l); setModal('view') }
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -85,13 +148,8 @@ export default function Leaders({ store }) {
     addNotification('Leader removed','error')
   }
 
-  function leaderStudents(leaderId) {
-    return students.filter(s => s.leaderId === leaderId)
-  }
-
-  function leaderFollowUps(leaderId) {
-    return followUps.filter(f => f.leaderId === leaderId)
-  }
+  function leaderStudents(leaderId) { return students.filter(s => s.leaderId === leaderId) }
+  function leaderFollowUps(leaderId) { return followUps.filter(f => f.leaderId === leaderId) }
 
   return (
     <div className="leaders-page">
@@ -113,12 +171,13 @@ export default function Leaders({ store }) {
           return (
             <div key={l.id} className="leader-card"
               draggable
-              onDragStart={() => onDragStart(l.id)}
-              onDragOver={e => onDragOver(e, l.id)}
-              onDrop={() => onDrop(leaders.filter(x => filterProgram === 'All' || x.program === filterProgram || x.program === 'Both'))}
-              onClick={() => openEdit(l)}
+              onDragStart={e => leaderDrag.onDragStart(e, l.id)}
+              onDragOver={e => leaderDrag.onDragOver(e, l.id)}
+              onDrop={leaderDrag.onDrop}
+              onDragEnd={leaderDrag.onDragEnd}
+              onClick={() => { if (!leaderDrag.wasDragged()) openEdit(l) }}
             >
-              <div className="leader-drag-handle" onClick={e => e.stopPropagation()}>⠿</div>
+              <div className="leader-drag-handle" title="Drag to reorder">⠿</div>
               <div className="leader-card-top">
                 <div className="leader-avatar-lg" style={{background: l.color}}>{l.initials}</div>
                 <div>
@@ -146,12 +205,16 @@ export default function Leaders({ store }) {
       <div className="leaders-committee">
         <h3 className="leaders-committee-title">Johnson County Young Life Committee</h3>
         <div className="leaders-committee-grid">
-          {[
-            { name: 'Monica Farum', role: 'Committee Member', phone: '(817) 247-7495', email: 'monicafaram@gmail.com', initials: 'MF', color: '#854883' },
-            { name: 'Rex Russell', role: 'Committee Chair', phone: '(817) 689-4560', email: 'rex@russellwg.com', initials: 'RR', color: '#1B4FA3' },
-            { name: 'Brenda Henderson', role: 'Committee Member', phone: '(817) 781-3628', email: 'auntb22@sbcglobal.net', initials: 'BH', color: '#0891b2' },
-          ].map(m => (
-            <div key={m.name} className="committee-card">
+          {committee.map(m => (
+            <div key={m.id} className="committee-card"
+              draggable
+              onDragStart={e => committeeDrag.onDragStart(e, m.id)}
+              onDragOver={e => committeeDrag.onDragOver(e, m.id)}
+              onDrop={committeeDrag.onDrop}
+              onDragEnd={committeeDrag.onDragEnd}
+              style={{cursor:'grab'}}
+            >
+              <div className="leader-drag-handle" style={{position:'static',marginRight:2,fontSize:16,color:'var(--gray-300)'}} title="Drag to reorder">⠿</div>
               <div className="leader-avatar-lg" style={{background:m.color,width:44,height:44,fontSize:15,flexShrink:0}}>{m.initials}</div>
               <div style={{flex:1}}>
                 <div style={{fontWeight:700,fontSize:15,color:'var(--gray-900)'}}>{m.name}</div>
@@ -234,54 +297,6 @@ export default function Leaders({ store }) {
               {editId && <button className="btn-danger" onClick={() => setConfirmDelete({id:editId})}>Delete</button>}
               <button className="btn-secondary" onClick={() => setModal(null)}>Cancel</button>
               <button className="btn-primary" onClick={handleSave}>{editId?'Save':'Add Leader'}</button>
-            </div>
-          </div>
-        </Modal>
-      )}
-
-      {/* View Modal */}
-      {modal === 'view' && viewLeader && (
-        <Modal title="Leader Profile" onClose={() => setModal(null)} size="lg">
-          <div className="leader-profile">
-            <div className="profile-header">
-              <div className="leader-avatar-lg" style={{background: viewLeader.color}}>{viewLeader.initials}</div>
-              <div>
-                <h2 className="profile-name">{viewLeader.firstName} {viewLeader.lastName}</h2>
-                <p style={{color:'var(--gray-500)',marginBottom:6}}>{viewLeader.role}</p>
-                <span className={`program-pill program-pill--${viewLeader.program==='YoungLife'?'yl':viewLeader.program==='WyldLife'?'wl':'both'}`}>{viewLeader.program}</span>
-              </div>
-            </div>
-            {viewLeader.bio && <p style={{fontSize:14,color:'var(--gray-600)',lineHeight:1.6}}>{viewLeader.bio}</p>}
-            <div className="profile-grid">
-              <div className="profile-section">
-                <div className="profile-section-title">Contact</div>
-                <div className="profile-field"><span>📞</span><a href={`tel:${viewLeader.phone}`}>{viewLeader.phone ? formatPhone(viewLeader.phone) : '—'}</a></div>
-                <div className="profile-field"><span>✉️</span><a href={`mailto:${viewLeader.email}`}>{viewLeader.email||'—'}</a></div>
-              </div>
-              <div className="profile-section">
-                <div className="profile-section-title">Schools</div>
-                <div className="tag-list" style={{gap:6}}>
-                  {(viewLeader.schools||[]).map(s => <span key={s} className="school-chip-sm">{s}</span>)}
-                  {(viewLeader.schools||[]).length===0 && <span style={{color:'var(--gray-400)',fontSize:13}}>None assigned</span>}
-                </div>
-              </div>
-            </div>
-            <div className="profile-section">
-              <div className="profile-section-title">Assigned Students ({leaderStudents(viewLeader.id).length})</div>
-              {leaderStudents(viewLeader.id).map(s => (
-                <div key={s.id} className="leader-student-row">
-                  <div className="student-avatar" style={{background:s.program==='YoungLife'?'#1B4FA3':'#3AAB35',width:28,height:28,fontSize:10}}>
-                    {s.firstName[0]}{s.lastName[0]}
-                  </div>
-                  <span>{s.firstName} {s.lastName}</span>
-                  <span style={{color:'var(--gray-400)',fontSize:12}}>{s.grade} · {s.school}</span>
-                </div>
-              ))}
-              {leaderStudents(viewLeader.id).length === 0 && <p className="empty-msg-sm">No students assigned</p>}
-            </div>
-            <div className="modal-actions">
-              <button className="btn-secondary" onClick={() => setModal(null)}>Close</button>
-              <button className="btn-primary" onClick={() => openEdit(viewLeader)}>Edit</button>
             </div>
           </div>
         </Modal>
