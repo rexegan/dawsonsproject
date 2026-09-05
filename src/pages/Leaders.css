@@ -66,10 +66,10 @@
 }
 .committee-card {
   position: relative;
-  display: flex; gap: 14px; align-items: flex-start;
+  display: flex; flex-direction: column; gap: 12px;
   background: white; border-radius: var(--radius-lg); padding: 18px;
   box-shadow: var(--shadow-sm); min-height: 260px;
   border-top: 4px solid #1B4FA3;
-  transition: box-shadow .15s, transform .15s;
+  cursor: pointer; transition: box-shadow .15s, transform .15s;
 }
 .committee-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }

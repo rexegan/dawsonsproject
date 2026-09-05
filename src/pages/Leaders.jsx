@@ -202,17 +202,19 @@ export default function Leaders({ store }) {
               onDragOver={e => cmDragOver(e, m.id)}
               onDrop={e => e.preventDefault()}
               onDragEnd={cmDragEnd}
-              style={{cursor:'grab'}}
             >
-              <div style={{color:'var(--gray-300)',fontSize:18,lineHeight:1,cursor:'grab',userSelect:'none',paddingRight:4,alignSelf:'center'}}>⠿</div>
-              <div className="leader-avatar-lg" style={{background:m.color,width:44,height:44,fontSize:15,flexShrink:0}}>{m.initials}</div>
-              <div style={{flex:1}}>
-                <div style={{fontWeight:700,fontSize:15,color:'var(--gray-900)'}}>{m.name}</div>
-                <div style={{fontSize:12,color:'var(--gray-500)',marginBottom:8}}>{m.role}</div>
-                <div style={{display:'flex',flexDirection:'column',gap:4}}>
-                  <a href={`tel:${m.phone}`} className="contact-link">📞 {m.phone}</a>
-                  <a href={`mailto:${m.email}`} className="contact-link">✉️ {m.email}</a>
+              <div className="leader-drag-handle" title="Drag to reorder">⠿</div>
+              <div className="leader-card-top">
+                <div className="leader-avatar-lg" style={{background:m.color}}>{m.initials}</div>
+                <div>
+                  <h4 className="leader-card-name">{m.name}</h4>
+                  <p className="leader-card-role">{m.role}</p>
                 </div>
+              </div>
+              <div style={{flex:1}} />
+              <div className="leader-card-contact">
+                {m.phone && <a href={`tel:${m.phone}`} className="contact-link" onClick={e=>e.stopPropagation()}>📞 {m.phone}</a>}
+                {m.email && <a href={`mailto:${m.email}`} className="contact-link" onClick={e=>e.stopPropagation()}>✉️ {m.email}</a>}
               </div>
             </div>
           ))}
