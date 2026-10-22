@@ -22,10 +22,13 @@ function getBirthdayRaw(s) {
 const EMPTY_STUDENT = {
   firstName:'', lastName:'', grade:'9th', school:'', phone:'', email:'',
   parentName:'', parentPhone:'', parentEmail:'', program:'YoungLife',
-  leaderId:'', notes:'', tags:[],
+  leaderId:'', notes:'', tags:[], gradYear:'',
 }
 
 const TAGS = ['interested','campaigners','camp','leadership','multiplier','new','follow-up']
+
+// Grade a student is in during the current school year → the spring they graduate 12th grade.
+const GRAD_YEAR_FROM_GRADE = { '6th':2033, '7th':2032, '8th':2031, '9th':2030, '10th':2029, '11th':2028, '12th':2027 }
 
 export default function Students({ store, openStudentId }) {
   const { students, leaders, schools: storeSchools, addStudent, updateStudent, deleteStudent, addNotification } = store
@@ -68,6 +71,7 @@ export default function Students({ store, openStudentId }) {
     else if (sortCol === 'program') { av = a.program;  bv = b.program }
     else if (sortCol === 'leader')  { av = leaderName(a.leaderId); bv = leaderName(b.leaderId) }
     else if (sortCol === 'birthday') { av = getBirthdayRaw(a).slice(5); bv = getBirthdayRaw(b).slice(5) }
+    else if (sortCol === 'gradYear') { av = Number(a.gradYear)||0; bv = Number(b.gradYear)||0 }
     else { av = av||''; bv = bv||'' }
     const cmp = typeof av === 'number' ? av - bv : String(av).localeCompare(String(bv))
     return sortDir === 'asc' ? cmp : -cmp
@@ -89,7 +93,13 @@ export default function Students({ store, openStudentId }) {
   function handleChange(e) {
     const { name, value } = e.target
     const phoneFields = ['phone', 'parentPhone']
-    setForm(f => ({ ...f, [name]: phoneFields.includes(name) ? formatPhone(value) : value }))
+    setForm(f => {
+      const next = { ...f, [name]: phoneFields.includes(name) ? formatPhone(value) : value }
+      if (name === 'grade' && (!f.gradYear || GRAD_YEAR_FROM_GRADE[f.grade] === Number(f.gradYear))) {
+        next.gradYear = GRAD_YEAR_FROM_GRADE[value] || f.gradYear
+      }
+      return next
+    })
   }
 
   function toggleTag(tag) {
@@ -158,7 +168,7 @@ export default function Students({ store, openStudentId }) {
         <table className="students-table">
           <thead>
             <tr>
-              {[['name','Name'],['grade','Grade'],['school','School'],['program','Program'],['leader','Leader'],['birthday','Birthday']].map(([col,label])=>(
+              {[['name','Name'],['grade','Grade'],['gradYear','Grad Year'],['school','School'],['program','Program'],['leader','Leader'],['birthday','Birthday']].map(([col,label])=>(
                 <th key={col} className="th-sortable" onClick={()=>handleSort(col)}>
                   {label} <span className="sort-arrow">{sortCol===col ? (sortDir==='asc'?'↑':'↓') : '↕'}</span>
                 </th>
@@ -181,6 +191,7 @@ export default function Students({ store, openStudentId }) {
                   </button>
                 </td>
                 <td><span className="grade-pill">{s.grade}</span></td>
+                <td style={{fontSize:13,color:'var(--gray-700)'}}>{s.gradYear || '—'}</td>
                 <td className="td-school">{s.school}</td>
                 <td>
                   <span className={`program-pill program-pill--${s.program === 'YoungLife' ? 'yl' : 'wl'}`}>
@@ -225,6 +236,12 @@ export default function Students({ store, openStudentId }) {
                   {GRADES.map(g => <option key={g}>{g}</option>)}
                 </select>
               </div>
+              <div className="form-group">
+                <label>Graduation Year</label>
+                <input name="gradYear" type="number" value={form.gradYear} onChange={handleChange} placeholder="2028" />
+              </div>
+            </div>
+            <div className="form-row-2">
               <div className="form-group">
                 <label>Program</label>
                 <select name="program" value={form.program} onChange={handleChange}>
@@ -308,7 +325,7 @@ export default function Students({ store, openStudentId }) {
               </div>
               <div>
                 <h2 className="profile-name">{selected.firstName} {selected.lastName}</h2>
-                <div className="profile-meta">{selected.grade} · {selected.school}</div>
+                <div className="profile-meta">{selected.grade}{selected.gradYear ? ` · Class of ${selected.gradYear}` : ''} · {selected.school}</div>
                 <span className={`program-pill program-pill--${selected.program === 'YoungLife' ? 'yl' : 'wl'}`}>{selected.program}</span>
               </div>
             </div>

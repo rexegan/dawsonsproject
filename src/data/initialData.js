@@ -16,7 +16,10 @@ export const GRADES = ['6th','7th','8th','9th','10th','11th','12th'];
 export const MS_GRADES = ['6th','7th','8th'];
 export const HS_GRADES = ['9th','10th','11th','12th'];
 
-export const initialStudents = [
+// Grade a student is in during the current school year → the spring they graduate 12th grade.
+const GRAD_YEAR_FROM_GRADE = { '6th':2033, '7th':2032, '8th':2031, '9th':2030, '10th':2029, '11th':2028, '12th':2027 };
+
+const _rawInitialStudents = [
 
   // ── WyldLife Registrants (middle school) ────────────────────────────────
   { id:'wl1',  firstName:'Emberlyn',   lastName:'Elliott',           grade:'6th',  school:'Loflin Middle School',  phone:'(817) 201-2548', email:'lindsay.elliott10@gmail.com',   parentName:'Lindsay Elliott',           parentPhone:'(817) 201-2548', parentEmail:'lindsay.elliott10@gmail.com',  program:'WyldLife', leaderId:'l3', tags:[], birthday:'2013-10-17', notes:'302 Edgehill Rd, Joshua TX 76058', dateAdded:'2025-08-01' },
@@ -174,6 +177,11 @@ export const initialStudents = [
   { id:'hs69', firstName:'Suvd',       lastName:'Ganbaatar',   grade:'12th', school:'Joshua High School',    phone:'(972) 927-0257', email:'suvdganbatar@gmail.com',           parentName:'Marshall Miller',      parentPhone:'(817) 727-5964', parentEmail:'marleydmiller@gmail.com',        program:'YoungLife', leaderId:'l4', tags:[], birthday:'2008-09-19', notes:'Oatlands Pl, Burleson TX 76028', dateAdded:'2025-08-01' },
   { id:'hs70', firstName:'Anthony',    lastName:'Duron',       grade:'12th', school:'Joshua High School',    phone:'(682) 600-2113', email:'tduron2007@gmail.com',             parentName:'Anthony Duron',        parentPhone:'(682) 366-4094', parentEmail:'Eduron817@gmail.com',            program:'YoungLife', leaderId:'l4', tags:[], birthday:'2007-05-26', notes:'2512 Buffalo Run, Burleson TX 76028', dateAdded:'2025-08-01' },
 ];
+
+export const initialStudents = _rawInitialStudents.map(s => ({
+  gradYear: GRAD_YEAR_FROM_GRADE[s.grade] || '',
+  ...s,
+}));
 
 export const initialLeaders = [
   { id:'l1', firstName:'Theresa',  lastName:'Boydston', role:'Area Director',     program:'Both',       phone:'(817)555-0001', email:'theresa.boydston@younglife.org',  bio:'Area Director for Johnson County Young Life. Passionate about reaching every student in JC.',                             schools:['Cleburne High School','Burleson High School','Burleson Centennial High School'],          initials:'TB', color:'#1B4FA3' },
