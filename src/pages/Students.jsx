@@ -191,7 +191,7 @@ export default function Students({ store, openStudentId }) {
                   </button>
                 </td>
                 <td><span className="grade-pill">{s.grade}</span></td>
-                <td style={{fontSize:13,color:'var(--gray-700)'}}>{s.gradYear || '—'}</td>
+                <td style={{fontSize:13,color:'var(--gray-700)'}}>{s.gradYear ? `May ${s.gradYear}` : '—'}</td>
                 <td className="td-school">{s.school}</td>
                 <td>
                   <span className={`program-pill program-pill--${s.program === 'YoungLife' ? 'yl' : 'wl'}`}>
@@ -325,7 +325,7 @@ export default function Students({ store, openStudentId }) {
               </div>
               <div>
                 <h2 className="profile-name">{selected.firstName} {selected.lastName}</h2>
-                <div className="profile-meta">{selected.grade}{selected.gradYear ? ` · Class of ${selected.gradYear}` : ''} · {selected.school}</div>
+                <div className="profile-meta">{selected.grade}{selected.gradYear ? ` · Graduates May ${selected.gradYear}` : ''} · {selected.school}</div>
                 <span className={`program-pill program-pill--${selected.program === 'YoungLife' ? 'yl' : 'wl'}`}>{selected.program}</span>
               </div>
             </div>
