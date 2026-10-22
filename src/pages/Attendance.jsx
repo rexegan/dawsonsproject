@@ -9,7 +9,7 @@ function fmtDate(iso) {
   return `${months[m - 1]} ${d}, ${y}`
 }
 
-export default function Attendance({ store }) {
+export default function Attendance({ store, navigateTo }) {
   const { events, students, saveAttendance, getEventAttendance, addNotification } = store
   const [selectedEvent, setSelectedEvent] = useState('')
   const [records, setRecords] = useState({}) // studentId -> { present, notes }
@@ -138,7 +138,13 @@ export default function Attendance({ store }) {
                   const rec = records[s.id] || { present: null, notes: '' }
                   return (
                     <div key={s.id} className={`att-row ${rec.present === true ? 'att-row--present' : rec.present === false ? 'att-row--absent' : ''}`}>
-                      <div className="att-student">
+                      <button
+                        type="button"
+                        className="att-student"
+                        style={{background:'none', border:'none', textAlign:'left', cursor:'pointer', padding:0, font:'inherit'}}
+                        onClick={() => navigateTo && navigateTo('students', { openStudentId: s.id })}
+                        title="View student card"
+                      >
                         <div className="att-avatar" style={{background: s.program==='YoungLife'?'#1B4FA3':'#3AAB35'}}>
                           {s.firstName[0]}{s.lastName[0]}
                         </div>
@@ -146,7 +152,7 @@ export default function Attendance({ store }) {
                           <div className="att-name">{s.firstName} {s.lastName}</div>
                           <div className="att-school">{s.grade} · {s.school}</div>
                         </div>
-                      </div>
+                      </button>
                       <div className="att-controls">
                         <input
                           className="att-note-input"
