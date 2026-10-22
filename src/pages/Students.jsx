@@ -186,7 +186,13 @@ export default function Students({ store, openStudentId }) {
                     </div>
                     <div>
                       <div className="student-fullname">{s.firstName} {s.lastName}</div>
-                      <div className="student-contact">{s.phone ? formatPhone(s.phone) : s.email || '—'}</div>
+                      <div className="student-contact">
+                        {s.phone
+                          ? <a href={`tel:${s.phone}`} onClick={e=>e.stopPropagation()}>{formatPhone(s.phone)}</a>
+                          : s.email
+                            ? <a href={`mailto:${s.email}`} onClick={e=>e.stopPropagation()}>{s.email}</a>
+                            : '—'}
+                      </div>
                     </div>
                   </button>
                 </td>
