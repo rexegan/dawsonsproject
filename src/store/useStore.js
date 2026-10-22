@@ -78,8 +78,13 @@ function uid() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36)
 }
 
+const GRAD_YEAR_FROM_GRADE = { '6th':2033, '7th':2032, '8th':2031, '9th':2030, '10th':2029, '11th':2028, '12th':2027 }
+function withGradYear(list) {
+  return list.map(s => s.gradYear ? s : { ...s, gradYear: GRAD_YEAR_FROM_GRADE[s.grade] || '' })
+}
+
 export function useStore() {
-  const [students, setStudents] = useState(() => load('yl_students', initialStudents))
+  const [students, setStudents] = useState(() => withGradYear(load('yl_students', initialStudents)))
   const [leaders, setLeaders] = useState(() => load('yl_leaders', initialLeaders))
   const [events, setEvents] = useState(() => load('yl_events', initialEvents))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
