@@ -8,6 +8,15 @@ const SECTIONS = [
   { id: 'camps', label: '⛺ Camps' },
   { id: 'global', label: '🌍 Global Reach' },
   { id: 'stats', label: '📊 By the Numbers' },
+  { id: 'videos', label: '🎬 Videos' },
+]
+
+const VIDEOS = [
+  { title: 'Top 10 Young Life Videos of All Time', desc: "Young Life's own roundup of the most powerful videos the ministry has ever produced — contact work, club, camp, and Campaigners, all in one place.", url: 'https://blog.younglife.org/legacy-and-impact/top-10-young-life-videos-of-all-time/', icon: '🏆' },
+  { title: 'Top Young Life Videos of 2025', desc: "This year's best videos from across the ministry, including the \"Why WyldLife?\" video featuring Young Life President Newt Crenshaw.", url: 'https://blog.younglife.org/stories-of-transformation/top-young-life-videos-of-2025/', icon: '🎥' },
+  { title: 'WyldLife — Middle Schoolers Matter', desc: "The official WyldLife site, with videos on why middle school ministry matters and what a WyldLife club actually looks like.", url: 'https://wyldlife.younglife.org/', icon: '🙌' },
+  { title: 'A Living Legacy — The 5 C\'s of Young Life', desc: "A classic Young Life film explaining the 5 C's — Contact Work, Camp, Club, Campaigners, and Committee — the foundation of how Young Life ministers to kids.", url: 'https://vimeo.com/148560064', icon: '📽️' },
+  { title: 'Young Life — Official Site & Video Library', desc: "Young Life's national site, with their full video library covering every part of the ministry — camp, club, Capernaum, college, and more.", url: 'https://www.younglife.org', icon: '🌍' },
 ]
 
 const TIMELINE = [
@@ -285,6 +294,34 @@ export default function YLStory() {
           <div className="ylstory-stat-note">
             <p>Young Life's annual budget exceeds <strong>$400 million</strong>, funded almost entirely by local donors, area fundraisers, and national supporters — making the work in Johnson County directly connected to what you give.</p>
             <p>Every dollar raised locally stays primarily in Johnson County — funding leaders, camp scholarships, events, and the ongoing work of reaching every kid in the county.</p>
+          </div>
+        </div>
+      )}
+
+      {/* VIDEOS */}
+      {section === 'videos' && (
+        <div className="ylstory-section">
+          <div className="ylstory-section-intro">
+            <h2>Young Life Videos</h2>
+            <p>See the ministry in action — club, camp, Campaigners, WyldLife, and more. These are Young Life's own official videos, straight from younglife.org.</p>
+          </div>
+          <div className="ylstory-camps-grid">
+            {VIDEOS.map((v, i) => (
+              <div key={i} className="ylstory-camp-card">
+                <div className="ylstory-camp-emoji">{v.icon}</div>
+                <div className="ylstory-camp-name">{v.title}</div>
+                <div className="ylstory-camp-desc">{v.desc}</div>
+                <a
+                  href={v.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ylstory-camp-link"
+                  onClick={e => e.stopPropagation()}
+                >
+                  Watch →
+                </a>
+              </div>
+            ))}
           </div>
         </div>
       )}

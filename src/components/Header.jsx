@@ -15,7 +15,7 @@ const TITLES = {
   resources: 'Resources',
   parentconnect: 'Parent / Guardian Connect',
   messaging: 'Messaging & Marketing',
-  ylstory: 'The YL Story',
+  ylstory: 'The Young Life Story',
   settings: 'Settings',
 }
 
