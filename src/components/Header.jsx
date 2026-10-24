@@ -30,9 +30,11 @@ export default function Header({ page, onMenuClick }) {
       <h1 className="header-title">{TITLES[page]}</h1>
       <div className="header-right">
         {page === 'dashboard' && (
-          <div className="header-verse">
-            <span className="header-verse-text">"Whatever you do, work at it with all your heart, as working for the Lord, not for human masters."</span>
-            <span className="header-verse-ref">Colossians 3:23</span>
+          <div className="header-verse header-verse--wrap">
+            <div className="header-verse-text">
+              "Whatever you do, work at it with all your heart,<br/>
+              as working for the Lord, not for human masters." <span className="header-verse-ref" style={{fontSize:'0.9em'}}>Colossians 3:23</span>
+            </div>
           </div>
         )}
         {page === 'followup' && (
@@ -115,7 +117,14 @@ export default function Header({ page, onMenuClick }) {
             </div>
           </div>
         )}
-        <div className="header-badge">Johnson County YL</div>
+        <div className={`header-badge ${page === 'dashboard' ? 'header-badge--logo' : ''}`}>
+          {page === 'dashboard' && (
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style={{flexShrink:0}}>
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          )}
+          <span>{page === 'dashboard' ? 'Johnson County Young Life' : 'Johnson County YL'}</span>
+        </div>
       </div>
     </header>
   )
