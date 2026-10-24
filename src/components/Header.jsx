@@ -31,7 +31,7 @@ export default function Header({ page, onMenuClick }) {
       <div className="header-right">
         {page === 'dashboard' && (
           <div className="header-verse">
-            <span className="header-verse-text">"Whatever you do, work at it with all your heart, as working for the Lord…"</span>
+            <span className="header-verse-text">"Whatever you do, work at it with all your heart, as working for the Lord, not for human masters."</span>
             <span className="header-verse-ref">Colossians 3:23</span>
           </div>
         )}
