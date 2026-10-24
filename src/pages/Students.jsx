@@ -77,7 +77,7 @@ export default function Students({ store, openStudentId }) {
     return sortDir === 'asc' ? cmp : -cmp
   })
 
-  const schools = storeSchools && storeSchools.length ? storeSchools : [...new Set(students.map(s => s.school))].sort()
+  const schools = [...new Set([...(storeSchools || []), ...students.map(s => s.school).filter(Boolean)])].sort()
 
   useEffect(() => {
     if (openStudentId) {
@@ -260,7 +260,7 @@ export default function Students({ store, openStudentId }) {
               <label>School</label>
               <select name="school" value={form.school} onChange={handleChange}>
                 <option value="">— Select School —</option>
-                {(storeSchools || []).map(s => <option key={s}>{s}</option>)}
+                {schools.map(s => <option key={s}>{s}</option>)}
               </select>
             </div>
             <div className="form-row-2">
