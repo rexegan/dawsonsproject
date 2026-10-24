@@ -30,13 +30,20 @@ const PRIORITY_COLOR = { High: '#dc2626', Medium: '#d97706', Low: '#3AAB35' }
 const PRIORITY_BG    = { High: '#fee2e2', Medium: '#fffbeb', Low: '#f0fdf4' }
 const PLAN_BLANK = { title:'', category:'event', status:'planning', priority:'Medium', date:'', notes:'', assignedTo:'', checklist:[] }
 
-function planLoad() { try { const v = localStorage.getItem('yl_planning'); return v ? JSON.parse(v) : [] } catch { return [] } }
+const PLAN_BANNED_PATTERN = /campaigners|5th quarter|fifth quarter/i
+function planLoad() {
+  try {
+    const v = localStorage.getItem('yl_planning')
+    const list = v ? JSON.parse(v) : []
+    return list.filter(i => !PLAN_BANNED_PATTERN.test(i.title || '') && !PLAN_BANNED_PATTERN.test(i.notes || ''))
+  } catch { return [] }
+}
 function planPersist(list) { try { localStorage.setItem('yl_planning', JSON.stringify(list)) } catch {} }
 function planFmtDate(iso) { if (!iso) return ''; const [y,m,d]=iso.split('-').map(Number); const ms=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return `${ms[m-1]} ${d}, ${y}` }
 function planDaysUntil(iso) { if (!iso) return null; return Math.ceil((new Date(iso)-new Date())/86400000) }
 
-const TYPE_COLOR = { club:'#1B4FA3', campaigners:'#3AAB35', camp:'#d97706', special:'#854883' }
-const TYPE_LABEL = { club:'Club Night', campaigners:'Campaigners', camp:'Camp', special:'Special Event' }
+const TYPE_COLOR = { club:'#1B4FA3', camp:'#d97706', special:'#854883' }
+const TYPE_LABEL = { club:'Club Night', camp:'Camp', special:'Special Event' }
 const EMPTY_EVENT = { title:'', type:'club', program:'YoungLife', date:'', time:'19:30', location:'', description:'', leaderId:'' }
 
 const SPONSOR_EVENTS = [

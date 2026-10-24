@@ -83,10 +83,15 @@ function withGradYear(list) {
   return list.map(s => s.gradYear ? s : { ...s, gradYear: GRAD_YEAR_FROM_GRADE[s.grade] || '' })
 }
 
+const BANNED_EVENT_PATTERN = /campaigners|5th quarter|fifth quarter/i
+function withoutCampaignersAndFifthQuarter(list) {
+  return list.filter(e => e.type !== 'campaigners' && !BANNED_EVENT_PATTERN.test(e.title || '') && !BANNED_EVENT_PATTERN.test(e.description || ''))
+}
+
 export function useStore() {
   const [students, setStudents] = useState(() => withGradYear(load('yl_students', initialStudents)))
   const [leaders, setLeaders] = useState(() => load('yl_leaders', initialLeaders))
-  const [events, setEvents] = useState(() => load('yl_events', initialEvents))
+  const [events, setEvents] = useState(() => withoutCampaignersAndFifthQuarter(load('yl_events', initialEvents)))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
   const [followUps, setFollowUps] = useState(() => load('yl_followUps', initialFollowUps))
   const [notifications, setNotifications] = useState(() => load('yl_notifications', []))
