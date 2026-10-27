@@ -78,6 +78,15 @@ function uid() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36)
 }
 
+const GRADE_BUMP_UP = { '6th':'7th', '7th':'8th', '8th':'9th', '9th':'10th', '10th':'11th', '11th':'12th', '12th':'Alumni' }
+function withGradeBumpOnce(list) {
+  const flagKey = 'yl_grade_bump_v1'
+  try { if (localStorage.getItem(flagKey)) return list } catch {}
+  const next = list.map(s => GRADE_BUMP_UP[s.grade] ? { ...s, grade: GRADE_BUMP_UP[s.grade] } : s)
+  try { localStorage.setItem(flagKey, '1') } catch {}
+  return next
+}
+
 const GRAD_YEAR_FROM_GRADE = { 'Alumni':2025, '6th':2032, '7th':2031, '8th':2030, '9th':2029, '10th':2028, '11th':2027, '12th':2026 }
 function withGradYear(list) {
   return list.map(s => {
@@ -133,7 +142,7 @@ function withProgramColors(list) {
 }
 
 export function useStore() {
-  const [students, setStudents] = useState(() => withGradYear(load('yl_students', initialStudents)))
+  const [students, setStudents] = useState(() => withGradYear(withGradeBumpOnce(load('yl_students', initialStudents))))
   const [leaders, setLeaders] = useState(() => withProgramColors(withAlyMerino(withReedClements(withKZSabolchick(withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders))))))))
   const [events, setEvents] = useState(() => load('yl_events', initialEvents))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
