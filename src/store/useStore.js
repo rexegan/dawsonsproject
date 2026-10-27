@@ -83,9 +83,19 @@ function withGradYear(list) {
   return list.map(s => s.gradYear ? s : { ...s, gradYear: GRAD_YEAR_FROM_GRADE[s.grade] || '' })
 }
 
+function withBrinleyBurnsGreen(list) {
+  return list.map(l => {
+    const name = `${l.firstName || ''} ${l.lastName || ''}`.trim().toLowerCase()
+    if ((name === 'brinley burns' || name === 'brindley burns') && l.color !== '#3AAB35') {
+      return { ...l, color: '#3AAB35' }
+    }
+    return l
+  })
+}
+
 export function useStore() {
   const [students, setStudents] = useState(() => withGradYear(load('yl_students', initialStudents)))
-  const [leaders, setLeaders] = useState(() => load('yl_leaders', initialLeaders))
+  const [leaders, setLeaders] = useState(() => withBrinleyBurnsGreen(load('yl_leaders', initialLeaders)))
   const [events, setEvents] = useState(() => load('yl_events', initialEvents))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
   const [followUps, setFollowUps] = useState(() => load('yl_followUps', initialFollowUps))
