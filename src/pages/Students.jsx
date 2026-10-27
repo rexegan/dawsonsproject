@@ -365,6 +365,7 @@ export default function Students({ store, openStudentId }) {
             <div className="profile-section">
               <div className="profile-section-title">Leader</div>
               <select
+                style={{width:'fit-content', minWidth:0}}
                 value={selected.leaderId || ''}
                 onChange={e => {
                   const newId = e.target.value
