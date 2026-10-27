@@ -174,11 +174,17 @@ function withClubAddress(list) {
     : e)
 }
 
+const CLUB_SERIES_ID_PATTERN = /^e(1[2-9]|[2-3][0-9])$/
 function withOngoingClubNights(list) {
-  const existingIds = new Set(list.map(e => e.id))
-  const missing = initialEvents.filter(e => /^e(1[2-9]|[2-3][0-9])$/.test(e.id) && !existingIds.has(e.id))
-  if (!missing.length) return list
-  return [...list, ...missing]
+  const authoritative = initialEvents.filter(e => CLUB_SERIES_ID_PATTERN.test(e.id))
+  const authoritativeById = new Map(authoritative.map(e => [e.id, e]))
+  const kept = list.filter(e => !CLUB_SERIES_ID_PATTERN.test(e.id))
+  const changed = list.length !== kept.length || authoritative.some(e => {
+    const existing = list.find(x => x.id === e.id)
+    return !existing || existing.date !== e.date || existing.time !== e.time || existing.location !== e.location
+  })
+  if (!changed) return list
+  return [...kept, ...authoritative]
 }
 
 const RETIRED_EVENT_IDS = new Set(['e1', 'e2', 'e3', 'e4', 'e7', 'e9', 'e10'])
@@ -186,10 +192,17 @@ function withoutRetiredEvents(list) {
   return list.filter(e => !RETIRED_EVENT_IDS.has(e.id))
 }
 
+const PROGRAM_EVENT_TIME = { YoungLife: '19:02', WyldLife: '17:02' }
+function withProgramEventTimes(list) {
+  return list.map(e => PROGRAM_EVENT_TIME[e.program] && e.time !== PROGRAM_EVENT_TIME[e.program]
+    ? { ...e, time: PROGRAM_EVENT_TIME[e.program] }
+    : e)
+}
+
 export function useStore() {
   const [students, setStudents] = useState(() => withGradYear(withGradeBumpOnce(load('yl_students', initialStudents))))
   const [leaders, setLeaders] = useState(() => withCorrectedLeaderSchools(withProgramColors(withAlyMerino(withReedClements(withKZSabolchick(withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders)))))))))
-  const [events, setEvents] = useState(() => withClubAddress(withOngoingClubNights(withoutCityClubNights(withoutRetiredEvents(load('yl_events', initialEvents))))))
+  const [events, setEvents] = useState(() => withProgramEventTimes(withClubAddress(withOngoingClubNights(withoutCityClubNights(withoutRetiredEvents(load('yl_events', initialEvents)))))))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
   const [followUps, setFollowUps] = useState(() => load('yl_followUps', initialFollowUps))
   const [notifications, setNotifications] = useState(() => load('yl_notifications', []))
