@@ -93,9 +93,15 @@ function withBrinleyBurnsGreen(list) {
   })
 }
 
+function withShellyRandle(list) {
+  const hasHer = list.some(l => `${l.firstName || ''} ${l.lastName || ''}`.trim().toLowerCase() === 'shelly randle')
+  if (hasHer) return list
+  return [...list, { id:'l5', firstName:'Shelly', lastName:'Randle', role:'Adult Helper', program:'WyldLife', phone:'(254) 723-6955', email:'shellyrandle6@gmail.com', bio:'Adult helper supporting WyldLife clubs in Burleson.', schools:['Kerr Middle School'], initials:'SR', color:'#d97706' }]
+}
+
 export function useStore() {
   const [students, setStudents] = useState(() => withGradYear(load('yl_students', initialStudents)))
-  const [leaders, setLeaders] = useState(() => withBrinleyBurnsGreen(load('yl_leaders', initialLeaders)))
+  const [leaders, setLeaders] = useState(() => withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders))))
   const [events, setEvents] = useState(() => load('yl_events', initialEvents))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
   const [followUps, setFollowUps] = useState(() => load('yl_followUps', initialFollowUps))
