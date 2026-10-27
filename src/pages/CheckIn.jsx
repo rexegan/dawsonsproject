@@ -121,7 +121,7 @@ export default function CheckIn({ store }) {
     return (
       <div className="checkin-page">
         <div className="checkin-top-bar">
-          <button className="checkin-back-btn" onClick={() => setShowHistory(false)}>← Back to Check-In</button>
+          <button className="btn-secondary" onClick={() => setShowHistory(false)}>← Back to Check-In</button>
         </div>
         <div className="att-history" style={{position:'static', maxWidth:520}}>
           <h3>Attendance History</h3>
