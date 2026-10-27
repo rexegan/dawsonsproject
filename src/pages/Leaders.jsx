@@ -3,7 +3,7 @@ import Modal from '../components/Modal'
 import { formatPhone } from '../utils/phone'
 import './Leaders.css'
 
-const ROLES = ['Area Director','YoungLife Leader','WyldLife Leader','Campaigners Leader','Committee Member','Volunteer','Staff']
+const ROLES = ['Area Director','YoungLife Leader','WyldLife Leader','Campaigners Leader','Adult Helper','Committee Member','Volunteer','Staff']
 const COLORS = ['#E8392A','#1B4FA3','#3AAB35','#854883','#d97706','#0891b2','#FF837D','#F3C546']
 const EMPTY = { firstName:'', lastName:'', role:'YoungLife Leader', program:'YoungLife', phone:'', email:'', bio:'', schools:[], initials:'', color:'#1B4FA3' }
 
