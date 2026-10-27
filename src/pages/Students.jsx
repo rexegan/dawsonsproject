@@ -364,7 +364,19 @@ export default function Students({ store, openStudentId }) {
 
             <div className="profile-section">
               <div className="profile-section-title">Leader</div>
-              <div className="profile-field"><span>🛡️</span>{leaderName(selected.leaderId)}</div>
+              <select
+                value={selected.leaderId || ''}
+                onChange={e => {
+                  const newId = e.target.value
+                  updateStudent(selected.id, { leaderId: newId })
+                  setSelected(s => ({ ...s, leaderId: newId }))
+                }}
+              >
+                <option value="">— Unassigned —</option>
+                {leaders.filter(l => l.color === '#1B4FA3' || l.color === '#3AAB35').map(l => (
+                  <option key={l.id} value={l.id}>{l.firstName} {l.lastName}</option>
+                ))}
+              </select>
             </div>
 
             {(selected.tags||[]).length > 0 && (
