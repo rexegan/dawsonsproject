@@ -191,10 +191,10 @@ export const initialLeaders = [
 ];
 
 export const initialEvents = [
-  { id:'e1', title:'YoungLife Club — Cleburne',    type:'club',        program:'YoungLife', date:'2026-08-22', time:'19:30', location:'456 Westhill Dr, Cleburne TX',          description:'Weekly club night for Cleburne-area high schoolers.',           leaderId:'l2' },
-  { id:'e2', title:'WyldLife Club — Cleburne',     type:'club',        program:'WyldLife',  date:'2026-08-22', time:'18:30', location:'123 Country Club Rd, Cleburne TX',       description:'Weekly club night for Cleburne-area middle schoolers.',          leaderId:'l3' },
-  { id:'e3', title:'YoungLife Club — Burleson',    type:'club',        program:'YoungLife', date:'2026-08-21', time:'19:30', location:'789 Renfro St, Burleson TX',             description:'Weekly club for Burleson HS and Burleson Centennial.',           leaderId:'l4' },
-  { id:'e4', title:'WyldLife Club — Burleson',     type:'club',        program:'WyldLife',  date:'2026-08-21', time:'18:30', location:'789 Renfro St, Burleson TX',             description:'Weekly middle school club — Burleson.',                          leaderId:'l3' },
+  { id:'e1', title:'YoungLife Club — Cleburne',    type:'club',        program:'YoungLife', date:'2026-08-22', time:'19:02', location:'456 Westhill Dr, Cleburne TX',          description:'Weekly club night for Cleburne-area high schoolers.',           leaderId:'l2' },
+  { id:'e2', title:'WyldLife Club — Cleburne',     type:'club',        program:'WyldLife',  date:'2026-08-22', time:'17:02', location:'123 Country Club Rd, Cleburne TX',       description:'Weekly club night for Cleburne-area middle schoolers.',          leaderId:'l3' },
+  { id:'e3', title:'YoungLife Club — Burleson',    type:'club',        program:'YoungLife', date:'2026-08-21', time:'19:02', location:'789 Renfro St, Burleson TX',             description:'Weekly club for Burleson HS and Burleson Centennial.',           leaderId:'l4' },
+  { id:'e4', title:'WyldLife Club — Burleson',     type:'club',        program:'WyldLife',  date:'2026-08-21', time:'17:02', location:'789 Renfro St, Burleson TX',             description:'Weekly middle school club — Burleson.',                          leaderId:'l3' },
   { id:'e7', title:'Fall Kickoff — All JC',        type:'special',     program:'Both',      date:'2026-09-05', time:'18:00', location:'Johnson County Fairgrounds, Cleburne TX', description:'All-county kickoff event — all students and schools welcome!',    leaderId:'l1' },
   { id:'e8', title:'Clay Shoot Fundraiser',        type:'special',     program:'Both',      date:'2026-10-04', time:'08:00', location:'Cleburne Shooting Complex',              description:'Annual fundraiser — all supporters welcome.',                    leaderId:'l1' },
   { id:'e9', title:'Frontier Ranch — Departs',     type:'camp',        program:'YoungLife', date:'2026-07-14', time:'05:30', location:'Cleburne HS Parking Lot',                description:'Summer camp at Frontier Ranch, Buena Vista CO.',                 leaderId:'l2' },
@@ -202,24 +202,24 @@ export const initialEvents = [
   { id:'e11',title:'Golf Tournament Fundraiser',   type:'special',     program:'Both',      date:'2026-09-25', time:'07:30', location:'Cleburne Golf Links, Cleburne TX',        description:'Johnson County Young Life Annual Golf Tournament fundraiser. All proceeds support student camp scholarships and local programming.', leaderId:'l1' },
 
   // ── 2025 Fall Semester — WyldLife ────────────────────────────────────────
-  { id:'e100', title:'WyldLife — First Club',              type:'club',        program:'WyldLife',  date:'2025-09-18', time:'18:30', location:'TBA', description:'First WyldLife Club of the fall semester!', leaderId:'l3' },
-  { id:'e101', title:'WyldLife — Club',                    type:'club',        program:'WyldLife',  date:'2025-10-02', time:'18:30', location:'TBA', description:'WyldLife Club night.', leaderId:'l3' },
-  { id:'e102', title:'WyldLife — Club',                    type:'club',        program:'WyldLife',  date:'2025-10-16', time:'18:30', location:'TBA', description:'WyldLife Club night.', leaderId:'l3' },
-  { id:'e103', title:'WyldLife — Club',                    type:'club',        program:'WyldLife',  date:'2025-10-30', time:'18:30', location:'TBA', description:'WyldLife Club night.', leaderId:'l3' },
-  { id:'e104', title:'WyldLife — Extended Club',           type:'club',        program:'WyldLife',  date:'2025-11-13', time:'18:30', location:'TBA', description:'WyldLife Extended Club night.', leaderId:'l3' },
+  { id:'e100', title:'WyldLife — First Club',              type:'club',        program:'WyldLife',  date:'2025-09-18', time:'17:02', location:'TBA', description:'First WyldLife Club of the fall semester!', leaderId:'l3' },
+  { id:'e101', title:'WyldLife — Club',                    type:'club',        program:'WyldLife',  date:'2025-10-02', time:'17:02', location:'TBA', description:'WyldLife Club night.', leaderId:'l3' },
+  { id:'e102', title:'WyldLife — Club',                    type:'club',        program:'WyldLife',  date:'2025-10-16', time:'17:02', location:'TBA', description:'WyldLife Club night.', leaderId:'l3' },
+  { id:'e103', title:'WyldLife — Club',                    type:'club',        program:'WyldLife',  date:'2025-10-30', time:'17:02', location:'TBA', description:'WyldLife Club night.', leaderId:'l3' },
+  { id:'e104', title:'WyldLife — Extended Club',           type:'club',        program:'WyldLife',  date:'2025-11-13', time:'17:02', location:'TBA', description:'WyldLife Extended Club night.', leaderId:'l3' },
   { id:'e105', title:'Thanksgiving Bonfire',               type:'special',     program:'Both',      date:'2025-11-20', time:'19:00', location:'TBA', description:'Thanksgiving Bonfire — WyldLife & YoungLife together.', leaderId:'l1' },
   { id:'e106', title:'WyldLife — Christmas Extended Club', type:'special',     program:'WyldLife',  date:'2025-12-04', time:'18:30', location:'TBA', description:'Christmas Extended Club — WyldLife.', leaderId:'l3' },
 
   // ── 2025 Fall Semester — YoungLife Club ──────────────────────────────────
-  { id:'e110', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-09-14', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
-  { id:'e111', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-09-21', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
-  { id:'e112', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-09-28', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
-  { id:'e113', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-10-05', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
-  { id:'e114', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-10-19', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
-  { id:'e115', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-02', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
-  { id:'e116', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-09', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
-  { id:'e117', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-16', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
-  { id:'e118', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-30', time:'19:30', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e110', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-09-14', time:'19:02', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e111', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-09-21', time:'19:02', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e112', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-09-28', time:'19:02', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e113', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-10-05', time:'19:02', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e114', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-10-19', time:'19:02', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e115', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-02', time:'19:02', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e116', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-09', time:'19:02', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e117', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-16', time:'19:02', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
+  { id:'e118', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-30', time:'19:02', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
 
   // ── 2025 Fall Semester — Extra Events ────────────────────────────────────
   { id:'e150', title:'Golf Tournament',                    type:'special',     program:'Both',      date:'2025-09-25', time:'07:30', location:'Cleburne Golf Links, Cleburne TX', description:'Annual Golf Tournament fundraiser. All proceeds support student camp scholarships.', leaderId:'l1' },

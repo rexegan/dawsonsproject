@@ -44,7 +44,8 @@ function planDaysUntil(iso) { if (!iso) return null; return Math.ceil((new Date(
 
 const TYPE_COLOR = { club:'#1B4FA3', camp:'#d97706', special:'#854883' }
 const TYPE_LABEL = { club:'Club', camp:'Camp', special:'Special Event' }
-const EMPTY_EVENT = { title:'', type:'club', program:'YoungLife', date:'', time:'19:30', location:'', description:'', leaderId:'' }
+const EMPTY_EVENT = { title:'', type:'club', program:'YoungLife', date:'', time:'19:02', location:'', description:'', leaderId:'' }
+const PROGRAM_START_TIME = { YoungLife:'19:02', WyldLife:'17:02' }
 
 const SPONSOR_EVENTS = [
   { id:'golf',    label:'Golf Tournament' },
@@ -213,7 +214,13 @@ export default function Events({ store, openEventId }) {
 
   function handleChange(e) {
     const { name, value } = e.target
-    setForm(f => ({ ...f, [name]: value }))
+    setForm(f => {
+      const next = { ...f, [name]: value }
+      if (name === 'program' && f.type === 'club' && PROGRAM_START_TIME[value] && (!f.time || f.time === PROGRAM_START_TIME[f.program])) {
+        next.time = PROGRAM_START_TIME[value]
+      }
+      return next
+    })
   }
 
   function handleSave() {
