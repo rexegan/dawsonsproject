@@ -58,7 +58,7 @@ const initialFinanceFollowUps = [
 const initialSchools = [
   'Cleburne High School', 'Cleburne Middle School', 'Burleson High School',
   'Burleson Centennial High School', 'Burleson Middle School', 'Alvarado High School',
-  'Alvarado Middle School', 'Joshua High School', 'Joshua Middle School',
+  'Alvarado Middle School', 'Joshua High School', 'Loflin Middle School', 'Nichols Middle School',
   'Godley High School', 'Godley Middle School', 'Grandview High School',
   'Venus High School', 'Rio Vista High School', 'Hillsboro High School',
 ]
