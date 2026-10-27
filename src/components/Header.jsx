@@ -79,7 +79,8 @@ export default function Header({ page, onMenuClick }) {
         {page === 'finances' && (
           <div className="header-verse header-verse--wrap">
             <div className="header-verse-text">
-              "God is able to bless you abundantly, so that in all things at all times, having all that you need, you will abound in every good work." <span className="header-verse-ref" style={{fontSize:'0.9em'}}>2 Corinthians 9:8</span>
+              "God is able to bless you abundantly, so that in all things at all times,<br/>
+              having all that you need, you will abound in every good work." <span className="header-verse-ref" style={{fontSize:'0.9em'}}>2 Corinthians 9:8</span>
             </div>
           </div>
         )}
