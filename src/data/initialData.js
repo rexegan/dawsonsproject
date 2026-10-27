@@ -196,10 +196,10 @@ export const initialEvents = [
   { id:'e3', title:'YoungLife Club — Burleson',    type:'club',        program:'YoungLife', date:'2026-08-21', time:'19:02', location:'789 Renfro St, Burleson TX',             description:'Weekly club for Burleson HS and Burleson Centennial.',           leaderId:'l4' },
   { id:'e4', title:'WyldLife Club — Burleson',     type:'club',        program:'WyldLife',  date:'2026-08-21', time:'17:02', location:'789 Renfro St, Burleson TX',             description:'Weekly middle school club — Burleson.',                          leaderId:'l3' },
   { id:'e7', title:'Fall Kickoff — All JC',        type:'special',     program:'Both',      date:'2026-09-05', time:'18:00', location:'Johnson County Fairgrounds, Cleburne TX', description:'All-county kickoff event — all students and schools welcome!',    leaderId:'l1' },
-  { id:'e8', title:'Clay Shoot Fundraiser',        type:'special',     program:'Both',      date:'2026-10-04', time:'08:00', location:'Cleburne Shooting Complex',              description:'Annual fundraiser — all supporters welcome.',                    leaderId:'l1' },
+  { id:'e8', title:'Clay Shoot Fundraiser',        type:'clayshoot',   program:'Both',      date:'2026-10-04', time:'08:00', location:'Cleburne Shooting Complex',              description:'Annual fundraiser — all supporters welcome.',                    leaderId:'l1' },
   { id:'e9', title:'Frontier Ranch — Departs',     type:'camp',        program:'YoungLife', date:'2026-07-14', time:'05:30', location:'Cleburne HS Parking Lot',                description:'Summer camp at Frontier Ranch, Buena Vista CO.',                 leaderId:'l2' },
   { id:'e10',title:'Crooked Creek — Departs',      type:'camp',        program:'WyldLife',  date:'2026-07-21', time:'06:00', location:'Burleson Centennial Parking Lot',        description:'WyldLife summer camp — Crooked Creek Ranch, CO.',                leaderId:'l3' },
-  { id:'e11',title:'Golf Tournament Fundraiser',   type:'special',     program:'Both',      date:'2026-09-25', time:'07:30', location:'Cleburne Golf Links, Cleburne TX',        description:'Johnson County Young Life Annual Golf Tournament fundraiser. All proceeds support student camp scholarships and local programming.', leaderId:'l1' },
+  { id:'e11',title:'Golf Tournament Fundraiser',   type:'golf',        program:'Both',      date:'2026-09-25', time:'07:30', location:'Cleburne Golf Links, Cleburne TX',        description:'Johnson County Young Life Annual Golf Tournament fundraiser. All proceeds support student camp scholarships and local programming.', leaderId:'l1' },
 
   // ── 2025 Fall Semester — WyldLife ────────────────────────────────────────
   { id:'e100', title:'WyldLife — First Club',              type:'club',        program:'WyldLife',  date:'2025-09-18', time:'17:02', location:'TBA', description:'First WyldLife Club of the fall semester!', leaderId:'l3' },
@@ -222,9 +222,9 @@ export const initialEvents = [
   { id:'e118', title:'YoungLife — Club',                   type:'club',        program:'YoungLife', date:'2025-11-30', time:'19:02', location:'TBA', description:'YoungLife Club night.', leaderId:'l2' },
 
   // ── 2025 Fall Semester — Extra Events ────────────────────────────────────
-  { id:'e150', title:'Golf Tournament',                    type:'special',     program:'Both',      date:'2025-09-25', time:'07:30', location:'Cleburne Golf Links, Cleburne TX', description:'Annual Golf Tournament fundraiser. All proceeds support student camp scholarships.', leaderId:'l1' },
+  { id:'e150', title:'Golf Tournament',                    type:'golf',        program:'Both',      date:'2025-09-25', time:'07:30', location:'Cleburne Golf Links, Cleburne TX', description:'Annual Golf Tournament fundraiser. All proceeds support student camp scholarships.', leaderId:'l1' },
   { id:'e151', title:'Instagram Scavenger Hunt',           type:'special',     program:'YoungLife', date:'2025-10-26', time:'14:00', location:'TBA', description:'Instagram Scavenger Hunt — all students welcome!', leaderId:'l2' },
-  { id:'e152', title:'Mr. Christmas Tree / Banquet',       type:'special',     program:'Both',      date:'2025-12-07', time:'18:00', location:'TBA', description:'Mr. Christmas Tree & Year-End Banquet — celebration for all students and leaders.', leaderId:'l1' },
+  { id:'e152', title:'Mr. Christmas Tree / Banquet',       type:'banquet',     program:'Both',      date:'2025-12-07', time:'18:00', location:'TBA', description:'Mr. Christmas Tree & Year-End Banquet — celebration for all students and leaders.', leaderId:'l1' },
 ];
 
 export const initialAttendance = [
