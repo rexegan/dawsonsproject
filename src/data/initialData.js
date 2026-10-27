@@ -17,7 +17,7 @@ export const MS_GRADES = ['6th','7th','8th'];
 export const HS_GRADES = ['9th','10th','11th','12th'];
 
 // Grade a student is in during the current school year → the spring they graduate 12th grade.
-const GRAD_YEAR_FROM_GRADE = { 'Alumni':2025, '6th':2032, '7th':2031, '8th':2030, '9th':2029, '10th':2028, '11th':2027, '12th':2026 };
+const GRAD_YEAR_FROM_GRADE = { 'Alumni':2026, '6th':2033, '7th':2032, '8th':2031, '9th':2030, '10th':2029, '11th':2028, '12th':2027 };
 
 const _rawInitialStudents = [
 
