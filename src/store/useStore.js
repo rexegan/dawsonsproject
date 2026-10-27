@@ -141,16 +141,38 @@ function withProgramColors(list) {
   })
 }
 
+const SCHOOL_RENAMES = {
+  'Joshua Middle School': ['Loflin Middle School', 'Nichols Middle School'],
+  'Burleson Middle School': ['Kerr Middle School', 'Hughes Middle School'],
+}
+function fixSchoolNames(list) {
+  const fixed = []
+  for (const s of list) {
+    if (SCHOOL_RENAMES[s]) fixed.push(...SCHOOL_RENAMES[s])
+    else fixed.push(s)
+  }
+  return [...new Set(fixed)]
+}
+function withCorrectedLeaderSchools(list) {
+  return list.map(l => {
+    if (!l.schools || !l.schools.some(s => SCHOOL_RENAMES[s])) return l
+    return { ...l, schools: fixSchoolNames(l.schools) }
+  })
+}
+function withCorrectedSchoolList(list) {
+  return fixSchoolNames(list)
+}
+
 export function useStore() {
   const [students, setStudents] = useState(() => withGradYear(withGradeBumpOnce(load('yl_students', initialStudents))))
-  const [leaders, setLeaders] = useState(() => withProgramColors(withAlyMerino(withReedClements(withKZSabolchick(withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders))))))))
+  const [leaders, setLeaders] = useState(() => withCorrectedLeaderSchools(withProgramColors(withAlyMerino(withReedClements(withKZSabolchick(withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders)))))))))
   const [events, setEvents] = useState(() => load('yl_events', initialEvents))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
   const [followUps, setFollowUps] = useState(() => load('yl_followUps', initialFollowUps))
   const [notifications, setNotifications] = useState(() => load('yl_notifications', []))
   const [org, setOrg] = useState(() => load('yl_org', initialOrg))
   const [programs, setPrograms] = useState(() => load('yl_programs', initialPrograms))
-  const [schools, setSchools] = useState(() => load('yl_schools', initialSchools))
+  const [schools, setSchools] = useState(() => withCorrectedSchoolList(load('yl_schools', initialSchools)))
   const [fundraisers, setFundraisers] = useState(() => load('yl_fundraisers', initialFundraisers))
   const [donors, setDonors] = useState(() => load('yl_donors', initialDonors))
   const [grants, setGrants] = useState(() => load('yl_grants', initialGrants))
