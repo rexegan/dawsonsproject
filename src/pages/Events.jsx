@@ -2,6 +2,21 @@ import { useState, useEffect, useMemo } from 'react'
 import Modal from '../components/Modal'
 import { formatPhone } from '../utils/phone'
 import { fmtTime } from '../utils/time'
+
+function timeTo12Parts(time) {
+  if (!time) return { h: '7', m: '00', ap: 'PM' }
+  const [hh, mm] = time.split(':').map(Number)
+  const ap = hh >= 12 ? 'PM' : 'AM'
+  const h12 = hh % 12 || 12
+  return { h: String(h12), m: String(mm).padStart(2, '0'), ap }
+}
+function partsTo24(h, m, ap) {
+  let hh = Number(h) % 12
+  if (ap === 'PM') hh += 12
+  return `${String(hh).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+}
+const HOUR_OPTIONS = Array.from({ length: 12 }, (_, i) => String(i + 1))
+const MINUTE_OPTIONS = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'))
 import './Events.css'
 import './Planning.css'
 
@@ -348,7 +363,18 @@ export default function Events({ store, openEventId }) {
               </div>
               <div className="form-group">
                 <label>Time</label>
-                <input type="time" name="time" value={form.time} onChange={handleChange} />
+                <div style={{display:'flex', gap:6}}>
+                  <select value={timeTo12Parts(form.time).h} onChange={e => { const p = timeTo12Parts(form.time); setForm(f => ({...f, time: partsTo24(e.target.value, p.m, p.ap)})) }}>
+                    {HOUR_OPTIONS.map(h => <option key={h} value={h}>{h}</option>)}
+                  </select>
+                  <select value={timeTo12Parts(form.time).m} onChange={e => { const p = timeTo12Parts(form.time); setForm(f => ({...f, time: partsTo24(p.h, e.target.value, p.ap)})) }}>
+                    {MINUTE_OPTIONS.map(m => <option key={m} value={m}>{m}</option>)}
+                  </select>
+                  <select value={timeTo12Parts(form.time).ap} onChange={e => { const p = timeTo12Parts(form.time); setForm(f => ({...f, time: partsTo24(p.h, p.m, e.target.value)})) }}>
+                    <option>AM</option>
+                    <option>PM</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div className="form-group">
