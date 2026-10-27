@@ -99,9 +99,15 @@ function withShellyRandle(list) {
   return [...list, { id:'l5', firstName:'Shelly', lastName:'Randle', role:'Adult Helper', program:'WyldLife', phone:'(254) 723-6955', email:'shellyrandle6@gmail.com', bio:'Adult helper supporting WyldLife clubs in Burleson.', schools:['Kerr Middle School'], initials:'SR', color:'#d97706' }]
 }
 
+function withKZSabolchick(list) {
+  const hasHer = list.some(l => `${l.firstName || ''} ${l.lastName || ''}`.trim().toLowerCase() === 'kz sabolchick')
+  if (hasHer) return list
+  return [...list, { id:'l6', firstName:'KZ', lastName:'Sabolchick', role:'WyldLife Leader', program:'WyldLife', phone:'(936) 514-2234', email:'kzsabolchick@icloud.com', bio:'WyldLife leader serving Johnson County middle schoolers.', schools:['Loflin Middle School','Nichols Middle School'], initials:'KZ', color:'#0891b2' }]
+}
+
 export function useStore() {
   const [students, setStudents] = useState(() => withGradYear(load('yl_students', initialStudents)))
-  const [leaders, setLeaders] = useState(() => withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders))))
+  const [leaders, setLeaders] = useState(() => withKZSabolchick(withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders)))))
   const [events, setEvents] = useState(() => load('yl_events', initialEvents))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
   const [followUps, setFollowUps] = useState(() => load('yl_followUps', initialFollowUps))
