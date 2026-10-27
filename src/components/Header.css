@@ -50,6 +50,9 @@
   font-weight: 900; color: var(--yl-blue); display: inline; white-space: nowrap;
 }
 
+.header-verse--left { align-items: flex-start; }
+.header-verse--left .header-verse-text { text-align: left; }
+
 @media (max-width: 900px) { .header-verse { display: none; } }
 
 .header-badge {
