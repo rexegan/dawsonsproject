@@ -432,7 +432,8 @@ export default function Students({ store, openStudentId }) {
             <div className="modal-actions">
               <button className="btn-danger" onClick={() => setConfirmDelete(selected)}>Delete Student</button>
               <button className="btn-secondary" onClick={() => setModal(null)}>Close</button>
-              <button className="btn-primary" onClick={() => openEdit(selected)}>Edit</button>
+              <button className="btn-secondary" onClick={() => openEdit(selected)}>Edit</button>
+              <button className="btn-primary" onClick={() => { addNotification('Saved!'); setModal(null) }}>Save</button>
             </div>
           </div>
         </Modal>

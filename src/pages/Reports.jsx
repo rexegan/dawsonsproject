@@ -1,6 +1,15 @@
 import { useState } from 'react'
 import Modal from '../components/Modal'
+import { formatPhone } from '../utils/phone'
 import './Reports.css'
+
+function fmtBirthday(raw) {
+  if (!raw) return ''
+  const [y, m, d] = raw.split('-').map(Number)
+  if (!y || !m || !d) return ''
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
+  return `${MONTHS[m - 1]} ${d}, ${y}`
+}
 
 const GRADES = ['6th','7th','8th','9th','10th','11th','12th']
 
@@ -40,6 +49,66 @@ export default function Reports({ store, setPage }) {
   const maxAtt = Math.max(...eventsWithAtt.map(e=>e.present), 1)
 
   const [modal, setModal] = useState(null)
+  const [programFocus, setProgramFocus] = useState(null)
+
+  function leaderName(id) {
+    const l = leaders.find(l => l.id === id)
+    return l ? `${l.firstName} ${l.lastName}` : '—'
+  }
+
+  const PROGRAM_FOCUS_LISTS = {
+    YoungLife: { label: 'YoungLife (High School)', color: '#1B4FA3', list: younglife },
+    WyldLife: { label: 'WyldLife (Middle School)', color: '#3AAB35', list: wyldlife },
+    Campaigners: { label: 'Campaigners', color: '#854883', list: students.filter(s => (s.tags||[]).includes('campaigners')) },
+    CampInterest: { label: 'Camp Interest', color: '#d97706', list: students.filter(s => (s.tags||[]).includes('camp')) },
+  }
+
+  function printRoster(focusKey) {
+    const focus = PROGRAM_FOCUS_LISTS[focusKey]
+    if (!focus) return
+    const rows = [...focus.list].sort((a,b) => `${a.lastName}${a.firstName}`.localeCompare(`${b.lastName}${b.firstName}`))
+    const today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })
+    const html = `<!DOCTYPE html><html><head><title>${focus.label} Roster</title><style>
+      body{font-family:Arial,sans-serif;margin:40px;color:#111;}
+      .hdr{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid ${focus.color};padding-bottom:14px;margin-bottom:20px;}
+      .hdr h1{font-size:22px;margin:0;color:${focus.color};}
+      .hdr .org{font-size:13px;color:#555;margin-top:2px;}
+      .hdr .date{font-size:13px;color:#555;text-align:right;}
+      table{width:100%;border-collapse:collapse;font-size:13px;}
+      th{background:${focus.color};color:white;text-align:left;padding:8px 10px;}
+      td{padding:7px 10px;border-bottom:1px solid #ddd;}
+      tr:nth-child(even) td{background:#f7f7f7;}
+      .count{font-size:13px;color:#555;margin-bottom:10px;}
+      @media print{body{margin:18px;}}
+    </style></head><body>
+      <div class="hdr">
+        <div>
+          <h1>${focus.label} Roster</h1>
+          <div class="org">Johnson County Young Life</div>
+        </div>
+        <div class="date">Printed ${today}</div>
+      </div>
+      <div class="count">${rows.length} student${rows.length!==1?'s':''}</div>
+      <table>
+        <thead><tr><th>Name</th><th>Grade</th><th>Grad Year</th><th>School</th><th>Program</th><th>Leader</th><th>Birthday</th></tr></thead>
+        <tbody>
+          ${rows.map(s => `<tr>
+            <td>${s.firstName} ${s.lastName}</td>
+            <td>${s.grade || ''}</td>
+            <td>${s.gradYear ? 'Class of ' + s.gradYear : ''}</td>
+            <td>${s.school || ''}</td>
+            <td>${s.program || ''}</td>
+            <td>${leaderName(s.leaderId)}</td>
+            <td>${fmtBirthday(s.birthday)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </body></html>`
+    const w = window.open('', '_blank')
+    w.document.write(html)
+    w.document.close()
+    setTimeout(() => w.print(), 400)
+  }
 
   // ── Deep-dive modal content ──────────────────────────────────────────────────
 
@@ -66,17 +135,45 @@ export default function Reports({ store, setPage }) {
               </div>
             ))}
           </div>
-          <div>
-            <div className="rpt-dive-section-title">YoungLife (High School) Students</div>
-            <div className="rpt-student-list">{younglife.map(s=><span key={s.id} className="rpt-student-chip">{s.firstName} {s.lastName} · {s.grade}</span>)}</div>
-          </div>
-          <div>
-            <div className="rpt-dive-section-title">WyldLife (Middle School) Students</div>
-            <div className="rpt-student-list">{wyldlife.map(s=><span key={s.id} className="rpt-student-chip rpt-student-chip--green">{s.firstName} {s.lastName} · {s.grade}</span>)}</div>
-          </div>
+
+          {programFocus && PROGRAM_FOCUS_LISTS[programFocus] && (() => {
+            const focus = PROGRAM_FOCUS_LISTS[programFocus]
+            const rows = [...focus.list].sort((a,b) => `${a.lastName}${a.firstName}`.localeCompare(`${b.lastName}${b.firstName}`))
+            return (
+              <div>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8}}>
+                  <div className="rpt-dive-section-title" style={{margin:0}}>{focus.label} — Full Roster ({rows.length})</div>
+                  <button className="btn-secondary" onClick={() => printRoster(programFocus)}>🖨️ Print</button>
+                </div>
+                <div className="table-wrap">
+                  <table className="students-table">
+                    <thead>
+                      <tr>
+                        <th>Name</th><th>Grade</th><th>Grad Year</th><th>School</th><th>Program</th><th>Leader</th><th>Birthday</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rows.map(s => (
+                        <tr key={s.id}>
+                          <td>{s.firstName} {s.lastName}</td>
+                          <td>{s.grade}</td>
+                          <td>{s.gradYear ? `Class of ${s.gradYear}` : '—'}</td>
+                          <td>{s.school}</td>
+                          <td>{s.program}</td>
+                          <td>{leaderName(s.leaderId)}</td>
+                          <td>{fmtBirthday(s.birthday) || '—'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )
+          })()}
+
           <div className="modal-actions">
-            <button className="btn-secondary" onClick={() => setModal(null)}>Close</button>
-            <button className="btn-primary" onClick={() => { setModal(null); setPage('students') }}>Open Students →</button>
+            <button className="btn-secondary" onClick={() => { setModal(null); setProgramFocus(null) }}>Close</button>
+            <button className="btn-primary" onClick={() => { setModal(null); setProgramFocus(null); setPage('students') }}>Open Students →</button>
           </div>
         </div>
       </Modal>
@@ -371,14 +468,14 @@ export default function Reports({ store, setPage }) {
         <h3 className="report-section-title">📊 Program Overview <span className="rpt-click-hint">— click any card for details</span></h3>
         <div className="overview-cards">
           {[
-            {cls:'ov-card--blue',   num:younglife.length, lbl:'YoungLife (HS)',        modal:'program'},
-            {cls:'ov-card--green',  num:wyldlife.length,  lbl:'WyldLife (MS)',         modal:'program'},
-            {cls:'ov-card--purple', num:students.filter(s=>(s.tags||[]).includes('campaigners')).length, lbl:'Campaigners', modal:'program'},
-            {cls:'ov-card--amber',  num:students.filter(s=>(s.tags||[]).includes('camp')).length,  lbl:'Camp Interest', modal:'program'},
+            {cls:'ov-card--blue',   num:younglife.length, lbl:'YoungLife (HS)',        modal:'program', focus:'YoungLife'},
+            {cls:'ov-card--green',  num:wyldlife.length,  lbl:'WyldLife (MS)',         modal:'program', focus:'WyldLife'},
+            {cls:'ov-card--purple', num:students.filter(s=>(s.tags||[]).includes('campaigners')).length, lbl:'Campaigners', modal:'program', focus:'Campaigners'},
+            {cls:'ov-card--amber',  num:students.filter(s=>(s.tags||[]).includes('camp')).length,  lbl:'Camp Interest', modal:'program', focus:'CampInterest'},
             {cls:'ov-card--red',    num:followUps.filter(f=>!f.completed).length, lbl:'Pending Follow-ups', modal:'followup'},
             {cls:'',                num:events.length, lbl:'Total Events', modal:'attendance'},
           ].map(c => (
-            <button key={c.lbl} className={`ov-card ${c.cls} ov-card--clickable`} onClick={() => setModal(c.modal)}>
+            <button key={c.lbl} className={`ov-card ${c.cls} ov-card--clickable`} onClick={() => { setProgramFocus(c.focus || null); setModal(c.modal) }}>
               <div className="ov-num">{c.num}</div>
               <div className="ov-lbl">{c.lbl}</div>
             </button>
