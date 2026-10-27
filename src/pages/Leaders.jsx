@@ -270,7 +270,6 @@ export default function Leaders({ store }) {
                   <p className="leader-card-role">{m.role}</p>
                 </div>
               </div>
-              <div style={{flex:1}} />
               <div className="leader-card-contact">
                 {m.phone && <a href={`tel:${m.phone}`} className="contact-link" onClick={e=>e.stopPropagation()}>📞 {m.phone}</a>}
                 {m.email && <a href={`mailto:${m.email}`} className="contact-link" onClick={e=>e.stopPropagation()}>✉️ {m.email}</a>}
