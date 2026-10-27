@@ -6,6 +6,7 @@ import './Leaders.css'
 const ROLES = ['Area Director','YoungLife Leader','WyldLife Leader','Campaigners Leader','Adult Helper','Committee Member','Volunteer','Staff']
 const COLORS = ['#E8392A','#1B4FA3','#3AAB35','#854883','#d97706','#0891b2','#FF837D','#F3C546']
 const EMPTY = { firstName:'', lastName:'', role:'YoungLife Leader', program:'YoungLife', phone:'', email:'', bio:'', schools:[], initials:'', color:'#1B4FA3' }
+const EMPTY_CM = { name:'', role:'Committee Member', phone:'', email:'', initials:'', color:'#1B4FA3' }
 
 const DEFAULT_COMMITTEE = [
   { id:'cm1', name:'Monica Farum', role:'Committee Member', phone:'(817) 247-7495', email:'monicafaram@gmail.com', initials:'MF', color:'#854883' },
@@ -42,6 +43,10 @@ export default function Leaders({ store }) {
   const [filterProgram, setFilterProgram] = useState('All')
   const [order, setOrder] = useState(() => load('yl_leaders_order', []))
   const [committee, setCommittee] = useState(() => load('yl_committee_order', DEFAULT_COMMITTEE))
+  const [cmModal, setCmModal] = useState(null)
+  const [cmForm, setCmForm] = useState(EMPTY_CM)
+  const [cmEditId, setCmEditId] = useState(null)
+  const [cmConfirmDelete, setCmConfirmDelete] = useState(null)
 
   // Keep order in sync when leaders are added/removed
   useEffect(() => {
@@ -111,6 +116,47 @@ export default function Leaders({ store }) {
 
   function openAdd() { setForm(EMPTY); setEditId(null); setModal('form') }
   function openEdit(l) { setForm({...l, schools: l.schools||[]}); setEditId(l.id); setModal('form') }
+
+  function openCmAdd() { setCmForm(EMPTY_CM); setCmEditId(null); setCmModal('form') }
+  function openCmEdit(m) { setCmForm({...m}); setCmEditId(m.id); setCmModal('form') }
+
+  function handleCmChange(e) {
+    const { name, value } = e.target
+    setCmForm(f => ({ ...f, [name]: name === 'phone' ? formatPhone(value) : value }))
+  }
+
+  function handleCmSave() {
+    if (!cmForm.name.trim()) return
+    const initials = cmForm.name.trim().split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase()
+    const payload = { ...cmForm, initials }
+    if (cmEditId) {
+      setCommittee(prev => {
+        const next = prev.map(m => m.id === cmEditId ? { ...payload, id: cmEditId } : m)
+        save('yl_committee_order', next)
+        return next
+      })
+      addNotification('Committee member updated!')
+    } else {
+      setCommittee(prev => {
+        const next = [...prev, { ...payload, id: 'cm' + Date.now() }]
+        save('yl_committee_order', next)
+        return next
+      })
+      addNotification('Committee member added!')
+    }
+    setCmModal(null)
+  }
+
+  function handleCmDelete(id) {
+    setCommittee(prev => {
+      const next = prev.filter(m => m.id !== id)
+      save('yl_committee_order', next)
+      return next
+    })
+    setCmConfirmDelete(null)
+    setCmModal(null)
+    addNotification('Committee member removed', 'error')
+  }
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -195,7 +241,10 @@ export default function Leaders({ store }) {
 
       {/* Johnson County YL Committee */}
       <div className="leaders-committee">
-        <h3 className="leaders-committee-title">Johnson County Young Life Committee</h3>
+        <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+          <h3 className="leaders-committee-title">Johnson County Young Life Committee</h3>
+          <button className="btn-secondary" onClick={openCmAdd}>+ Add Committee Member</button>
+        </div>
         <div className="leaders-committee-grid">
           {committee.map(m => (
             <div key={m.id} className="committee-card"
@@ -204,6 +253,7 @@ export default function Leaders({ store }) {
               onDragOver={e => cmDragOver(e, m.id)}
               onDrop={e => e.preventDefault()}
               onDragEnd={cmDragEnd}
+              onClick={() => { if (!cmDidDrag.current) openCmEdit(m) }}
             >
               <div className="leader-drag-handle" title="Drag to reorder">⠿</div>
               <div className="leader-card-top">
@@ -301,6 +351,55 @@ export default function Leaders({ store }) {
           <div className="modal-actions">
             <button className="btn-secondary" onClick={() => setConfirmDelete(null)}>Cancel</button>
             <button className="btn-danger" onClick={() => handleDelete(confirmDelete.id)}>Delete</button>
+          </div>
+        </Modal>
+      )}
+
+      {cmModal === 'form' && (
+        <Modal title={cmEditId ? 'Edit Committee Member' : 'Add Committee Member'} onClose={() => setCmModal(null)} size="md">
+          <div className="form-grid">
+            <div className="form-group">
+              <label>Full Name *</label>
+              <input name="name" value={cmForm.name} onChange={handleCmChange} placeholder="Full name" />
+            </div>
+            <div className="form-group">
+              <label>Role</label>
+              <input name="role" value={cmForm.role} onChange={handleCmChange} placeholder="e.g. Committee Chair, Committee Member" />
+            </div>
+            <div className="form-row-2">
+              <div className="form-group">
+                <label>Phone</label>
+                <input name="phone" value={cmForm.phone} onChange={handleCmChange} placeholder="(913) 555-0000" />
+              </div>
+              <div className="form-group">
+                <label>Email</label>
+                <input name="email" type="email" value={cmForm.email} onChange={handleCmChange} placeholder="name@email.com" />
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Avatar Color</label>
+              <div className="color-picker">
+                {COLORS.map(c => (
+                  <button key={c} type="button" className={`color-swatch ${cmForm.color===c?'color-swatch--on':''}`}
+                    style={{background:c}} onClick={() => setCmForm(f => ({...f, color:c}))} />
+                ))}
+              </div>
+            </div>
+            <div className="modal-actions">
+              {cmEditId && <button className="btn-danger" onClick={() => setCmConfirmDelete({id:cmEditId})}>Delete</button>}
+              <button className="btn-secondary" onClick={() => setCmModal(null)}>Cancel</button>
+              <button className="btn-primary" onClick={handleCmSave}>{cmEditId?'Save':'Add Committee Member'}</button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {cmConfirmDelete && (
+        <Modal title="Delete Committee Member" onClose={() => setCmConfirmDelete(null)} size="sm">
+          <p style={{marginBottom:20}}>Delete this committee member?</p>
+          <div className="modal-actions">
+            <button className="btn-secondary" onClick={() => setCmConfirmDelete(null)}>Cancel</button>
+            <button className="btn-danger" onClick={() => handleCmDelete(cmConfirmDelete.id)}>Delete</button>
           </div>
         </Modal>
       )}
