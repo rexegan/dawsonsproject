@@ -97,6 +97,25 @@ function withGradYear(list) {
   })
 }
 
+const MS_GRADES_SET = new Set(['6th', '7th', '8th'])
+function withProgramByGrade(list) {
+  return list.map(s => {
+    if (!s.grade) return s
+    const shouldBeYoungLife = !MS_GRADES_SET.has(s.grade) && s.grade !== 'Alumni'
+    if (shouldBeYoungLife && s.program !== 'YoungLife') return { ...s, program: 'YoungLife' }
+    if (!shouldBeYoungLife && s.grade !== 'Alumni' && s.program !== 'WyldLife') return { ...s, program: 'WyldLife' }
+    return s
+  })
+}
+
+const IMPORTED_ROSTER_ID_PATTERN = /^wl(8[3-9]|9[0-9]|1[01][0-9])$/
+function withImportedRoster(list) {
+  const existingIds = new Set(list.map(s => s.id))
+  const missing = initialStudents.filter(s => IMPORTED_ROSTER_ID_PATTERN.test(s.id) && !existingIds.has(s.id))
+  if (!missing.length) return list
+  return [...list, ...missing]
+}
+
 function withBrinleyBurnsGreen(list) {
   return list.map(l => {
     const name = `${l.firstName || ''} ${l.lastName || ''}`.trim().toLowerCase()
@@ -200,7 +219,7 @@ function withProgramEventTimes(list) {
 }
 
 export function useStore() {
-  const [students, setStudents] = useState(() => withGradYear(withGradeBumpOnce(load('yl_students', initialStudents))))
+  const [students, setStudents] = useState(() => withProgramByGrade(withGradYear(withImportedRoster(withGradeBumpOnce(load('yl_students', initialStudents))))))
   const [leaders, setLeaders] = useState(() => withCorrectedLeaderSchools(withProgramColors(withAlyMerino(withReedClements(withKZSabolchick(withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders)))))))))
   const [events, setEvents] = useState(() => withProgramEventTimes(withClubAddress(withOngoingClubNights(withoutCityClubNights(withoutRetiredEvents(load('yl_events', initialEvents)))))))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
