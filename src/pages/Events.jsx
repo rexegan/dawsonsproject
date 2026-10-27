@@ -43,7 +43,7 @@ function planFmtDate(iso) { if (!iso) return ''; const [y,m,d]=iso.split('-').ma
 function planDaysUntil(iso) { if (!iso) return null; return Math.ceil((new Date(iso)-new Date())/86400000) }
 
 const TYPE_COLOR = { club:'#1B4FA3', camp:'#d97706', special:'#854883' }
-const TYPE_LABEL = { club:'Club Night', camp:'Camp', special:'Special Event' }
+const TYPE_LABEL = { club:'Club', camp:'Camp', special:'Special Event' }
 const EMPTY_EVENT = { title:'', type:'club', program:'YoungLife', date:'', time:'19:30', location:'', description:'', leaderId:'' }
 
 const SPONSOR_EVENTS = [
