@@ -321,7 +321,7 @@ export default function Events({ store, openEventId }) {
           <div className="form-grid">
             <div className="form-group">
               <label>Event Title *</label>
-              <input name="title" value={form.title} onChange={handleChange} placeholder="e.g. YoungLife Club Night" />
+              <input name="title" value={form.title} onChange={handleChange} placeholder="e.g. YoungLife Club" />
             </div>
             <div className="form-row-2">
               <div className="form-group">
