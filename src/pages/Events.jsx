@@ -285,7 +285,6 @@ export default function Events({ store, openEventId }) {
         {filtered.map(e => {
           const att = getEventAttendance(e.id)
           const presentCount = att.filter(a=>a.present).length
-          const leader = leaders.find(l => l.id === e.leaderId)
           return (
             <div key={e.id} className="event-card" onClick={() => openView(e)}>
               <div className="event-card-top" style={{background: TYPE_COLOR[e.type]}}>
@@ -300,7 +299,6 @@ export default function Events({ store, openEventId }) {
                 <div className="event-card-meta">
                   <span>🕐 {fmtTime(e.time)}</span>
                   <span>📍 {e.location}</span>
-                  {leader && <span>👤 {leader.firstName} {leader.lastName}</span>}
                 </div>
                 <div className="event-card-footer">
                   <span className={`program-pill program-pill--${e.program==='YoungLife'?'yl':e.program==='WyldLife'?'wl':'both'}`}>
