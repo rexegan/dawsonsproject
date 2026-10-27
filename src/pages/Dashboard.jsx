@@ -9,13 +9,20 @@ function getBirthdayISO(s) {
   return s.birthday || (s.notes && (s.notes.match(/DOB (\d{4}-\d{2}-\d{2})/)||[])[1]) || ''
 }
 
+function toLocalISO(d) {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
 export default function Dashboard({ store, setPage, navigateTo }) {
   const { students, events, followUps, attendance, fundraisers, committeeMeetings } = store
   const [tab, setTab] = useState('overview')
   const [viewMeeting, setViewMeeting] = useState(null)
 
   const today = new Date()
-  const todayStr = today.toISOString().slice(0,10)
+  const todayStr = toLocalISO(today)
 
   const upcoming = events
     .filter(e => e.date >= todayStr)
@@ -61,7 +68,7 @@ export default function Dashboard({ store, setPage, navigateTo }) {
 
   // Upcoming events (next 30 days)
   const thirtyDaysOut = new Date(today); thirtyDaysOut.setDate(thirtyDaysOut.getDate() + 30)
-  const thirtyStr = thirtyDaysOut.toISOString().slice(0,10)
+  const thirtyStr = toLocalISO(thirtyDaysOut)
   const upcomingEvents = events.filter(e => e.date >= todayStr && e.date <= thirtyStr).sort((a,b) => a.date.localeCompare(b.date))
 
   // Budget snapshot — active fundraisers
