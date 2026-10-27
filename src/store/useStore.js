@@ -170,10 +170,15 @@ function withOngoingClubNights(list) {
   return [...list, ...missing]
 }
 
+const RETIRED_EVENT_IDS = new Set(['e1', 'e2', 'e3', 'e4', 'e7', 'e9', 'e10'])
+function withoutRetiredEvents(list) {
+  return list.filter(e => !RETIRED_EVENT_IDS.has(e.id))
+}
+
 export function useStore() {
   const [students, setStudents] = useState(() => withGradYear(withGradeBumpOnce(load('yl_students', initialStudents))))
   const [leaders, setLeaders] = useState(() => withCorrectedLeaderSchools(withProgramColors(withAlyMerino(withReedClements(withKZSabolchick(withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders)))))))))
-  const [events, setEvents] = useState(() => withOngoingClubNights(load('yl_events', initialEvents)))
+  const [events, setEvents] = useState(() => withOngoingClubNights(withoutRetiredEvents(load('yl_events', initialEvents))))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
   const [followUps, setFollowUps] = useState(() => load('yl_followUps', initialFollowUps))
   const [notifications, setNotifications] = useState(() => load('yl_notifications', []))
