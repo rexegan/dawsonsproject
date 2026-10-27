@@ -78,7 +78,7 @@ function uid() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36)
 }
 
-const GRAD_YEAR_FROM_GRADE = { '6th':2032, '7th':2031, '8th':2030, '9th':2029, '10th':2028, '11th':2027, '12th':2026 }
+const GRAD_YEAR_FROM_GRADE = { 'Alumni':2025, '6th':2032, '7th':2031, '8th':2030, '9th':2029, '10th':2028, '11th':2027, '12th':2026 }
 function withGradYear(list) {
   return list.map(s => {
     const correct = GRAD_YEAR_FROM_GRADE[s.grade]
