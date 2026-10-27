@@ -79,6 +79,7 @@ export default function Leaders({ store }) {
     if (e.target) e.target.style.opacity = ''
     save('yl_leaders_order', order)
     leaderDragId.current = null
+    setTimeout(() => { leaderDidDrag.current = false }, 0)
   }
 
   // Drag state for committee
@@ -105,6 +106,7 @@ export default function Leaders({ store }) {
     if (e.target) e.target.style.opacity = ''
     save('yl_committee_order', committee)
     cmDragId.current = null
+    setTimeout(() => { cmDidDrag.current = false }, 0)
   }
 
   function openAdd() { setForm(EMPTY); setEditId(null); setModal('form') }
