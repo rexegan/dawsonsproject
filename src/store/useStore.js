@@ -96,30 +96,40 @@ function withBrinleyBurnsGreen(list) {
 function withShellyRandle(list) {
   const hasHer = list.some(l => `${l.firstName || ''} ${l.lastName || ''}`.trim().toLowerCase() === 'shelly randle')
   if (hasHer) return list
-  return [...list, { id:'l5', firstName:'Shelly', lastName:'Randle', role:'Adult Helper', program:'WyldLife', phone:'(254) 723-6955', email:'shellyrandle6@gmail.com', bio:'Adult helper supporting WyldLife clubs in Burleson.', schools:['Kerr Middle School'], initials:'SR', color:'#d97706' }]
+  return [...list, { id:'l5', firstName:'Shelly', lastName:'Randle', role:'Adult Helper', program:'WyldLife', phone:'(254) 723-6955', email:'shellyrandle6@gmail.com', bio:'Adult helper supporting WyldLife clubs in Burleson.', schools:['Kerr Middle School'], initials:'SR', color:'#3AAB35' }]
 }
 
 function withKZSabolchick(list) {
   const hasHer = list.some(l => `${l.firstName || ''} ${l.lastName || ''}`.trim().toLowerCase() === 'kz sabolchick')
   if (hasHer) return list
-  return [...list, { id:'l6', firstName:'KZ', lastName:'Sabolchick', role:'WyldLife Leader', program:'WyldLife', phone:'(936) 514-2234', email:'kzsabolchick@icloud.com', bio:'WyldLife leader serving Johnson County middle schoolers.', schools:['Loflin Middle School','Nichols Middle School'], initials:'KZ', color:'#0891b2' }]
+  return [...list, { id:'l6', firstName:'KZ', lastName:'Sabolchick', role:'WyldLife Leader', program:'WyldLife', phone:'(936) 514-2234', email:'kzsabolchick@icloud.com', bio:'WyldLife leader serving Johnson County middle schoolers.', schools:['Loflin Middle School','Nichols Middle School'], initials:'KZ', color:'#3AAB35' }]
 }
 
 function withReedClements(list) {
   const hasHim = list.some(l => `${l.firstName || ''} ${l.lastName || ''}`.trim().toLowerCase() === 'reed clements')
   if (hasHim) return list
-  return [...list, { id:'l7', firstName:'Reed', lastName:'Clements', role:'WyldLife Leader', program:'WyldLife', phone:'(682) 458-8329', email:'reedlclements@icloud.com', bio:'WyldLife leader serving Johnson County middle schoolers.', schools:['Loflin Middle School','Nichols Middle School'], initials:'RC', color:'#F3C546' }]
+  return [...list, { id:'l7', firstName:'Reed', lastName:'Clements', role:'WyldLife Leader', program:'WyldLife', phone:'(682) 458-8329', email:'reedlclements@icloud.com', bio:'WyldLife leader serving Johnson County middle schoolers.', schools:['Loflin Middle School','Nichols Middle School'], initials:'RC', color:'#3AAB35' }]
 }
 
 function withAlyMerino(list) {
   const hasHer = list.some(l => `${l.firstName || ''} ${l.lastName || ''}`.trim().toLowerCase() === 'aly merino')
   if (hasHer) return list
-  return [...list, { id:'l8', firstName:'Aly', lastName:'Merino', role:'WyldLife Leader', program:'WyldLife', phone:'(817) 805-2470', email:'merinoaly08@gmail.com', bio:'WyldLife leader serving Johnson County middle schoolers.', schools:['Loflin Middle School','Nichols Middle School'], initials:'AM', color:'#FF837D' }]
+  return [...list, { id:'l8', firstName:'Aly', lastName:'Merino', role:'WyldLife Leader', program:'WyldLife', phone:'(817) 805-2470', email:'merinoaly08@gmail.com', bio:'WyldLife leader serving Johnson County middle schoolers.', schools:['Loflin Middle School','Nichols Middle School'], initials:'AM', color:'#3AAB35' }]
+}
+
+const PROGRAM_COLOR = { YoungLife:'#1B4FA3', WyldLife:'#3AAB35' }
+const ALLOWED_LEADER_COLORS = ['#1B4FA3', '#3AAB35', '#854883']
+function withProgramColors(list) {
+  return list.map(l => {
+    if (PROGRAM_COLOR[l.program] && l.color !== PROGRAM_COLOR[l.program]) return { ...l, color: PROGRAM_COLOR[l.program] }
+    if (!ALLOWED_LEADER_COLORS.includes(l.color)) return { ...l, color: '#1B4FA3' }
+    return l
+  })
 }
 
 export function useStore() {
   const [students, setStudents] = useState(() => withGradYear(load('yl_students', initialStudents)))
-  const [leaders, setLeaders] = useState(() => withAlyMerino(withReedClements(withKZSabolchick(withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders)))))))
+  const [leaders, setLeaders] = useState(() => withProgramColors(withAlyMerino(withReedClements(withKZSabolchick(withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders))))))))
   const [events, setEvents] = useState(() => load('yl_events', initialEvents))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
   const [followUps, setFollowUps] = useState(() => load('yl_followUps', initialFollowUps))

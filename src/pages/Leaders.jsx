@@ -4,14 +4,15 @@ import { formatPhone } from '../utils/phone'
 import './Leaders.css'
 
 const ROLES = ['Area Director','YoungLife Leader','WyldLife Leader','Campaigners Leader','Adult Helper','Committee Member','Volunteer','Staff']
-const COLORS = ['#E8392A','#1B4FA3','#3AAB35','#854883','#d97706','#0891b2','#FF837D','#F3C546']
+const COLORS = ['#1B4FA3','#3AAB35','#854883']
 const EMPTY = { firstName:'', lastName:'', role:'YoungLife Leader', program:'YoungLife', phone:'', email:'', bio:'', schools:[], initials:'', color:'#1B4FA3' }
-const EMPTY_CM = { name:'', role:'Committee Member', phone:'', email:'', initials:'', color:'#1B4FA3' }
+const PROGRAM_COLOR = { YoungLife:'#1B4FA3', WyldLife:'#3AAB35' }
+const EMPTY_CM = { name:'', role:'Committee Member', phone:'', email:'', initials:'', color:'#854883' }
 
 const DEFAULT_COMMITTEE = [
   { id:'cm1', name:'Monica Farum', role:'Committee Member', phone:'(817) 247-7495', email:'monicafaram@gmail.com', initials:'MF', color:'#854883' },
-  { id:'cm2', name:'Rex Russell', role:'Committee Chair', phone:'(817) 689-4560', email:'rex@russellwg.com', initials:'RR', color:'#1B4FA3' },
-  { id:'cm3', name:'Brenda Henderson', role:'Committee Member', phone:'(817) 781-3628', email:'auntb22@sbcglobal.net', initials:'BH', color:'#0891b2' },
+  { id:'cm2', name:'Rex Russell', role:'Committee Chair', phone:'(817) 689-4560', email:'rex@russellwg.com', initials:'RR', color:'#854883' },
+  { id:'cm3', name:'Brenda Henderson', role:'Committee Member', phone:'(817) 781-3628', email:'auntb22@sbcglobal.net', initials:'BH', color:'#854883' },
 ]
 
 function load(key, def) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def } catch { return def } }
@@ -42,7 +43,7 @@ export default function Leaders({ store }) {
   const [confirmDelete, setConfirmDelete] = useState(null)
   const [filterProgram, setFilterProgram] = useState('All')
   const [order, setOrder] = useState(() => load('yl_leaders_order', []))
-  const [committee, setCommittee] = useState(() => load('yl_committee_order', DEFAULT_COMMITTEE))
+  const [committee, setCommittee] = useState(() => load('yl_committee_order', DEFAULT_COMMITTEE).map(m => m.color === '#854883' ? m : { ...m, color: '#854883' }))
   const [cmModal, setCmModal] = useState(null)
   const [cmForm, setCmForm] = useState(EMPTY_CM)
   const [cmEditId, setCmEditId] = useState(null)
@@ -160,7 +161,13 @@ export default function Leaders({ store }) {
 
   function handleChange(e) {
     const { name, value } = e.target
-    setForm(f => ({ ...f, [name]: name === 'phone' ? formatPhone(value) : value }))
+    setForm(f => {
+      const next = { ...f, [name]: name === 'phone' ? formatPhone(value) : value }
+      if (name === 'program' && PROGRAM_COLOR[value] && (!f.color || f.color === PROGRAM_COLOR[f.program])) {
+        next.color = PROGRAM_COLOR[value]
+      }
+      return next
+    })
   }
 
   function toggleSchool(school) {
