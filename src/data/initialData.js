@@ -2,7 +2,7 @@
 
 export const SCHOOLS = [
   'Cleburne High School', 'Cleburne Middle School',
-  'Burleson High School', 'Burleson Centennial High School', 'Burleson Middle School',
+  'Burleson High School', 'Burleson Centennial High School',
   'Alvarado High School', 'Alvarado Middle School',
   'Joshua High School',
   'Godley High School', 'Godley Middle School',
@@ -186,7 +186,7 @@ export const initialStudents = _rawInitialStudents.map(s => ({
 export const initialLeaders = [
   { id:'l1', firstName:'Theresa',  lastName:'Boydston', role:'Area Director',     program:'Both',       phone:'(817)555-0001', email:'theresa.boydston@younglife.org',  bio:'Area Director for Johnson County Young Life. Passionate about reaching every student in JC.',                             schools:['Cleburne High School','Burleson High School','Burleson Centennial High School'],          initials:'TB', color:'#1B4FA3' },
   { id:'l2', firstName:'Josh',     lastName:'Nguyen',   role:'YoungLife Leader',  program:'YoungLife',  phone:'(817)555-0102', email:'josh.nguyen@younglife.org',       bio:'High school leader covering Cleburne, Burleson, Grandview, Godley, and Hillsboro.',                                     schools:['Cleburne High School','Burleson High School','Godley High School','Grandview High School','Hillsboro High School'], initials:'JN', color:'#1B4FA3' },
-  { id:'l3', firstName:'Megan',    lastName:'Carter',   role:'WyldLife Leader',   program:'WyldLife',   phone:'(817)555-0103', email:'megan.carter@younglife.org',      bio:'Middle school leader for all WyldLife clubs in Johnson County. Loves the energy of MS kids!',                          schools:['Cleburne Middle School','Burleson Middle School','Alvarado Middle School','Loflin Middle School','Nichols Middle School','Godley Middle School'], initials:'MC', color:'#3AAB35' },
+  { id:'l3', firstName:'Megan',    lastName:'Carter',   role:'WyldLife Leader',   program:'WyldLife',   phone:'(817)555-0103', email:'megan.carter@younglife.org',      bio:'Middle school leader for all WyldLife clubs in Johnson County. Loves the energy of MS kids!',                          schools:['Cleburne Middle School','Kerr Middle School','Hughes Middle School','Alvarado Middle School','Loflin Middle School','Nichols Middle School','Godley Middle School'], initials:'MC', color:'#3AAB35' },
   { id:'l4', firstName:'Marcus',   lastName:'Hill',     role:'YoungLife Leader',  program:'YoungLife',  phone:'(817)555-0104', email:'marcus.hill@younglife.org',       bio:'High school leader covering Burleson Centennial, Alvarado, Joshua, Venus, and Rio Vista.',                               schools:['Burleson Centennial High School','Alvarado High School','Joshua High School','Venus High School','Rio Vista High School'], initials:'MH', color:'#854883' },
 ];
 
