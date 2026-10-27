@@ -163,9 +163,13 @@ function withCorrectedSchoolList(list) {
   return fixSchoolNames(list)
 }
 
+function withoutCityClubNights(list) {
+  return list.filter(e => !(e.type === 'club' && /Cleburne|Burleson/.test(e.title || '')))
+}
+
 function withOngoingClubNights(list) {
   const existingIds = new Set(list.map(e => e.id))
-  const missing = initialEvents.filter(e => /^e(1[2-9]|[2-5][0-9]|6[0-7])$/.test(e.id) && !existingIds.has(e.id))
+  const missing = initialEvents.filter(e => /^e(1[2-9]|[2-3][0-9])$/.test(e.id) && !existingIds.has(e.id))
   if (!missing.length) return list
   return [...list, ...missing]
 }
@@ -178,7 +182,7 @@ function withoutRetiredEvents(list) {
 export function useStore() {
   const [students, setStudents] = useState(() => withGradYear(withGradeBumpOnce(load('yl_students', initialStudents))))
   const [leaders, setLeaders] = useState(() => withCorrectedLeaderSchools(withProgramColors(withAlyMerino(withReedClements(withKZSabolchick(withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders)))))))))
-  const [events, setEvents] = useState(() => withOngoingClubNights(withoutRetiredEvents(load('yl_events', initialEvents))))
+  const [events, setEvents] = useState(() => withOngoingClubNights(withoutCityClubNights(withoutRetiredEvents(load('yl_events', initialEvents)))))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
   const [followUps, setFollowUps] = useState(() => load('yl_followUps', initialFollowUps))
   const [notifications, setNotifications] = useState(() => load('yl_notifications', []))
