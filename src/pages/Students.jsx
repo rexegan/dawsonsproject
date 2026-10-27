@@ -54,7 +54,7 @@ export default function Students({ store, openStudentId }) {
     else { setSortCol(col); setSortDir('asc') }
   }
 
-  const GRADE_ORDER = ['6th','7th','8th','9th','10th','11th','12th']
+  const GRADE_ORDER = ['6th','7th','8th','9th','10th','11th','12th','Alumni']
 
   const filtered = students.filter(s => {
     const name = `${s.firstName} ${s.lastName}`.toLowerCase()

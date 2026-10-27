@@ -12,7 +12,7 @@ export const SCHOOLS = [
   'Keene Junior High', 'Hughes Middle School', 'Kerr Middle School',
 ];
 
-export const GRADES = ['6th','7th','8th','9th','10th','11th','12th'];
+export const GRADES = ['6th','7th','8th','9th','10th','11th','12th','Alumni'];
 export const MS_GRADES = ['6th','7th','8th'];
 export const HS_GRADES = ['9th','10th','11th','12th'];
 
