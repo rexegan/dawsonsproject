@@ -9,6 +9,14 @@ function fmtDate(iso) {
   return `${months[m - 1]} ${d}, ${y}`
 }
 
+function localToday() {
+  const d = new Date()
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
 export default function Attendance({ store, navigateTo }) {
   const { events, students, saveAttendance, getEventAttendance, addNotification } = store
   const [selectedEvent, setSelectedEvent] = useState('')
@@ -17,14 +25,16 @@ export default function Attendance({ store, navigateTo }) {
   const [viewEvent, setViewEvent] = useState('')
 
   const sortedEvents = [...events].sort((a,b) => b.date.localeCompare(a.date))
+  const today = localToday()
+  const upcomingEvents = [...events].filter(e => e.date >= today).sort((a,b) => a.date.localeCompare(b.date))
 
-  // Auto-select most recent event on mount
+  // Auto-select the soonest upcoming event on mount
   useEffect(() => {
-    if (events.length && !selectedEvent) {
-      const most = [...events].sort((a,b) => b.date.localeCompare(a.date))[0]
-      if (most) {
-        loadEvent(most.id)
-        setViewEvent(most.id)
+    if (upcomingEvents.length && !selectedEvent) {
+      const soonest = upcomingEvents[0]
+      if (soonest) {
+        loadEvent(soonest.id)
+        setViewEvent(soonest.id)
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,7 +116,7 @@ export default function Attendance({ store, navigateTo }) {
               onChange={e => loadEvent(e.target.value)}
             >
               <option value="">— Select an Event —</option>
-              {sortedEvents.map(e => (
+              {upcomingEvents.map(e => (
                 <option key={e.id} value={e.id}>
                   {fmtDate(e.date)} · {e.title}
                 </option>
