@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { fmtTime } from '../utils/time'
 import './CheckIn.css'
+import './Attendance.css'
 
 const TYPE_COLOR  = { club:'#1B4FA3', campaigners:'#3AAB35', camp:'#d97706', special:'#854883' }
 const TYPE_EMOJI  = { club:'🎉', campaigners:'📖', camp:'⛺', special:'⭐' }
@@ -33,6 +34,8 @@ export default function CheckIn({ store }) {
   const [search, setSearch]           = useState('')
   const [filter, setFilter]           = useState('all') // all | unmarked | present | absent
   const [tab, setTab]                 = useState('upcoming') // upcoming | past
+  const [showHistory, setShowHistory] = useState(false)
+  const [viewEvent, setViewEvent]     = useState('')
 
   const today = new Date().toISOString().slice(0,10)
 
@@ -43,6 +46,10 @@ export default function CheckIn({ store }) {
   const past = [...events]
     .filter(e => e.date < today)
     .sort((a,b) => b.date.localeCompare(a.date))
+
+  const sortedEvents = [...events].sort((a,b) => b.date.localeCompare(a.date))
+  const viewEv = events.find(e => e.id === viewEvent)
+  const viewRecords = viewEvent ? getEventAttendance(viewEvent) : []
 
   function openEvent(ev) {
     setActiveEvent(ev)
@@ -109,6 +116,56 @@ export default function CheckIn({ store }) {
   const absentCount   = Object.values(records).filter(r => r.present === false).length
   const unmarkedCount = Object.values(records).filter(r => r.present === null).length
 
+  // — Attendance History panel —
+  if (showHistory) {
+    return (
+      <div className="checkin-page">
+        <div className="checkin-top-bar">
+          <button className="checkin-back-btn" onClick={() => setShowHistory(false)}>← Back to Check-In</button>
+        </div>
+        <div className="att-history" style={{position:'static', maxWidth:520}}>
+          <h3>Attendance History</h3>
+          <select
+            className="filter-select"
+            value={viewEvent}
+            onChange={e => setViewEvent(e.target.value)}
+          >
+            <option value="">— View Event —</option>
+            {sortedEvents.map(e => (
+              <option key={e.id} value={e.id}>{fmtDate(e.date)} · {e.title}</option>
+            ))}
+          </select>
+
+          {viewEv && (
+            <>
+              <div className="hist-event-info">
+                <strong>{viewEv.title}</strong>
+                <span>{fmtDate(viewEv.date)}</span>
+              </div>
+              {viewRecords.length === 0
+                ? <p className="empty-msg-sm">No records for this event</p>
+                : viewRecords.map(r => {
+                    const s = students.find(s => s.id === r.studentId)
+                    if (!s) return null
+                    return (
+                      <div key={r.id} className="hist-row">
+                        <span className={r.present ? 'hist-present' : 'hist-absent'}>{r.present ? '✓' : '✗'}</span>
+                        <span className="hist-name">{s.firstName} {s.lastName}</span>
+                        {r.notes && <span className="hist-note">· {r.notes}</span>}
+                      </div>
+                    )
+                  })
+              }
+              <div className="hist-summary">
+                {viewRecords.filter(r=>r.present).length} present · {viewRecords.filter(r=>!r.present).length} absent
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   // — Event card grid —
   if (!activeEvent) {
     const list = tab === 'upcoming' ? upcoming : past
@@ -123,7 +180,10 @@ export default function CheckIn({ store }) {
               Past Events
             </button>
           </div>
-          <div className="checkin-count">{list.length} events</div>
+          <div style={{display:'flex', alignItems:'center', gap:12}}>
+            <button className="checkin-tab" onClick={()=>setShowHistory(true)}>📊 Attendance History</button>
+            <div className="checkin-count">{list.length} events</div>
+          </div>
         </div>
 
         {list.length === 0 && (
