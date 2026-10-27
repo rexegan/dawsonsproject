@@ -3,6 +3,14 @@ import Modal from '../components/Modal'
 import { formatPhone } from '../utils/phone'
 import { fmtTime } from '../utils/time'
 
+function localToday() {
+  const d = new Date()
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
 function timeTo12Parts(time) {
   if (!time) return { h: '7', m: '00', ap: 'PM' }
   const [hh, mm] = time.split(':').map(Number)
@@ -154,7 +162,7 @@ export default function Events({ store, openEventId }) {
   function planMutate(fn) { setPlanItems(prev => { const next = fn(prev); planPersist(next); return next }) }
   function planAddItem() {
     if (!planDraft.title.trim()) return
-    const today = new Date().toISOString().slice(0,10)
+    const today = localToday()
     const item = { ...planDraft, id: 'pl' + Date.now(), created: today, checklist: planDraft.checklist || [] }
     planMutate(prev => [item, ...prev])
     setPlanDraft(PLAN_BLANK); setPlanAddOpen(false)
@@ -207,7 +215,7 @@ export default function Events({ store, openEventId }) {
   const planComplete = planItems.filter(i => i.status === 'complete').length
   const planUpcoming = planItems.filter(i => i.date && planDaysUntil(i.date) !== null && planDaysUntil(i.date) >= 0 && planDaysUntil(i.date) <= 30).length
 
-  const today = new Date().toISOString().slice(0,10)
+  const today = localToday()
 
   const filtered = [...events]
     .filter(e => {
@@ -499,7 +507,7 @@ export default function Events({ store, openEventId }) {
                   </button>
                 ))}
               </div>
-              <button className="btn-primary" onClick={() => { setPlanDraft({...PLAN_BLANK, date: new Date().toISOString().slice(0,10)}); setPlanAddOpen(true) }}>
+              <button className="btn-primary" onClick={() => { setPlanDraft({...PLAN_BLANK, date: localToday()}); setPlanAddOpen(true) }}>
                 + Add Item
               </button>
             </div>
