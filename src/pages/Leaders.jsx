@@ -58,6 +58,31 @@ export default function Leaders({ store }) {
     })
   }, [leaders.map(l => l.id).join(',')])  // eslint-disable-line
 
+  // Duplicate Kip and Theresa/Teresa onto the committee as well, without removing their leader cards
+  useEffect(() => {
+    setCommittee(prev => {
+      let next = prev
+      leaders.forEach(l => {
+        const first = (l.firstName || '').trim().toLowerCase()
+        if (first !== 'kip' && first !== 'theresa' && first !== 'teresa') return
+        const fullName = `${l.firstName} ${l.lastName}`.trim()
+        const alreadyOnCommittee = next.some(m => m.name.trim().toLowerCase() === fullName.toLowerCase())
+        if (alreadyOnCommittee) return
+        next = [...next, {
+          id: 'cm-dup-' + l.id,
+          name: fullName,
+          role: l.role || 'Committee Member',
+          phone: l.phone || '',
+          email: l.email || '',
+          initials: l.initials || '',
+          color: '#854883',
+        }]
+      })
+      if (next !== prev) save('yl_committee_order', next)
+      return next
+    })
+  }, [leaders.map(l => l.id).join(',')])  // eslint-disable-line
+
   const sorted = applyOrder(leaders, order)
   const filtered = sorted.filter(l => filterProgram === 'All' || l.program === filterProgram || l.program === 'Both')
 
