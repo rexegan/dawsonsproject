@@ -25,6 +25,13 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - name: Build Mitch's Mercedes into dist/mitchs-mercedes
+        working-directory: mitchs-mercedes
+        run: |
+          npm ci
+          npm run build
+          mkdir -p ../dist/mitchs-mercedes
+          cp -r dist/. ../dist/mitchs-mercedes/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
