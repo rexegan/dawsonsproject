@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { supabase } from './supabase.js'
 import { useStore, uid } from './store.js'
 import { Badge, Select, money, vehicleName, repairTotal } from './ui.jsx'
 import { VehicleForm, RepairForm, RecallForm } from './forms.jsx'
@@ -16,8 +17,50 @@ function download(name, text, type) {
   URL.revokeObjectURL(url)
 }
 
+function Login() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [err, setErr] = useState('')
+  const [busy, setBusy] = useState(false)
+  const submit = async (e) => {
+    e.preventDefault()
+    setBusy(true); setErr('')
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) setErr(error.message)
+    setBusy(false)
+  }
+  return (
+    <div className="app">
+      <header className="top"><div className="brand"><span className="star">✦</span> Mitch's Mercedes <small>Staff sign-in</small></div></header>
+      <main>
+        <form className="card login" onSubmit={submit}>
+          <h3>Sign in</h3>
+          <label className="field"><span>Email</span><input type="email" required autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} /></label>
+          <label className="field"><span>Password</span><input type="password" required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} /></label>
+          {err && <p className="warn">{err}</p>}
+          <button className="primary" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
+        </form>
+      </main>
+    </div>
+  )
+}
+
 export default function App() {
-  const { db, upsert, remove, replaceAll } = useStore()
+  // undefined = still checking, null = signed out, object = signed in. Without Supabase config the app runs locally.
+  const [session, setSession] = useState(supabase ? undefined : null)
+  useEffect(() => {
+    if (!supabase) return
+    supabase.auth.getSession().then(({ data }) => setSession(data.session))
+    const { data } = supabase.auth.onAuthStateChange((_e, s) => setSession(s))
+    return () => data.subscription.unsubscribe()
+  }, [])
+  if (supabase && session === undefined) return <p className="empty" style={{ padding: 24 }}>Loading…</p>
+  if (supabase && !session) return <Login />
+  return <Shop session={session} />
+}
+
+function Shop({ session }) {
+  const { db, upsert, remove, replaceAll, loading, error, clearError } = useStore(!!session)
   const [tab, setTab] = useState('Dashboard')
   const [selected, setSelected] = useState(null)
   const [modal, setModal] = useState(null) // { type, vehicle?, row? }
@@ -37,9 +80,12 @@ export default function App() {
             <button key={t} className={t === tab ? 'active' : ''} onClick={() => { setTab(t); setSelected(null) }}>{t}</button>
           ))}
         </nav>
+        {session && <div className="who">{session.user.email} · <button className="link" onClick={() => supabase.auth.signOut()}>Sign out</button></div>}
       </header>
+      {error && <div className="banner">{error} <button className="link" onClick={clearError}>Dismiss</button></div>}
 
       <main>
+        {loading && <p className="empty">Loading shared data…</p>}
         {tab === 'Dashboard' && <Dashboard db={db} byId={byId} open={open} go={setTab} onSample={() => replaceAll(buildSampleData())} />}
         {tab === 'Vehicles' && !vehicle && (
           <VehicleList db={db} open={open} onAdd={() => setModal({ type: 'vehicle' })} />
@@ -52,7 +98,7 @@ export default function App() {
         )}
         {tab === 'Repairs' && <AllRepairs db={db} byId={byId} open={open} />}
         {tab === 'Recalls' && <AllRecalls db={db} byId={byId} open={open} upsert={upsert} />}
-        {tab === 'Backup' && <Backup db={db} replaceAll={replaceAll} />}
+        {tab === 'Backup' && <Backup db={db} replaceAll={replaceAll} shared={!!session} />}
       </main>
 
       {modal?.type === 'vehicle' && (
@@ -274,7 +320,7 @@ function AllRecalls({ db, byId, open, upsert }) {
   )
 }
 
-function Backup({ db, replaceAll }) {
+function Backup({ db, replaceAll, shared }) {
   const csvCell = (x) => `"${String(x ?? '').replace(/"/g, '""')}"`
   const exportCsv = () => {
     const byId = Object.fromEntries(db.vehicles.map((v) => [v.id, v]))
@@ -300,14 +346,14 @@ function Backup({ db, replaceAll }) {
   return (
     <section className="card">
       <h3>Backup &amp; Export</h3>
-      <p>Data is saved in this browser on this device. Download a backup regularly, and use it to move to another computer.</p>
+      <p>{shared ? 'Data is stored in the shop’s shared database and is visible to everyone signed in. Still download a backup now and then.' : 'Data is saved in this browser on this device. Download a backup regularly, and use it to move to another computer.'}</p>
       <div className="row">
         <button className="primary" onClick={() => download(`mitchs-mercedes-backup-${new Date().toLocaleDateString('en-CA')}.json`, JSON.stringify(db, null, 2), 'application/json')}>Download Backup (JSON)</button>
         <button onClick={exportCsv}>Export Repairs (CSV)</button>
         <label className="button">Restore Backup…<input type="file" accept="application/json" hidden onChange={importFile} /></label>
       </div>
       <h3 style={{ marginTop: 20 }}>Demo data</h3>
-      <p>Load 15 fictional customers with vehicles, repair history and recalls to see how everything works. This replaces what is currently saved.</p>
+      <p>Load 15 fictional customers with vehicles, repair history and recalls to see how everything works. This replaces what is currently saved{shared && ' — for EVERYONE in the shared database'}.</p>
       <div className="row">
         <button onClick={() => (!db.vehicles.length || window.confirm('Replace ALL current data with sample data?')) && replaceAll(buildSampleData())}>Load Sample Data</button>
         <button className="danger" onClick={() => window.confirm('Delete ALL vehicles, repairs and recalls?') && replaceAll({})}>Clear All Data</button>

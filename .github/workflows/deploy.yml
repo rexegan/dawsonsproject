@@ -27,6 +27,9 @@ jobs:
       - run: npm run build
       - name: Build Mitch's Mercedes into dist/mitchs-mercedes
         working-directory: mitchs-mercedes
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
         run: |
           npm ci
           npm run build
