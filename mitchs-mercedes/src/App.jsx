@@ -4,6 +4,7 @@ import { Badge, Select, money, vehicleName, repairTotal } from './ui.jsx'
 import { VehicleForm, RepairForm, RecallForm } from './forms.jsx'
 import { REPAIR_STATUSES, RECALL_STATUSES } from './data.js'
 import { fetchRecalls, nhtsaModelName } from './nhtsa.js'
+import { buildSampleData } from './sample.js'
 
 const TABS = ['Dashboard', 'Vehicles', 'Repairs', 'Recalls', 'Backup']
 const ACTIVE = ['Estimate', 'Waiting on Parts', 'In Progress', 'Ready for Pickup']
@@ -39,7 +40,7 @@ export default function App() {
       </header>
 
       <main>
-        {tab === 'Dashboard' && <Dashboard db={db} byId={byId} open={open} go={setTab} />}
+        {tab === 'Dashboard' && <Dashboard db={db} byId={byId} open={open} go={setTab} onSample={() => replaceAll(buildSampleData())} />}
         {tab === 'Vehicles' && !vehicle && (
           <VehicleList db={db} open={open} onAdd={() => setModal({ type: 'vehicle' })} />
         )}
@@ -77,12 +78,19 @@ function Stat({ n, label, onClick }) {
   return <button className="stat" onClick={onClick}><b>{n}</b><span>{label}</span></button>
 }
 
-function Dashboard({ db, byId, open, go }) {
+function Dashboard({ db, byId, open, go, onSample }) {
   const activeRepairs = db.repairs.filter((r) => ACTIVE.includes(r.status))
   const openRecalls = db.recalls.filter((r) => r.status === 'Open' || r.status === 'Scheduled')
-  const unpaid = db.repairs.filter((r) => r.status === 'Completed' && r.payment === 'Unpaid')
+  const unpaid = db.repairs.filter((r) => (r.status === 'Completed' || r.status === 'Ready for Pickup') && r.payment === 'Unpaid')
   return (
     <>
+      {db.vehicles.length === 0 && (
+        <section className="card">
+          <h3>Welcome to Mitch's Mercedes</h3>
+          <p>No vehicles yet. Add your first car on the Vehicles tab, or load 15 fictional customers to try everything out.</p>
+          <button className="primary" onClick={onSample}>Load Sample Data</button>
+        </section>
+      )}
       <div className="stats">
         <Stat n={db.vehicles.length} label="Vehicles on file" onClick={() => go('Vehicles')} />
         <Stat n={activeRepairs.length} label="Active repairs" onClick={() => go('Repairs')} />
@@ -123,7 +131,7 @@ function VehicleList({ db, open, onAdd }) {
         <input className="search" placeholder="Search VIN, owner, model, plate, phone…" value={q} onChange={(e) => setQ(e.target.value)} />
         <button className="primary" onClick={onAdd}>+ Add Vehicle</button>
       </div>
-      {list.length === 0 && <p className="empty">{db.vehicles.length ? 'No matches.' : 'No vehicles yet — add the first Mercedes.'}</p>}
+      {list.length === 0 && <p className="empty">{db.vehicles.length ? 'No matches.' : 'No vehicles yet — add the first Mercedes, or load demo data from the Backup tab.'}</p>}
       <div className="cards">
         {list.map((v) => {
           const reps = db.repairs.filter((r) => r.vehicleId === v.id)
@@ -297,6 +305,12 @@ function Backup({ db, replaceAll }) {
         <button className="primary" onClick={() => download(`mitchs-mercedes-backup-${new Date().toLocaleDateString('en-CA')}.json`, JSON.stringify(db, null, 2), 'application/json')}>Download Backup (JSON)</button>
         <button onClick={exportCsv}>Export Repairs (CSV)</button>
         <label className="button">Restore Backup…<input type="file" accept="application/json" hidden onChange={importFile} /></label>
+      </div>
+      <h3 style={{ marginTop: 20 }}>Demo data</h3>
+      <p>Load 15 fictional customers with vehicles, repair history and recalls to see how everything works. This replaces what is currently saved.</p>
+      <div className="row">
+        <button onClick={() => (!db.vehicles.length || window.confirm('Replace ALL current data with sample data?')) && replaceAll(buildSampleData())}>Load Sample Data</button>
+        <button className="danger" onClick={() => window.confirm('Delete ALL vehicles, repairs and recalls?') && replaceAll({})}>Clear All Data</button>
       </div>
     </section>
   )
