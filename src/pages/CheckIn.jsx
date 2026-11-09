@@ -36,6 +36,7 @@ export default function CheckIn({ store }) {
   const [tab, setTab]                 = useState('upcoming') // upcoming | past
   const [showHistory, setShowHistory] = useState(false)
   const [viewEvent, setViewEvent]     = useState('')
+  const [kioskMode, setKioskMode]     = useState(false)
 
   const today = new Date().toISOString().slice(0,10)
 
@@ -69,6 +70,22 @@ export default function CheckIn({ store }) {
   function toggle(studentId, present) {
     setRecords(r => ({ ...r, [studentId]: { ...r[studentId], present } }))
     setSaved(false)
+  }
+
+  function kioskToggle(studentId) {
+    setRecords(r => {
+      const current = r[studentId] || { present: null, notes: '' }
+      const nextPresent = current.present === true ? null : true
+      const next = { ...r, [studentId]: { ...current, present: nextPresent } }
+      const recs = Object.entries(next).map(([sid, val]) => ({
+        eventId: activeEvent.id,
+        studentId: sid,
+        present: val.present ?? false,
+        notes: val.notes || '',
+      }))
+      saveAttendance(activeEvent.id, recs)
+      return next
+    })
   }
 
   function markAll(present) {
@@ -236,6 +253,56 @@ export default function CheckIn({ store }) {
     )
   }
 
+  // — Kiosk self check-in mode —
+  if (kioskMode && activeEvent) {
+    return (
+      <div className="kiosk-page">
+        <div className="kiosk-header" style={{background: TYPE_BG[activeEvent.type] || TYPE_BG.club}}>
+          <div>
+            <div className="kiosk-title">{activeEvent.title}</div>
+            <div className="kiosk-sub">Tap your name to check in!</div>
+          </div>
+          <div className="kiosk-header-right">
+            <div className="kiosk-count-pill">✓ {presentCount} checked in</div>
+            <button className="kiosk-exit" onClick={() => setKioskMode(false)}>Exit Kiosk Mode</button>
+          </div>
+        </div>
+
+        <input
+          className="kiosk-search"
+          placeholder="🔍 Search your name…"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          autoFocus
+        />
+
+        <div className="kiosk-grid">
+          {filtered.length === 0 && (
+            <div className="checkin-empty" style={{padding:'40px 0', gridColumn:'1/-1'}}>No students match</div>
+          )}
+          {filtered.map(s => {
+            const rec = records[s.id] || { present: null }
+            const checkedIn = rec.present === true
+            return (
+              <button
+                key={s.id}
+                className={`kiosk-tile ${checkedIn ? 'kiosk-tile--checked' : ''}`}
+                onClick={() => kioskToggle(s.id)}
+              >
+                {checkedIn && <div className="kiosk-check">✓</div>}
+                <div className="kiosk-avatar" style={{background: s.program==='YoungLife'?'#1B4FA3':'#3AAB35'}}>
+                  {s.firstName[0]}{s.lastName[0]}
+                </div>
+                <div className="kiosk-name">{s.firstName}</div>
+                <div className="kiosk-lastname">{s.lastName}</div>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
   // — Check-in roster for selected event —
   return (
     <div className="checkin-page">
@@ -281,6 +348,7 @@ export default function CheckIn({ store }) {
         <div className="checkin-bulk">
           <button className="bulk-mark bulk-mark--present" onClick={() => markAll(true)}>Mark All Present</button>
           <button className="bulk-mark bulk-mark--absent" onClick={() => markAll(false)}>Mark All Absent</button>
+          <button className="btn-primary" onClick={() => { setSearch(''); setKioskMode(true) }}>📱 Kiosk Check-In Mode</button>
         </div>
       </div>
 
