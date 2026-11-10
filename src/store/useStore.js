@@ -116,6 +116,14 @@ function withHighSchoolSchoolFix(list) {
     : s)
 }
 
+const SAMPLE_PHOTO_IDS = new Set(['wl1', 'wl2', 'hs1', 'hs2', 'hs3', 'hs5'])
+function withSamplePhotos(list) {
+  const seedById = new Map(initialStudents.filter(s => SAMPLE_PHOTO_IDS.has(s.id)).map(s => [s.id, s.photoUrl]))
+  return list.map(s => (SAMPLE_PHOTO_IDS.has(s.id) && !s.photoUrl && seedById.has(s.id))
+    ? { ...s, photoUrl: seedById.get(s.id) }
+    : s)
+}
+
 const IMPORTED_ROSTER_ID_PATTERN = /^wl(8[3-9]|9[0-9]|1[01][0-9])$/
 function withImportedRoster(list) {
   const existingIds = new Set(list.map(s => s.id))
@@ -227,7 +235,7 @@ function withProgramEventTimes(list) {
 }
 
 export function useStore() {
-  const [students, setStudents] = useState(() => withHighSchoolSchoolFix(withProgramByGrade(withGradYear(withImportedRoster(withGradeBumpOnce(load('yl_students', initialStudents)))))))
+  const [students, setStudents] = useState(() => withSamplePhotos(withHighSchoolSchoolFix(withProgramByGrade(withGradYear(withImportedRoster(withGradeBumpOnce(load('yl_students', initialStudents))))))))
   const [leaders, setLeaders] = useState(() => withCorrectedLeaderSchools(withProgramColors(withAlyMerino(withReedClements(withKZSabolchick(withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders)))))))))
   const [events, setEvents] = useState(() => withProgramEventTimes(withClubAddress(withOngoingClubNights(withoutCityClubNights(withoutRetiredEvents(load('yl_events', initialEvents)))))))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))
