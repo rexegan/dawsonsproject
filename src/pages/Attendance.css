@@ -51,6 +51,17 @@
 
 .att-student { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
 .att-avatar  { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+.att-avatar-btn {
+  background: none; border: none; padding: 0; cursor: pointer; flex-shrink: 0;
+  border-radius: 9px; transition: transform .1s;
+  touch-action: manipulation;
+}
+.att-avatar-btn:active { transform: scale(.9); }
+.att-avatar--check { background: #3AAB35 !important; font-size: 18px; }
+.att-student-info {
+  background: none; border: none; text-align: left; cursor: pointer; padding: 0; font: inherit;
+  display: flex; flex-direction: column; min-width: 0;
+}
 .att-name    { font-weight: 600; font-size: 14px; color: var(--gray-800); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .att-school  { font-size: 12px; color: var(--gray-500); white-space: nowrap; }
 

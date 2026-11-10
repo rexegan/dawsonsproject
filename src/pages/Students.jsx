@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Modal from '../components/Modal'
+import StudentAvatar from '../components/StudentAvatar'
 import { GRADES } from '../data/initialData'
 import { formatPhone } from '../utils/phone'
+import { formatProgram } from '../utils/program'
+import { resizeImageFile } from '../utils/photo'
 import './Students.css'
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
@@ -22,7 +25,7 @@ function getBirthdayRaw(s) {
 const EMPTY_STUDENT = {
   firstName:'', lastName:'', grade:'9th', school:'', phone:'', email:'',
   parentName:'', parentPhone:'', parentEmail:'', program:'YoungLife',
-  leaderId:'', notes:'', tags:[], gradYear:'',
+  leaderId:'', notes:'', tags:[], gradYear:'', photoUrl:'',
 }
 
 const TAGS = ['interested','campaigners','camp','leadership','multiplier','new','follow-up']
@@ -88,6 +91,18 @@ export default function Students({ store, openStudentId }) {
 
   function openAdd() { setForm(EMPTY_STUDENT); setModal('add') }
   function openEdit(s) { setSelected(s); setForm({ ...s }); setModal('edit') }
+
+  async function handlePhotoUpload(studentId, file) {
+    if (!file) return
+    try {
+      const dataUrl = await resizeImageFile(file)
+      updateStudent(studentId, { photoUrl: dataUrl })
+      setSelected(s => s && s.id === studentId ? { ...s, photoUrl: dataUrl } : s)
+      addNotification('Photo updated!')
+    } catch {
+      addNotification('Could not load that photo', 'error')
+    }
+  }
   function openView(s) { setSelected(s); setModal('view') }
 
   function handleChange(e) {
@@ -146,7 +161,7 @@ export default function Students({ store, openStudentId }) {
           />
           <select className="filter-select" value={filterProgram} onChange={e => setFilterProgram(e.target.value)}>
             <option value="All">All Programs</option>
-            <option>YoungLife</option>
+            <option value="YoungLife">Young Life</option>
             <option>WyldLife</option>
           </select>
           <select className="filter-select" value={filterGrade} onChange={e => setFilterGrade(e.target.value)}>
@@ -181,9 +196,7 @@ export default function Students({ store, openStudentId }) {
               <tr key={s.id}>
                 <td>
                   <button className="student-name-btn" onClick={() => openView(s)}>
-                    <div className="student-avatar" style={{background: s.program === 'YoungLife' ? '#1B4FA3' : '#3AAB35'}}>
-                      {s.firstName[0]}{s.lastName[0]}
-                    </div>
+                    <StudentAvatar student={s} className="student-avatar" />
                     <div>
                       <div className="student-fullname">{s.firstName} {s.lastName}</div>
                       <div className="student-contact">
@@ -201,7 +214,7 @@ export default function Students({ store, openStudentId }) {
                 <td className="td-school">{s.school}</td>
                 <td>
                   <span className={`program-pill program-pill--${s.program === 'YoungLife' ? 'yl' : 'wl'}`}>
-                    {s.program}
+                    {formatProgram(s.program)}
                   </span>
                 </td>
                 <td className="td-leader">{leaderName(s.leaderId)}</td>
@@ -225,6 +238,27 @@ export default function Students({ store, openStudentId }) {
       {(modal === 'add' || modal === 'edit') && (
         <Modal title={modal === 'add' ? 'Add Student' : 'Edit Student'} onClose={() => setModal(null)} size="lg">
           <div className="form-grid">
+            <div className="form-group" style={{display:'flex', alignItems:'center', gap:14}}>
+              <StudentAvatar student={form} className="profile-avatar" />
+              <div>
+                <label style={{marginBottom:4, display:'block'}}>Photo</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async e => {
+                    const file = e.target.files[0]
+                    if (!file) return
+                    try {
+                      const dataUrl = await resizeImageFile(file)
+                      setForm(f => ({ ...f, photoUrl: dataUrl }))
+                    } catch {
+                      addNotification('Could not load that photo', 'error')
+                    }
+                  }}
+                />
+                {form.photoUrl && <button type="button" className="btn-secondary" style={{marginLeft:8, padding:'4px 10px', fontSize:12}} onClick={() => setForm(f => ({...f, photoUrl:''}))}>Remove</button>}
+              </div>
+            </div>
             <div className="form-row-2">
               <div className="form-group">
                 <label>First Name *</label>
@@ -251,7 +285,7 @@ export default function Students({ store, openStudentId }) {
               <div className="form-group">
                 <label>Program</label>
                 <select name="program" value={form.program} onChange={handleChange}>
-                  <option>YoungLife</option>
+                  <option value="YoungLife">Young Life</option>
                   <option>WyldLife</option>
                 </select>
               </div>
@@ -326,13 +360,22 @@ export default function Students({ store, openStudentId }) {
         <Modal title="Student Profile" onClose={() => setModal(null)} size="lg">
           <div className="student-profile">
             <div className="profile-header">
-              <div className="profile-avatar" style={{background: selected.program === 'YoungLife' ? '#1B4FA3' : '#3AAB35'}}>
-                {selected.firstName[0]}{selected.lastName[0]}
+              <div style={{position:'relative', flexShrink:0}}>
+                <StudentAvatar student={selected} className="profile-avatar" />
+                <label className="photo-upload-btn" title="Add/change photo">
+                  📷
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{display:'none'}}
+                    onChange={e => handlePhotoUpload(selected.id, e.target.files[0])}
+                  />
+                </label>
               </div>
               <div>
                 <h2 className="profile-name">{selected.firstName} {selected.lastName}</h2>
                 <div className="profile-meta">{selected.grade}{selected.gradYear ? ` · Class of ${selected.gradYear}` : ''} · {selected.school}</div>
-                <span className={`program-pill program-pill--${selected.program === 'YoungLife' ? 'yl' : 'wl'}`}>{selected.program}</span>
+                <span className={`program-pill program-pill--${selected.program === 'YoungLife' ? 'yl' : 'wl'}`}>{formatProgram(selected.program)}</span>
               </div>
             </div>
 

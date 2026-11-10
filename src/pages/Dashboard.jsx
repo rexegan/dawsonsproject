@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { fmtTime } from '../utils/time'
+import { formatProgram } from '../utils/program'
+import StudentAvatar from '../components/StudentAvatar'
 import './Dashboard.css'
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
@@ -217,12 +219,10 @@ export default function Dashboard({ store, setPage, navigateTo }) {
             {upcomingBirthdays.length === 0 && <p className="empty-msg">No birthdays in the next 30 days</p>}
             {upcomingBirthdays.map(({ student: s, diff, month, day, year }) => (
               <button key={s.id} className="dd-row dd-row--clickable" onClick={() => (navigateTo || setPage)('students', navigateTo ? { openStudentId: s.id } : undefined)}>
-                <div className="dd-avatar" style={{background: s.program === 'WyldLife' ? '#3AAB35' : '#1B4FA3'}}>
-                  {s.firstName[0]}{s.lastName[0]}
-                </div>
+                <StudentAvatar student={s} className="dd-avatar" />
                 <div style={{flex:1,textAlign:'left'}}>
                   <div style={{fontWeight:700,fontSize:14}}>{s.firstName} {s.lastName}</div>
-                  <div style={{fontSize:12,color:'var(--gray-500)'}}>{MONTHS[month-1]} {day}, {year} · {s.program} · {s.school}</div>
+                  <div style={{fontSize:12,color:'var(--gray-500)'}}>{MONTHS[month-1]} {day}, {year} · {formatProgram(s.program)} · {s.school}</div>
                 </div>
                 <div style={{textAlign:'right',flexShrink:0}}>
                   <div style={{fontWeight:800,fontSize:13,color: diff===0?'#dc2626': diff<=3?'#d97706':'#1B4FA3'}}>

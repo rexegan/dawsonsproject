@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import Modal from '../components/Modal'
 import { FORM_DOCS } from './FormDocuments'
 import { formatPhone } from '../utils/phone'
+import { formatProgram } from '../utils/program'
 import './ParentConnect.css'
 
 const BLANK_PARENT = {
@@ -227,8 +228,8 @@ export default function ParentConnect({ store }) {
         <div className="parent-section">
           <div className="parent-toolbar">
             <input className="parent-search" placeholder="Search by name, phone, or email…" value={search} onChange={e => setSearch(e.target.value)} />
-            {['All', 'YoungLife', 'WyldLife'].map(p => (
-              <button key={p} className={`level-chip ${progFilter === p ? 'level-chip--active' : ''}`} onClick={() => setProgFilter(p)}>{p}</button>
+            {[['All','All'], ['YoungLife','Young Life'], ['WyldLife','WyldLife']].map(([val,label]) => (
+              <button key={val} className={`level-chip ${progFilter === val ? 'level-chip--active' : ''}`} onClick={() => setProgFilter(val)}>{label}</button>
             ))}
             <button className="btn-primary" style={{ fontSize: 13, padding: '6px 14px', marginLeft: 'auto' }} onClick={() => { setNewDraft({ ...BLANK_PARENT }); setAddingParent(true) }}>+ Add Parent</button>
           </div>
@@ -247,7 +248,7 @@ export default function ParentConnect({ store }) {
                 <button key={p._key} className="parent-card" onClick={() => setViewParent(p)}>
                   <div className="parent-card-header">
                     <span className="parent-name">{p.firstName} {p.lastName}</span>
-                    <span className={`parent-program-chip parent-program-chip--${(p.program || 'younglife').toLowerCase()}`}>{p.program || 'YoungLife'}</span>
+                    <span className={`parent-program-chip parent-program-chip--${(p.program || 'younglife').toLowerCase()}`}>{(p.program || 'YoungLife') === 'YoungLife' ? 'Young Life' : p.program}</span>
                   </div>
                   {p.studentName && <div className="parent-card-student">Student: {p.studentName}</div>}
                   <div className="parent-card-contact">
@@ -299,7 +300,7 @@ export default function ParentConnect({ store }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {viewParent.studentName && (
               <div style={{ background: '#EEF3FB', borderRadius: 8, padding: '8px 12px', fontSize: 13, color: '#1B4FA3', fontWeight: 600, marginBottom: 10 }}>
-                Student: {viewParent.studentName} · {viewParent.program}
+                Student: {viewParent.studentName} · {formatProgram(viewParent.program)}
               </div>
             )}
             {[
@@ -344,7 +345,7 @@ export default function ParentConnect({ store }) {
           <div style={{ marginBottom: 12 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--gray-500)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 3 }}>Program</div>
             <select className="settings-input" value={newDraft.program} onChange={e => setNewDraft(d => ({ ...d, program: e.target.value }))}>
-              <option value="YoungLife">YoungLife</option>
+              <option value="YoungLife">Young Life</option>
               <option value="WyldLife">WyldLife</option>
             </select>
           </div>

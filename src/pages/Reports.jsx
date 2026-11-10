@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Modal from '../components/Modal'
 import { formatPhone } from '../utils/phone'
+import { formatProgram } from '../utils/program'
 import './Reports.css'
 
 function fmtBirthday(raw) {
@@ -57,7 +58,7 @@ export default function Reports({ store, setPage }) {
   }
 
   const PROGRAM_FOCUS_LISTS = {
-    YoungLife: { label: 'YoungLife (High School)', color: '#1B4FA3', list: younglife },
+    YoungLife: { label: 'Young Life (High School)', color: '#1B4FA3', list: younglife },
     WyldLife: { label: 'WyldLife (Middle School)', color: '#3AAB35', list: wyldlife },
     Campaigners: { label: 'Campaigners', color: '#854883', list: students.filter(s => (s.tags||[]).includes('campaigners')) },
     CampInterest: { label: 'Camp Interest', color: '#d97706', list: students.filter(s => (s.tags||[]).includes('camp')) },
@@ -121,7 +122,7 @@ export default function Reports({ store, setPage }) {
         <div style={{display:'flex',flexDirection:'column',gap:16}}>
           <div className="rpt-dive-grid">
             {[
-              {label:'YoungLife (HS)', val:younglife.length, color:'#1B4FA3', sub: younglife.map(s=>s.grade).filter((v,i,a)=>a.indexOf(v)===i).sort().join(', ')},
+              {label:'Young Life (HS)', val:younglife.length, color:'#1B4FA3', sub: younglife.map(s=>s.grade).filter((v,i,a)=>a.indexOf(v)===i).sort().join(', ')},
               {label:'WyldLife (MS)', val:wyldlife.length, color:'#3AAB35', sub: wyldlife.map(s=>s.grade).filter((v,i,a)=>a.indexOf(v)===i).sort().join(', ')},
               {label:'Campaigners', val:campaigners.length, color:'#854883', sub:'In weekly Bible study'},
               {label:'Camp Interest', val:campInterest.length, color:'#d97706', sub:'Tagged for camp'},
@@ -159,7 +160,7 @@ export default function Reports({ store, setPage }) {
                           <td>{s.grade}</td>
                           <td>{s.gradYear ? `Class of ${s.gradYear}` : '—'}</td>
                           <td>{s.school}</td>
-                          <td>{s.program}</td>
+                          <td>{formatProgram(s.program)}</td>
                           <td>{leaderName(s.leaderId)}</td>
                           <td>{fmtBirthday(s.birthday) || '—'}</td>
                         </tr>
@@ -433,7 +434,7 @@ export default function Reports({ store, setPage }) {
                   <div style={{display:'flex',alignItems:'center',gap:8}}>
                     <div className="leader-avatar-sm" style={{background:l.color}}>{l.initials}</div>
                     <span className="rpt-drill-label">{l.firstName} {l.lastName}</span>
-                    <span style={{fontSize:11,color:'var(--gray-400)'}}>{l.role} · {l.program}</span>
+                    <span style={{fontSize:11,color:'var(--gray-400)'}}>{l.role} · {formatProgram(l.program)}</span>
                   </div>
                   <span className="rpt-drill-count">{l.students} students · {l.followUps} FU · {l.pending} pending</span>
                 </div>
@@ -468,7 +469,7 @@ export default function Reports({ store, setPage }) {
         <h3 className="report-section-title">📊 Program Overview <span className="rpt-click-hint">— click any card for details</span></h3>
         <div className="overview-cards">
           {[
-            {cls:'ov-card--blue',   num:younglife.length, lbl:'YoungLife (HS)',        modal:'program', focus:'YoungLife'},
+            {cls:'ov-card--blue',   num:younglife.length, lbl:'Young Life (HS)',        modal:'program', focus:'YoungLife'},
             {cls:'ov-card--green',  num:wyldlife.length,  lbl:'WyldLife (MS)',         modal:'program', focus:'WyldLife'},
             {cls:'ov-card--purple', num:students.filter(s=>(s.tags||[]).includes('campaigners')).length, lbl:'Campaigners', modal:'program', focus:'Campaigners'},
             {cls:'ov-card--amber',  num:students.filter(s=>(s.tags||[]).includes('camp')).length,  lbl:'Camp Interest', modal:'program', focus:'CampInterest'},
@@ -578,7 +579,7 @@ export default function Reports({ store, setPage }) {
                 <tr key={l.id}>
                   <td><div style={{display:'flex',alignItems:'center',gap:8}}><div className="leader-avatar-sm" style={{background:l.color}}>{l.initials}</div>{l.firstName} {l.lastName}</div></td>
                   <td style={{color:'var(--gray-500)'}}>{l.role}</td>
-                  <td><span className={`program-pill program-pill--${l.program==='YoungLife'?'yl':l.program==='WyldLife'?'wl':'both'}`}>{l.program}</span></td>
+                  <td><span className={`program-pill program-pill--${l.program==='YoungLife'?'yl':l.program==='WyldLife'?'wl':'both'}`}>{l.program==='YoungLife'?'Young Life':l.program}</span></td>
                   <td><strong>{l.students}</strong></td>
                   <td>{l.followUps}</td>
                   <td>{l.pending>0?<span style={{color:l.pending>2?'#dc2626':'#d97706',fontWeight:700}}>{l.pending}</span>:<span style={{color:'#15803d',fontWeight:700}}>✓</span>}</td>

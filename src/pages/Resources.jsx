@@ -53,7 +53,7 @@ const CAMPS = [
     id:'c1', name:'Frontier Ranch', type:'YoungLife', state:'CO',
     address:'1000 Frontier Ranch Rd, Buena Vista, CO 81211',
     phone:'(719) 395-6343', website:'https://frontierranch.younglife.org/',
-    description:'High-adventure camp in the Colorado Rockies. The flagship YoungLife camp offering whitewater rafting, rock climbing, zip lines, and more.',
+    description:'High-adventure camp in the Colorado Rockies. The flagship Young Life camp offering whitewater rafting, rock climbing, zip lines, and more.',
     capacity:720, season:'June–August',
   },
   {
@@ -724,9 +724,9 @@ const ORG_CHART = {
     { name:'Theresa Boydston', role:'Area Director', program:'Both', cell:'', email:'theresa.boydston@younglife.org', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', emergencyContact:'', emergencyPhone:'', notes:'' },
   ],
   groupLeaders: [
-    { id:'gl1', name:'', role:'YoungLife Club Leader', program:'YoungLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
-    { id:'gl2', name:'', role:'YoungLife Club Leader', program:'YoungLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
-    { id:'gl3', name:'', role:'YoungLife Club Leader', program:'YoungLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
+    { id:'gl1', name:'', role:'Young Life Club Leader', program:'YoungLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
+    { id:'gl2', name:'', role:'Young Life Club Leader', program:'YoungLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
+    { id:'gl3', name:'', role:'Young Life Club Leader', program:'YoungLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
     { id:'gl4', name:'', role:'WyldLife Club Leader', program:'WyldLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
     { id:'gl5', name:'', role:'WyldLife Club Leader', program:'WyldLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' },
   ],
@@ -885,7 +885,7 @@ function OrgListModal({ items, itemLabel, fields, newItem, onSave, onClose }) {
           <div key={it._id||i} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 14px',background:'white',border:'1.5px solid var(--gray-200)',borderRadius:10}}>
             <div style={{flex:1}}>
               <div style={{fontWeight:700,fontSize:14}}>{it.name||<em style={{color:'var(--gray-400)',fontStyle:'normal'}}>(No name)</em>}</div>
-              <div style={{fontSize:12,color:'var(--gray-500)'}}>{it.role} · {it.program}{it.school?` · ${it.school}`:''}</div>
+              <div style={{fontSize:12,color:'var(--gray-500)'}}>{it.role} · {it.program==='YoungLife'?'Young Life':it.program}{it.school?` · ${it.school}`:''}</div>
               {it.cell && <div style={{fontSize:12,color:'var(--gray-600)'}}>{it.cell}</div>}
               {it.email && <div style={{fontSize:12,color:'#1B4FA3'}}>{it.email}</div>}
             </div>
@@ -1106,7 +1106,7 @@ export default function Resources({ store }) {
                   <div className="org-node-icon">👥</div>
                   <div className="org-node-name">{g.role}</div>
                   <div className="org-node-role">{g.count} Leaders</div>
-                  <div className="org-node-loc">{g.program}</div>
+                  <div className="org-node-loc">{g.program==='YoungLife'?'Young Life':g.program}</div>
                 </button>
               ))}
             </div>
@@ -1118,7 +1118,7 @@ export default function Resources({ store }) {
                   <div className="org-node-icon">🌟</div>
                   <div className="org-node-name">{s.role}</div>
                   <div className="org-node-count">{s.count} Students</div>
-                  <div className="org-node-loc">{s.program}</div>
+                  <div className="org-node-loc">{s.program==='YoungLife'?'Young Life':s.program}</div>
                 </button>
               ))}
             </div>
@@ -1133,7 +1133,7 @@ export default function Resources({ store }) {
             {CAMPS.map(c => (
               <button key={c.id} className="camp-card" onClick={() => setSelectedCamp(c)}>
                 <div className="camp-card-header">
-                  <span className={`camp-type camp-type--${c.type.toLowerCase()}`}>{c.type}</span>
+                  <span className={`camp-type camp-type--${c.type.toLowerCase()}`}>{c.type==='YoungLife'?'Young Life':c.type}</span>
                   <span className="camp-state">{c.state}</span>
                 </div>
                 <div className="camp-name">{c.name}</div>
@@ -1399,7 +1399,7 @@ export default function Resources({ store }) {
         <Modal open title={selectedCamp.name} onClose={() => setSelectedCamp(null)} size="md">
           <div style={{display:'flex',flexDirection:'column',gap:14}}>
             <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
-              <span className={`camp-type camp-type--${selectedCamp.type.toLowerCase()}`}>{selectedCamp.type}</span>
+              <span className={`camp-type camp-type--${selectedCamp.type.toLowerCase()}`}>{selectedCamp.type==='YoungLife'?'Young Life':selectedCamp.type}</span>
               <span style={{fontSize:13,color:'var(--gray-500)'}}>{selectedCamp.state} · Capacity {selectedCamp.capacity} · {selectedCamp.season}</span>
             </div>
             <p style={{fontSize:14,lineHeight:1.7,color:'var(--gray-700)'}}>{selectedCamp.description}</p>
@@ -1474,7 +1474,7 @@ export default function Resources({ store }) {
           <OrgListModal
             items={orgData.groupLeaders}
             itemLabel="Leader"
-            fields={[['name','Full Name'],['role','Role'],['program','Program (YoungLife / WyldLife)'],['cell','Cell Phone'],['email','Email'],['homeAddress','Home Address'],['city','City'],['state','State'],['zip','ZIP'],['birthday','Birthday'],['spouseName','Spouse Name'],['employer','Employer'],['emergencyContact','Emergency Contact'],['emergencyPhone','Emergency Phone'],['notes','Notes']]}
+            fields={[['name','Full Name'],['role','Role'],['program','Program (Young Life / WyldLife)'],['cell','Cell Phone'],['email','Email'],['homeAddress','Home Address'],['city','City'],['state','State'],['zip','ZIP'],['birthday','Birthday'],['spouseName','Spouse Name'],['employer','Employer'],['emergencyContact','Emergency Contact'],['emergencyPhone','Emergency Phone'],['notes','Notes']]}
             newItem={{ name:'', role:'Club Leader', program:'YoungLife', cell:'', email:'', homeAddress:'', city:'', state:'TX', zip:'', birthday:'', spouseName:'', employer:'', emergencyContact:'', emergencyPhone:'', notes:'' }}
             onSave={items=>{ setOrgData(d=>({...d,groupLeaders:items})); setOrgModal(false) }}
             onClose={()=>setOrgModal(false)}

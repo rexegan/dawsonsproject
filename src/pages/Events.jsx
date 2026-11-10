@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import Modal from '../components/Modal'
 import { formatPhone } from '../utils/phone'
+import { formatProgram } from '../utils/program'
 import { fmtTime } from '../utils/time'
 
 function localToday() {
@@ -327,7 +328,7 @@ export default function Events({ store, openEventId }) {
                 </div>
                 <div className="event-card-footer">
                   <span className={`program-pill program-pill--${e.program==='YoungLife'?'yl':e.program==='WyldLife'?'wl':'both'}`}>
-                    {e.program}
+                    {formatProgram(e.program)}
                   </span>
                   {att.length > 0 && (
                     <span className="att-pill">✓ {presentCount}/{att.length} attended</span>
@@ -358,7 +359,7 @@ export default function Events({ store, openEventId }) {
               <div className="form-group">
                 <label>Program</label>
                 <select name="program" value={form.program} onChange={handleChange}>
-                  <option>YoungLife</option>
+                  <option value="YoungLife">Young Life</option>
                   <option>WyldLife</option>
                   <option>Both</option>
                 </select>
@@ -422,7 +423,7 @@ export default function Events({ store, openEventId }) {
               <div className="event-detail-row"><span>📍</span>{viewEvent.location}</div>
               <div className="event-detail-row">
                 <span>🏷</span>
-                <span className={`program-pill program-pill--${viewEvent.program==='YoungLife'?'yl':viewEvent.program==='WyldLife'?'wl':'both'}`}>{viewEvent.program}</span>
+                <span className={`program-pill program-pill--${viewEvent.program==='YoungLife'?'yl':viewEvent.program==='WyldLife'?'wl':'both'}`}>{formatProgram(viewEvent.program)}</span>
               </div>
               {leaders.find(l=>l.id===viewEvent.leaderId) && (
                 <div className="event-detail-row"><span>👤</span>{leaders.find(l=>l.id===viewEvent.leaderId)?.firstName} {leaders.find(l=>l.id===viewEvent.leaderId)?.lastName}</div>

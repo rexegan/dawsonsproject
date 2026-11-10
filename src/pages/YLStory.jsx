@@ -50,7 +50,7 @@ const CAMPS = [
 
 const PROGRAMS_INFO = [
   {
-    name: 'YoungLife',
+    name: 'Young Life',
     color: '#1B4FA3',
     emoji: '🏫',
     grade: 'High School — 9th through 12th Grade',
@@ -342,7 +342,7 @@ export default function YLStory() {
             <div className="ylstory-jc-card">
               <div className="ylstory-jc-icon">👥</div>
               <div className="ylstory-jc-title">Our Students</div>
-              <p>We serve over 150 registered students across YoungLife (9th–12th grade) and WyldLife (6th–8th grade). Each one is known by name. Each one matters.</p>
+              <p>We serve over 150 registered students across Young Life (9th–12th grade) and WyldLife (6th–8th grade). Each one is known by name. Each one matters.</p>
             </div>
             <div className="ylstory-jc-card">
               <div className="ylstory-jc-icon">🙌</div>

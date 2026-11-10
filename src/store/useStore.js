@@ -108,6 +108,14 @@ function withProgramByGrade(list) {
   })
 }
 
+const HS_GRADES_SET = new Set(['9th', '10th', '11th', '12th'])
+const MS_SCHOOLS_NEEDING_HS_FIX = new Set(['Loflin Middle School', 'Nichols Middle School'])
+function withHighSchoolSchoolFix(list) {
+  return list.map(s => (HS_GRADES_SET.has(s.grade) && MS_SCHOOLS_NEEDING_HS_FIX.has(s.school))
+    ? { ...s, school: 'Joshua High School' }
+    : s)
+}
+
 const IMPORTED_ROSTER_ID_PATTERN = /^wl(8[3-9]|9[0-9]|1[01][0-9])$/
 function withImportedRoster(list) {
   const existingIds = new Set(list.map(s => s.id))
@@ -219,7 +227,7 @@ function withProgramEventTimes(list) {
 }
 
 export function useStore() {
-  const [students, setStudents] = useState(() => withProgramByGrade(withGradYear(withImportedRoster(withGradeBumpOnce(load('yl_students', initialStudents))))))
+  const [students, setStudents] = useState(() => withHighSchoolSchoolFix(withProgramByGrade(withGradYear(withImportedRoster(withGradeBumpOnce(load('yl_students', initialStudents)))))))
   const [leaders, setLeaders] = useState(() => withCorrectedLeaderSchools(withProgramColors(withAlyMerino(withReedClements(withKZSabolchick(withShellyRandle(withBrinleyBurnsGreen(load('yl_leaders', initialLeaders)))))))))
   const [events, setEvents] = useState(() => withProgramEventTimes(withClubAddress(withOngoingClubNights(withoutCityClubNights(withoutRetiredEvents(load('yl_events', initialEvents)))))))
   const [attendance, setAttendance] = useState(() => load('yl_attendance', initialAttendance))

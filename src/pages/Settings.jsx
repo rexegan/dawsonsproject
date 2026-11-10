@@ -340,7 +340,7 @@ function LeadersSection({ store }) {
   const leaderFields = [
     { key:'name', placeholder:'Full name*' },
     { key:'role', placeholder:'Role (e.g. Area Director)' },
-    { key:'program', placeholder:'Program (YoungLife / WyldLife / Both)' },
+    { key:'program', placeholder:'Program (Young Life / WyldLife / Both)' },
     { key:'phone', placeholder:'Phone' },
     { key:'email', placeholder:'Email' },
   ]

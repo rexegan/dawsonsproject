@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
 import Modal from '../components/Modal'
 import { formatPhone } from '../utils/phone'
+import { formatProgram } from '../utils/program'
 import './Leaders.css'
 
-const ROLES = ['Area Director','YoungLife Leader','WyldLife Leader','Campaigners Leader','Adult Helper','Committee Member','Volunteer','Staff']
+const ROLES = ['Area Director','Young Life Leader','WyldLife Leader','Campaigners Leader','Adult Helper','Committee Member','Volunteer','Staff']
 const COLORS = ['#1B4FA3','#3AAB35','#854883']
-const EMPTY = { firstName:'', lastName:'', role:'YoungLife Leader', program:'YoungLife', phone:'', email:'', bio:'', schools:[], initials:'', color:'#1B4FA3' }
+const EMPTY = { firstName:'', lastName:'', role:'Young Life Leader', program:'YoungLife', phone:'', email:'', bio:'', schools:[], initials:'', color:'#1B4FA3' }
 const PROGRAM_COLOR = { YoungLife:'#1B4FA3', WyldLife:'#3AAB35' }
 const EMPTY_CM = { name:'', role:'Committee Member', phone:'', email:'', initials:'', color:'#854883' }
 
@@ -227,7 +228,7 @@ export default function Leaders({ store }) {
         <div className="toolbar-left">
           <select className="filter-select" value={filterProgram} onChange={e => setFilterProgram(e.target.value)}>
             <option value="All">All Programs</option>
-            <option>YoungLife</option>
+            <option value="YoungLife">Young Life</option>
             <option>WyldLife</option>
           </select>
         </div>
@@ -253,7 +254,7 @@ export default function Leaders({ store }) {
                 <div>
                   <h4 className="leader-card-name">{l.firstName} {l.lastName}</h4>
                   <p className="leader-card-role">{l.role}</p>
-                  <span className={`program-pill program-pill--${l.program==='YoungLife'?'yl':l.program==='WyldLife'?'wl':'both'}`}>{l.program}</span>
+                  <span className={`program-pill program-pill--${l.program==='YoungLife'?'yl':l.program==='WyldLife'?'wl':'both'}`}>{formatProgram(l.program)}</span>
                 </div>
               </div>
               {l.bio && <p className="leader-card-bio">{l.bio}</p>}
@@ -327,7 +328,7 @@ export default function Leaders({ store }) {
               <div className="form-group">
                 <label>Program</label>
                 <select name="program" value={form.program} onChange={handleChange}>
-                  <option>YoungLife</option>
+                  <option value="YoungLife">Young Life</option>
                   <option>WyldLife</option>
                   <option>Both</option>
                 </select>

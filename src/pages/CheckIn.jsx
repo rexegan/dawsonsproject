@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { fmtTime } from '../utils/time'
+import { formatProgram } from '../utils/program'
+import StudentAvatar from '../components/StudentAvatar'
 import './CheckIn.css'
 import './Attendance.css'
 
@@ -10,6 +12,15 @@ const TYPE_BG     = {
   campaigners: 'linear-gradient(135deg,#3AAB35 0%,#2d8a29 100%)',
   camp:        'linear-gradient(135deg,#d97706 0%,#b45309 100%)',
   special:     'linear-gradient(135deg,#854883 0%,#6b3870 100%)',
+}
+const BG_YOUNGLIFE = 'linear-gradient(135deg,#1B4FA3 0%,#153e85 100%)'
+const BG_WYLDLIFE  = 'linear-gradient(135deg,#3AAB35 0%,#2d8a29 100%)'
+
+function eventBg(ev) {
+  const title = ev.title || ''
+  if (/wyld\s*life/i.test(title)) return BG_WYLDLIFE
+  if (/young\s*life/i.test(title)) return BG_YOUNGLIFE
+  return TYPE_BG[ev.type] || TYPE_BG.club
 }
 
 function fmtDate(iso) {
@@ -48,7 +59,7 @@ export default function CheckIn({ store }) {
     .filter(e => e.date < today)
     .sort((a,b) => b.date.localeCompare(a.date))
 
-  const sortedEvents = [...events].sort((a,b) => b.date.localeCompare(a.date))
+  const sortedEvents = [...events].filter(e => e.date >= '2026-09-14').sort((a,b) => b.date.localeCompare(a.date))
   const viewEv = events.find(e => e.id === viewEvent)
   const viewRecords = viewEvent ? getEventAttendance(viewEvent) : []
 
@@ -222,7 +233,7 @@ export default function CheckIn({ store }) {
                 className="checkin-card"
                 onClick={() => openEvent(ev)}
               >
-                <div className="checkin-card-art" style={{background: TYPE_BG[ev.type] || TYPE_BG.club}}>
+                <div className="checkin-card-art" style={{background: eventBg(ev)}}>
                   <div className="checkin-card-emoji">{TYPE_EMOJI[ev.type] || '📅'}</div>
                   <div className="checkin-card-type-badge">{ev.type}</div>
                   {hasData && (
@@ -239,7 +250,7 @@ export default function CheckIn({ store }) {
                     {ev.location && <span>📍 {ev.location}</span>}
                   </div>
                   <div className="checkin-card-prog" style={{color: ev.program==='WyldLife'?'#3AAB35':'#1B4FA3'}}>
-                    {ev.program === 'Both' ? 'All Students' : ev.program}
+                    {ev.program === 'Both' ? 'All Students' : formatProgram(ev.program)}
                   </div>
                   <div className="checkin-card-action">
                     {hasData ? 'View / Update Check-in →' : 'Start Check-in →'}
@@ -257,7 +268,7 @@ export default function CheckIn({ store }) {
   if (kioskMode && activeEvent) {
     return (
       <div className="kiosk-page">
-        <div className="kiosk-header" style={{background: TYPE_BG[activeEvent.type] || TYPE_BG.club}}>
+        <div className="kiosk-header" style={{background: eventBg(activeEvent)}}>
           <div>
             <div className="kiosk-title">{activeEvent.title}</div>
             <div className="kiosk-sub">Tap your name to check in!</div>
@@ -290,9 +301,7 @@ export default function CheckIn({ store }) {
                 onClick={() => kioskToggle(s.id)}
               >
                 {checkedIn && <div className="kiosk-check">✓</div>}
-                <div className="kiosk-avatar" style={{background: s.program==='YoungLife'?'#1B4FA3':'#3AAB35'}}>
-                  {s.firstName[0]}{s.lastName[0]}
-                </div>
+                <StudentAvatar student={s} className="kiosk-avatar" />
                 <div className="kiosk-name">{s.firstName}</div>
                 <div className="kiosk-lastname">{s.lastName}</div>
               </button>
@@ -307,7 +316,7 @@ export default function CheckIn({ store }) {
   return (
     <div className="checkin-page">
       {/* Header bar */}
-      <div className="checkin-roster-header" style={{background: TYPE_BG[activeEvent.type] || TYPE_BG.club}}>
+      <div className="checkin-roster-header" style={{background: eventBg(activeEvent)}}>
         <button className="checkin-back-btn" onClick={() => setActiveEvent(null)}>← Back</button>
         <div className="checkin-roster-info">
           <div className="checkin-roster-emoji">{TYPE_EMOJI[activeEvent.type]}</div>
@@ -363,12 +372,16 @@ export default function CheckIn({ store }) {
           return (
             <div key={s.id} className={`checkin-student checkin-student--${state}`}>
               <div className="checkin-student-left">
-                <div
-                  className="checkin-avatar"
-                  style={{background: s.program==='YoungLife'?'#1B4FA3':'#3AAB35'}}
+                <button
+                  type="button"
+                  className="att-avatar-btn"
+                  onClick={() => toggle(s.id, state==='present' ? null : true)}
+                  title={state==='present' ? 'Checked in — tap to undo' : 'Tap your picture to check in'}
                 >
-                  {s.firstName[0]}{s.lastName[0]}
-                </div>
+                  {state==='present'
+                    ? <div className="checkin-avatar att-avatar--check">✓</div>
+                    : <StudentAvatar student={s} className="checkin-avatar" />}
+                </button>
                 <div>
                   <div className="checkin-student-name">{s.firstName} {s.lastName}</div>
                   <div className="checkin-student-sub">{s.grade} · {s.school}</div>

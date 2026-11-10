@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { fmtTime } from '../utils/time'
+import StudentAvatar from '../components/StudentAvatar'
 import './Attendance.css'
 
 function fmtDate(iso) {
@@ -24,7 +25,7 @@ export default function Attendance({ store, navigateTo }) {
   const [saved, setSaved] = useState(false)
   const [viewEvent, setViewEvent] = useState('')
 
-  const sortedEvents = [...events].sort((a,b) => b.date.localeCompare(a.date))
+  const sortedEvents = [...events].filter(e => e.date >= '2026-09-14').sort((a,b) => b.date.localeCompare(a.date))
   const today = localToday()
   const upcomingEvents = [...events].filter(e => e.date >= today).sort((a,b) => a.date.localeCompare(b.date))
 
@@ -148,21 +149,27 @@ export default function Attendance({ store, navigateTo }) {
                   const rec = records[s.id] || { present: null, notes: '' }
                   return (
                     <div key={s.id} className={`att-row ${rec.present === true ? 'att-row--present' : rec.present === false ? 'att-row--absent' : ''}`}>
-                      <button
-                        type="button"
-                        className="att-student"
-                        style={{background:'none', border:'none', textAlign:'left', cursor:'pointer', padding:0, font:'inherit'}}
-                        onClick={() => navigateTo && navigateTo('students', { openStudentId: s.id })}
-                        title="View student card"
-                      >
-                        <div className="att-avatar" style={{background: s.program==='YoungLife'?'#1B4FA3':'#3AAB35'}}>
-                          {s.firstName[0]}{s.lastName[0]}
-                        </div>
-                        <div>
+                      <div className="att-student">
+                        <button
+                          type="button"
+                          className="att-avatar-btn"
+                          onClick={() => toggle(s.id, rec.present === true ? null : true)}
+                          title={rec.present === true ? 'Checked in — tap to undo' : 'Tap your picture to check in'}
+                        >
+                          {rec.present === true
+                            ? <div className="att-avatar att-avatar--check">✓</div>
+                            : <StudentAvatar student={s} className="att-avatar" />}
+                        </button>
+                        <button
+                          type="button"
+                          className="att-student-info"
+                          onClick={() => navigateTo && navigateTo('students', { openStudentId: s.id })}
+                          title="View student card"
+                        >
                           <div className="att-name">{s.firstName} {s.lastName}</div>
                           <div className="att-school">{s.grade} · {s.school}</div>
-                        </div>
-                      </button>
+                        </button>
+                      </div>
                       <div className="att-controls">
                         <input
                           className="att-note-input"
