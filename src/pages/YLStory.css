@@ -14,7 +14,6 @@
   display: flex; gap: 8px; flex-wrap: wrap;
   padding: 16px 20px; background: white;
   border-bottom: 1px solid var(--gray-200);
-  position: sticky; top: var(--header-h); z-index: 50;
 }
 .ylstory-nav-btn {
   padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
