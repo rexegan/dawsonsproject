@@ -35,6 +35,14 @@ jobs:
           npm run build
           mkdir -p ../dist/mitchs-mercedes
           cp -r dist/. ../dist/mitchs-mercedes/
+      - name: Add the Social Security What-If page at dist/ss-what-if
+        run: |
+          mkdir -p dist/ss-what-if
+          {
+            echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body>'
+            cat ss-what-if/index.html
+            echo '</body></html>'
+          } > dist/ss-what-if/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
