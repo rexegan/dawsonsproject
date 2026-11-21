@@ -1,279 +1,354 @@
 <title>Social Security What-If</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="See what your Social Security taxes would be worth today if they had been invested in an S&amp;P 500 or balanced fund.">
+<meta name="description" content="See what your Social Security taxes would be worth if they had been invested in an S&amp;P 500 or balanced fund.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap">
 <style>
-/* Layout: a working ledger. Inputs on the left like a paper form, the answer and the year-by-year record on the right. */
+/* Layout: a financial planning tool. App bar, short intro, input panel on the left, results stack on the right. */
 :root {
-  --bg: #f3f6f4;
+  --bg: #f3f5f8;
   --surface: #ffffff;
-  --surface-2: #e9efec;
-  --ink: #13211d;
-  --muted: #56655f;
-  --line: #d3ddd8;
-  --accent: #0e6b5b;
-  --accent-soft: #d5ebe5;
-  --amber: #a8681a;
-  --amber-soft: #f5e6cf;
-  --good: #1b7a45;
-  --bad: #b3372b;
-  --focus: #1f6fd1;
-  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
-  --font-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --surface-2: #f7f9fb;
+  --ink: #0f1b2d;
+  --muted: #5b6778;
+  --faint: #8a95a5;
+  --line: #e0e5ec;
+  --line-strong: #cbd3de;
+  --brand: #13294b;
+  --on-brand: #ffffff;
+  --acct: #0a7c5c;
+  --acct-soft: #e4f3ed;
+  --ss: #3a5a94;
+  --ss-soft: #e8eef8;
+  --warn-soft: #fff6e0;
+  --good: #0a7c5c;
+  --bad: #c0392b;
+  --focus: #2563eb;
+  --shadow: 0 1px 2px rgba(15, 27, 45, .05), 0 4px 14px rgba(15, 27, 45, .05);
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1412; --surface: #151f1c; --surface-2: #1c2925; --ink: #e4ece8; --muted: #9aaba4;
-    --line: #2b3a35; --accent: #4cc1a6; --accent-soft: #173a32; --amber: #e3a650; --amber-soft: #3a2c17;
-    --good: #5fcf8e; --bad: #ef7d70; --focus: #7fb2ff; color-scheme: dark;
+    --bg: #0b111b; --surface: #121a27; --surface-2: #172131; --ink: #e8edf4; --muted: #9aa6b8; --faint: #6f7c90;
+    --line: #233044; --line-strong: #31415a; --brand: #0e1a2e; --on-brand: #e8edf4;
+    --acct: #3ccf9b; --acct-soft: #123328; --ss: #8eb0ea; --ss-soft: #1a2741; --warn-soft: #2e2716;
+    --good: #3ccf9b; --bad: #f08a7e; --focus: #7aa7ff; --shadow: none; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1412; --surface: #151f1c; --surface-2: #1c2925; --ink: #e4ece8; --muted: #9aaba4;
-  --line: #2b3a35; --accent: #4cc1a6; --accent-soft: #173a32; --amber: #e3a650; --amber-soft: #3a2c17;
-  --good: #5fcf8e; --bad: #ef7d70; --focus: #7fb2ff; color-scheme: dark;
+  --bg: #0b111b; --surface: #121a27; --surface-2: #172131; --ink: #e8edf4; --muted: #9aa6b8; --faint: #6f7c90;
+  --line: #233044; --line-strong: #31415a; --brand: #0e1a2e; --on-brand: #e8edf4;
+  --acct: #3ccf9b; --acct-soft: #123328; --ss: #8eb0ea; --ss-soft: #1a2741; --warn-soft: #2e2716;
+  --good: #3ccf9b; --bad: #f08a7e; --focus: #7aa7ff; --shadow: none; color-scheme: dark;
 }
 * { box-sizing: border-box; }
-body {
-  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
-  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 0 96px;
-}
-.wrap { max-width: 1240px; margin: 0 auto; }
-h1, h2, h3 { font-family: var(--font-display); font-stretch: 85%; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
-.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.5; padding-block: 0 88px; -webkit-font-smoothing: antialiased; }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 1200px; margin: 0 auto; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+.tnum { font-variant-numeric: tabular-nums; }
 button, select, input { font: inherit; color: inherit; }
-:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
-/* Header */
-header.top { padding-block: 32px 24px; display: grid; gap: 10px; max-width: 64rem; }
-.eyebrow { font-family: var(--font-data); font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); display: flex; flex-wrap: wrap; gap: 6px 14px; }
-.eyebrow span { white-space: nowrap; }
-header.top h1 { font-size: clamp(30px, 5vw, 50px); font-weight: 800; line-height: 1.04; }
-header.top p { margin: 0; color: var(--muted); font-size: 17px; max-width: 62ch; }
+/* App bar */
+.appbar { background: var(--brand); color: var(--on-brand); margin-top: calc(-1 * env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); }
+.appbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; }
+.brandmark { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+.brandmark svg { flex: none; }
+.appbar .meta { font-size: 13px; opacity: .75; }
 
-/* Grid */
-.layout { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 28px; align-items: start; }
-@media (max-width: 920px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+/* Intro */
+.intro { padding-block: 32px 24px; }
+.intro h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 3.6vw, 36px); line-height: 1.15; letter-spacing: -0.02em; max-width: 30ch; }
+.intro p { margin: 10px 0 0; color: var(--muted); font-size: 16px; max-width: 70ch; }
 
-/* Form */
-.form { display: grid; gap: 22px; }
-fieldset { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 18px; margin: 0; display: grid; gap: 14px; min-width: 0; }
-legend { font-family: var(--font-display); font-stretch: 85%; font-weight: 700; font-size: 19px; padding: 0 6px; margin-left: -6px; }
-.step { font-family: var(--font-data); font-size: 12px; color: var(--accent); letter-spacing: .06em; margin-right: 8px; }
+/* Layout */
+.layout { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 940px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); min-width: 0; }
+
+/* Input panel */
+.panel-in { overflow: hidden; }
+.sec { padding: 20px; display: grid; gap: 14px; border-top: 1px solid var(--line); }
+.sec:first-child { border-top: 0; }
+.sec-h { display: flex; align-items: center; gap: 10px; }
+.sec-h .n { width: 24px; height: 24px; border-radius: 50%; background: var(--brand); color: var(--on-brand); font-size: 12px; font-weight: 700; display: grid; place-items: center; flex: none; }
+:root[data-theme="dark"] .sec-h .n { background: var(--line-strong); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sec-h .n { background: var(--line-strong); } }
+.sec-h h2 { font-size: 16px; font-weight: 650; font-weight: 600; letter-spacing: -0.005em; }
+.sec-h .opt { margin-left: auto; font-size: 12px; color: var(--faint); }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-label.f { display: grid; gap: 5px; font-size: 14px; font-weight: 600; min-width: 0; }
-label.f small, .hint { font-weight: 400; color: var(--muted); font-size: 13px; }
-select, input[type="number"], input[type="text"] {
-  width: 100%; min-height: 44px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg);
+.field { display: grid; gap: 6px; min-width: 0; }
+.field > span { font-size: 13px; font-weight: 500; color: var(--muted); }
+.help { font-size: 12.5px; color: var(--faint); line-height: 1.45; }
+select, input[type="number"] {
+  width: 100%; height: 42px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface);
+  font-size: 14.5px; transition: border-color .15s;
 }
-select { padding-right: 28px; }
-input[type="number"] { font-family: var(--font-data); }
-.check { display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; cursor: pointer; }
-.check input { width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--accent); flex: none; }
+select { appearance: none; -webkit-appearance: none; padding-right: 34px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 17px) 18px, calc(100% - 12px) 18px; background-size: 5px 5px; background-repeat: no-repeat; }
+select:hover, input[type="number"]:hover { border-color: var(--faint); }
+.suffix { position: relative; }
+.suffix input { padding-right: 34px; }
+.suffix::after { content: attr(data-s); position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--faint); font-size: 13.5px; pointer-events: none; }
+.prefix { position: relative; }
+.prefix input { padding-left: 26px; }
+.prefix::before { content: "$"; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--faint); font-size: 14px; pointer-events: none; }
 
-.period { border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: grid; gap: 10px; background: var(--bg); position: relative; }
-.period-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.period-head h3 { font-size: 16px; font-weight: 700; }
-.period-head .yrs { font-family: var(--font-data); font-size: 12.5px; color: var(--muted); }
-.period .equiv { font-size: 13px; color: var(--muted); }
-.period .equiv b { color: var(--ink); font-weight: 600; }
-.btn { min-height: 44px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); padding: 8px 14px; cursor: pointer; font-weight: 600; }
-.btn:hover { border-color: var(--accent); }
-.btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-.btn.small { min-height: 36px; padding: 4px 10px; font-size: 13.5px; font-weight: 500; }
-.btn.ghost { background: transparent; border-color: transparent; color: var(--muted); }
-.btn.ghost:hover { color: var(--bad); border-color: var(--line); }
-.btnrow { display: flex; flex-wrap: wrap; gap: 10px; }
-.sample-flag { font-size: 13px; background: var(--amber-soft); color: var(--ink); border-radius: 6px; padding: 8px 10px; }
+.toggle { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.toggle input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.toggle .sw { flex: none; width: 38px; height: 22px; border-radius: 11px; background: var(--line-strong); position: relative; transition: background .15s; margin-top: 1px; }
+.toggle .sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); transition: transform .15s; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+.toggle input:checked + .sw { background: var(--acct); }
+.toggle input:checked + .sw::after { transform: translateX(16px); }
+.toggle input:focus-visible + .sw { outline: 2px solid var(--focus); outline-offset: 2px; }
+.toggle .t { font-size: 14px; font-weight: 500; }
+.toggle .t small { display: block; font-weight: 400; color: var(--faint); font-size: 12.5px; margin-top: 2px; }
+
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface-2); border: 1px solid var(--line-strong); border-radius: 8px; padding: 3px; gap: 3px; }
+.seg button { border: 0; background: transparent; border-radius: 6px; padding: 7px 4px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; line-height: 1.25; }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(15,27,45,.12); font-weight: 600; }
+.seg button small { display: block; font-weight: 400; font-size: 11.5px; color: var(--faint); }
+
+.note { font-size: 13px; background: var(--warn-soft); border-radius: 8px; padding: 10px 12px; line-height: 1.45; }
+
+/* Jobs */
+.jobs { display: grid; gap: 8px; }
+.job { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.job.open { border-color: var(--line-strong); box-shadow: var(--shadow); }
+.job-h { width: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 14px; background: transparent; border: 0; text-align: left; cursor: pointer; border-radius: 10px; }
+.job-h:hover { background: var(--surface-2); }
+.job-h .yrs { font-size: 13px; font-weight: 600; background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; white-space: nowrap; }
+.job-h .what { min-width: 0; }
+.job-h .what b { display: block; font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.job-h .what small { display: block; font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.job-h .chev { width: 8px; height: 8px; border-right: 2px solid var(--faint); border-bottom: 2px solid var(--faint); transform: rotate(45deg); margin: 0 4px 4px; transition: transform .15s; }
+.job.open .chev { transform: rotate(-135deg); margin-bottom: -2px; }
+.job-b { padding: 4px 14px 14px; display: grid; gap: 12px; }
+.job-b .equiv { font-size: 12.5px; color: var(--muted); background: var(--surface-2); border-radius: 6px; padding: 8px 10px; }
+.job-f { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.btn { height: 40px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); padding: 0 14px; cursor: pointer; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+.btn:hover { background: var(--surface-2); }
+.btn.link { border: 0; background: transparent; padding: 0 4px; height: 32px; color: var(--muted); font-weight: 500; font-size: 13px; }
+.btn.link:hover { color: var(--bad); }
+.btn.add { width: 100%; justify-content: center; border-style: dashed; color: var(--acct); }
+.btnrow { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
 
 /* Results */
-.results { display: grid; gap: 22px; min-width: 0; }
-.answer { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 22px; display: grid; gap: 18px; }
-.answer .label { font-size: 15px; color: var(--muted); font-weight: 600; }
-.answer .big { font-family: var(--font-display); font-stretch: 80%; font-weight: 800; font-size: clamp(46px, 8vw, 78px); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
-.answer .sub { color: var(--muted); font-size: 15px; }
-.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-.stats > div { background: var(--surface); padding: 12px 14px; display: grid; gap: 2px; align-content: start; }
-.stats .k { font-size: 13px; color: var(--muted); }
-.stats .v { font-family: var(--font-data); font-weight: 600; font-size: 19px; font-variant-numeric: tabular-nums; }
-@media (max-width: 560px) { .stats { grid-template-columns: minmax(0, 1fr); } }
+.results { display: grid; gap: 20px; min-width: 0; }
+.summary { padding: 24px; display: grid; gap: 20px; }
+.summary .eyebrow { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.summary .big { font-family: var(--font-display); font-weight: 700; font-size: clamp(42px, 6.5vw, 64px); line-height: 1.05; letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; margin-top: 4px; }
+.summary .sub { color: var(--muted); font-size: 14px; margin-top: 6px; }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 10px; }
+.kpis > div { padding: 14px 16px; display: grid; gap: 4px; align-content: start; border-left: 1px solid var(--line); }
+.kpis > div:first-child { border-left: 0; }
+.kpis .k { font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.kpis .k i { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.kpis .v { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+@media (max-width: 600px) { .kpis { grid-template-columns: minmax(0, 1fr); } .kpis > div { border-left: 0; border-top: 1px solid var(--line); } .kpis > div:first-child { border-top: 0; } }
 
-.compare { display: grid; gap: 12px; }
-.compare h2 { font-size: 21px; }
-.bar { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr); gap: 4px 14px; align-items: center; }
-.bar .name { font-size: 14px; font-weight: 600; }
-.bar .name small { display: block; font-weight: 400; color: var(--muted); font-size: 12.5px; }
-.bar .track { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.bar .fill { height: 26px; border-radius: 4px; min-width: 3px; transition: width .35s ease; }
-.bar .fill.acct { background: var(--accent); }
-.bar .fill.ss { background: var(--amber); }
-.bar .amt { font-family: var(--font-data); font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
-@media (max-width: 560px) { .bar { grid-template-columns: minmax(0, 1fr); } }
-.verdict { font-size: 15.5px; background: var(--accent-soft); border-radius: 8px; padding: 12px 14px; }
+.cardpad { padding: 22px 24px; display: grid; gap: 16px; }
+.cardhead { display: flex; justify-content: space-between; align-items: baseline; gap: 8px 16px; flex-wrap: wrap; }
+.cardhead h2 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+.cardhead .aside { font-size: 13px; color: var(--muted); }
 
-.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: grid; gap: 14px; min-width: 0; }
-.panel h2 { font-size: 21px; }
-.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; color: var(--muted); }
-.legend i { display: inline-block; width: 18px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+.bars { display: grid; gap: 14px; }
+.bar { display: grid; gap: 6px; }
+.bar .top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.bar .name { font-size: 14px; font-weight: 500; }
+.bar .name small { color: var(--faint); font-weight: 400; margin-left: 6px; }
+.bar .amt { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bar .track { height: 10px; background: var(--surface-2); border-radius: 5px; overflow: hidden; border: 1px solid var(--line); }
+.bar .fill { height: 100%; border-radius: 5px; transition: width .35s ease; }
+.fill.acct { background: var(--acct); }
+.fill.ss { background: var(--ss); }
+.fill.ss2 { background: var(--ss); opacity: .55; }
+.verdict { font-size: 14.5px; border-radius: 8px; padding: 12px 14px; background: var(--acct-soft); line-height: 1.5; }
+.verdict.lower { background: var(--ss-soft); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; }
 .chartbox { position: relative; min-width: 0; }
 .chartbox svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
-.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 13px; padding: 8px 10px; border-radius: 6px; white-space: nowrap; transform: translate(-50%, -100%); line-height: 1.4; }
-.tip .num { font-weight: 600; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); box-shadow: 0 6px 20px rgba(15,27,45,.15); font-size: 12.5px; padding: 8px 10px; border-radius: 8px; white-space: nowrap; transform: translate(-50%, -100%); line-height: 1.5; font-variant-numeric: tabular-nums; }
+.tip .r { display: flex; justify-content: space-between; gap: 14px; }
+.tip .r span { color: var(--muted); }
+.chartnote { font-size: 13px; color: var(--muted); margin: 0; }
 
-.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; max-height: 620px; overflow-y: auto; }
-table { border-collapse: collapse; width: 100%; font-size: 14px; }
-th, td { padding: 6px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--line); }
-th { position: sticky; top: 0; background: var(--surface-2); font-weight: 600; font-size: 12.5px; text-align: right; z-index: 1; }
-th:first-child, td:first-child, th:nth-child(3), td:nth-child(3) { text-align: left; }
-td { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
-td.w { font-family: var(--font-body); color: var(--muted); }
-td input { width: 110px; min-height: 34px; padding: 4px 6px; text-align: right; font-size: 13.5px; }
-td input.set { border-color: var(--accent); background: var(--accent-soft); }
-tr.future td { color: var(--muted); }
-tr.crash td.ret { color: var(--bad); }
-td.ret.up { color: var(--good); }
-td.ret.down { color: var(--bad); }
+details.card > summary { list-style: none; cursor: pointer; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+details.card > summary::-webkit-details-marker { display: none; }
+details.card > summary h2 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+details.card > summary .hint { font-size: 13px; color: var(--muted); font-weight: 400; display: block; margin-top: 2px; }
+details.card > summary .chev { width: 9px; height: 9px; border-right: 2px solid var(--faint); border-bottom: 2px solid var(--faint); transform: rotate(45deg); flex: none; transition: transform .15s; }
+details.card[open] > summary .chev { transform: rotate(-135deg); }
+details.card > summary:hover h2 { color: var(--acct); }
+.dbody { padding: 0 24px 22px; display: grid; gap: 12px; }
 
-.notes { font-size: 14px; color: var(--muted); display: grid; gap: 8px; }
-.notes h3 { font-size: 17px; color: var(--ink); }
-.notes ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
-.notes a { color: var(--accent); }
+.tablewrap { overflow: auto; border: 1px solid var(--line); border-radius: 8px; max-height: 560px; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+th, td { padding: 8px 12px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--line); }
+th { position: sticky; top: 0; background: var(--surface-2); font-weight: 600; font-size: 12px; color: var(--muted); z-index: 1; }
+th:nth-child(-n+3), td:nth-child(-n+3) { text-align: left; }
+td.w { color: var(--muted); }
+tbody tr:hover td { background: var(--surface-2); }
+td input { width: 108px; height: 32px; padding: 0 8px; text-align: right; font-size: 13px; border: 1px solid var(--line); border-radius: 6px; background: transparent; font-variant-numeric: tabular-nums; }
+td input:hover { border-color: var(--line-strong); }
+td input.set { border-color: var(--acct); background: var(--acct-soft); font-weight: 600; }
+tr.future td { color: var(--faint); }
+td.up { color: var(--good); }
+td.down { color: var(--bad); }
+td.bal { font-weight: 600; }
 
-/* Phone: answer pinned to the bottom so it updates as you type */
-.dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--ink); color: var(--bg);
+.method { font-size: 14px; color: var(--muted); display: grid; gap: 10px; }
+.method dl { margin: 0; display: grid; gap: 12px; }
+.method dt { font-weight: 600; color: var(--ink); font-size: 14px; }
+.method dd { margin: 2px 0 0; }
+.disclaimer { font-size: 12.5px; color: var(--faint); padding-top: 4px; }
+footer { margin-top: 28px; padding-block: 20px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--faint); }
+
+/* Phone: answer pinned to the bottom so it updates while you edit */
+.dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--brand); color: var(--on-brand);
   padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
-  display: none; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; }
-.dock b { font-family: var(--font-data); font-size: 20px; }
-@media (max-width: 920px) { .dock { display: flex; } }
-@media (prefers-reduced-motion: reduce) { .bar .fill { transition: none; } }
+  display: none; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; box-shadow: 0 -4px 16px rgba(0,0,0,.15); }
+.dock b { font-family: var(--font-display); font-size: 20px; font-variant-numeric: tabular-nums; }
+@media (max-width: 940px) { .dock { display: flex; } }
+@media (max-width: 420px) { .sec, .summary { padding: 16px; } .cardpad { padding: 18px 16px; } details.card > summary { padding: 16px; } .dbody { padding: 0 16px 18px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
-<div class="wrap">
-  <header class="top">
-    <div class="eyebrow"><span>FICA · OASDI</span><span>6.2% you + 6.2% employer</span><span>12.4% self-employed</span></div>
-    <h1>What if your Social Security tax had been invested instead?</h1>
-    <p>Enter the kinds of jobs you worked and roughly what they paid. The calculator takes the Social Security part of the tax from each year, puts it into an S&amp;P 500 or balanced fund using that year's real market return, and shows what the account would be worth at retirement.</p>
-  </header>
+<header class="appbar">
+  <div class="wrap gutter">
+    <div class="brandmark">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="6" fill="#ffffff" fill-opacity=".12"/><path d="M6 18 L11 12.5 L14.5 15.5 L20 8.5" fill="none" stroke="#5fe0b0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="8.5" r="2" fill="#5fe0b0"/></svg>
+      Social Security What-If
+    </div>
+    <span class="meta">Data through 2026</span>
+  </div>
+</header>
 
-  <div class="layout">
-    <form class="form" id="form" autocomplete="off">
-      <fieldset>
-        <legend><span class="step">STEP 1</span>About you</legend>
-        <div class="row2">
-          <label class="f">Year you were born
-            <select id="birth"></select>
-          </label>
-          <label class="f">Age to value it at
-            <select id="retire"></select>
-          </label>
-        </div>
-        <div class="hint" id="spanHint"></div>
-      </fieldset>
+<div class="gutter">
+<section class="intro wrap">
+  <h1>What would your Social Security taxes be worth if they had been invested?</h1>
+  <p>Describe the jobs you've held and roughly what they paid. We take the Social Security portion of FICA from each year, invest it at that year's actual market return, and compare the result with the benefit Social Security would pay you.</p>
+</section>
 
-      <fieldset>
-        <legend><span class="step">STEP 2</span>Your work history</legend>
-        <div class="sample-flag" id="sampleFlag">This is an <b>example</b> work history so you can see how it works. Change the jobs and pay to match yours.</div>
-        <p class="hint" style="margin:0">Pay ranges are in <b>today's dollars</b>, the way you'd describe that job's pay now. The calculator scales them back to what that pay was worth in each year, using the national average wage index.</p>
-        <div id="periods" style="display:grid;gap:12px"></div>
-        <div class="btnrow">
-          <button type="button" class="btn primary" id="addPeriod">+ Add another job</button>
-          <button type="button" class="btn" id="clearAll">Start with a blank history</button>
-        </div>
-        <p class="hint" style="margin:0">Know exactly what you earned in a year? Type it into the year-by-year table on the right (it's on your Social Security statement).</p>
-      </fieldset>
+<main class="wrap layout">
+  <form class="card panel-in" id="form" autocomplete="off">
+    <section class="sec">
+      <div class="sec-h"><span class="n">1</span><h2>About you</h2></div>
+      <div class="row2">
+        <label class="field"><span>Birth year</span><select id="birth"></select></label>
+        <label class="field"><span>Value at age</span><select id="retire"></select></label>
+      </div>
+      <div class="help" id="spanHint"></div>
+    </section>
 
-      <fieldset>
-        <legend><span class="step">STEP 3</span>How the money is invested</legend>
-        <label class="f">Fund
-          <select id="fund">
-            <option value="100">S&amp;P 500 index fund (100% stocks)</option>
-            <option value="60">Balanced fund: 60% S&amp;P 500 / 40% bonds</option>
-            <option value="40">Conservative: 40% S&amp;P 500 / 60% bonds</option>
-          </select>
-        </label>
-        <label class="check"><input type="checkbox" id="employer">
-          <span>Include the employer's matching 6.2%<br><small class="hint">Your employer paid the same amount you did. Self-employed (1099) work always counts the full 12.4%, since you paid both halves.</small></span>
-        </label>
-        <div class="row2">
-          <label class="f">Yearly fund fee
-            <input type="number" id="fee" step="0.01" min="0" max="3"><small>% per year</small>
-          </label>
-          <label class="f">S&amp;P 500 in 2026 so far
-            <input type="number" id="sp26" step="0.5" min="-60" max="60"><small>% total return</small>
-          </label>
-        </div>
-        <label class="f">Return for years that haven't happened yet
-          <input type="number" id="future" step="0.5" min="-10" max="15"><small>% per year, used only after 2026</small>
-        </label>
-      </fieldset>
+    <section class="sec">
+      <div class="sec-h"><span class="n">2</span><h2>Work history</h2></div>
+      <div class="note" id="sampleFlag"><b>Example history.</b> Click a job to change it to match your own work.</div>
+      <div class="jobs" id="jobs"></div>
+      <button type="button" class="btn add" id="addJob">+ Add a job</button>
+      <div class="btnrow">
+        <span class="help">Pay is in today's dollars. We adjust it for each year.</span>
+        <button type="button" class="btn link" id="clearAll">Clear all</button>
+      </div>
+    </section>
 
-      <fieldset>
-        <legend><span class="step">STEP 4</span>Compare with your real Social Security <small class="hint">(optional)</small></legend>
-        <label class="f">Monthly benefit at <span id="ssaAgeLbl">65</span> from your SSA statement
-          <input type="number" id="ssaActual" min="0" step="1" placeholder="Leave blank to use our estimate">
-          <small>Find it at ssa.gov/myaccount. We estimate it from your work history if you leave this blank.</small>
-        </label>
-      </fieldset>
-    </form>
-
-    <section class="results" aria-live="polite">
-      <div class="answer">
-        <div>
-          <div class="label" id="ansLabel">Your account at age 65</div>
-          <div class="big" id="ansBig">$0</div>
-          <div class="sub" id="ansSub"></div>
-        </div>
-        <div class="stats">
-          <div><span class="k" id="kPaid">Social Security tax put in</span><span class="v" id="vPaid">$0</span></div>
-          <div><span class="k">Growth from the market</span><span class="v" id="vGrowth">$0</span></div>
-          <div><span class="k">Each $1 paid in became</span><span class="v" id="vMult">$0</span></div>
-        </div>
-        <div class="compare">
-          <h2>Monthly retirement income</h2>
-          <div class="bar"><div class="name">Your invested account<small>4% withdrawn per year, the account keeps going</small></div><div class="track"><div class="fill acct" id="barAcct"></div><span class="amt" id="amtAcct"></span></div></div>
-          <div class="bar"><div class="name" id="ssName1">Social Security at 65<small>reduced for claiming early</small></div><div class="track"><div class="fill ss" id="barSS"></div><span class="amt" id="amtSS"></span></div></div>
-          <div class="bar"><div class="name">Social Security at 67<small>your full retirement age</small></div><div class="track"><div class="fill ss" id="barSS67" style="opacity:.6"></div><span class="amt" id="amtSS67"></span></div></div>
-          <div class="verdict" id="verdict"></div>
+    <section class="sec">
+      <div class="sec-h"><span class="n">3</span><h2>Investment</h2></div>
+      <div class="field"><span>Fund</span>
+        <div class="seg" id="fundSeg" role="group" aria-label="Fund">
+          <button type="button" data-v="100">S&amp;P 500<small>100% stocks</small></button>
+          <button type="button" data-v="60">Balanced<small>60 / 40</small></button>
+          <button type="button" data-v="40">Conservative<small>40 / 60</small></button>
         </div>
       </div>
-
-      <div class="panel">
-        <h2>How the account would have grown</h2>
-        <div class="legend"><span><i style="background:var(--accent)"></i>Account value</span><span><i style="background:var(--amber)"></i>Total Social Security tax paid in</span></div>
-        <div class="chartbox" id="chartbox"><svg id="chart" role="img" aria-label="Account value by age"></svg><div class="tip" id="tip" hidden></div></div>
-        <p class="hint" style="margin:0" id="chartNote"></p>
+      <label class="toggle"><input type="checkbox" id="employer"><span class="sw"></span>
+        <span class="t">Include employer's matching 6.2%<small>Self-employed years always count the full 12.4%.</small></span>
+      </label>
+      <div class="row2">
+        <label class="field"><span>Annual fund fee</span><div class="suffix" data-s="%"><input type="number" id="fee" step="0.01" min="0" max="3"></div></label>
+        <label class="field"><span>S&amp;P 500 return, 2026 YTD</span><div class="suffix" data-s="%"><input type="number" id="sp26" step="0.5" min="-60" max="60"></div></label>
       </div>
+      <label class="field"><span>Assumed return after 2026</span><div class="suffix" data-s="%"><input type="number" id="future" step="0.5" min="-10" max="15"></div>
+        <span class="help">Only used for years that haven't happened yet.</span></label>
+    </section>
 
-      <div class="panel">
-        <h2>Year by year</h2>
-        <p class="hint" style="margin:0">Type your actual earnings into the <b>Earnings</b> box for any year to replace the estimate. Clear the box to go back.</p>
+    <section class="sec">
+      <div class="sec-h"><span class="n">4</span><h2>Your SSA statement</h2><span class="opt">Optional</span></div>
+      <label class="field"><span>Monthly benefit at age <b id="ssaAgeLbl">65</b></span><div class="prefix"><input type="number" id="ssaActual" min="0" step="1" placeholder="Use our estimate"></div>
+        <span class="help">From your statement at ssa.gov/myaccount. More accurate than our estimate.</span></label>
+    </section>
+  </form>
+
+  <div class="results" aria-live="polite">
+    <section class="card summary">
+      <div>
+        <div class="eyebrow" id="ansLabel">Account value at age 65</div>
+        <div class="big" id="ansBig">$0</div>
+        <div class="sub" id="ansSub"></div>
+      </div>
+      <div class="kpis">
+        <div><span class="k"><i style="background:var(--ss)"></i><span id="kPaid">Total tax invested</span></span><span class="v" id="vPaid">$0</span></div>
+        <div><span class="k"><i style="background:var(--acct)"></i>Market growth</span><span class="v" id="vGrowth">$0</span></div>
+        <div><span class="k">Growth multiple</span><span class="v" id="vMult">—</span></div>
+      </div>
+    </section>
+
+    <section class="card cardpad">
+      <div class="cardhead"><h2>Monthly retirement income</h2><span class="aside">Invested account vs. Social Security</span></div>
+      <div class="bars">
+        <div class="bar"><div class="top"><span class="name">Invested account<small>4% withdrawal rate</small></span><span class="amt" id="amtAcct"></span></div><div class="track"><div class="fill acct" id="barAcct"></div></div></div>
+        <div class="bar"><div class="top"><span class="name" id="ssName1">Social Security at 65</span><span class="amt" id="amtSS"></span></div><div class="track"><div class="fill ss" id="barSS"></div></div></div>
+        <div class="bar"><div class="top"><span class="name">Social Security at 67<small>full retirement age</small></span><span class="amt" id="amtSS67"></span></div><div class="track"><div class="fill ss2" id="barSS67"></div></div></div>
+      </div>
+      <div class="verdict" id="verdict"></div>
+    </section>
+
+    <section class="card cardpad">
+      <div class="cardhead"><h2>Account growth by age</h2>
+        <div class="legend"><span><i style="background:var(--acct)"></i>Account value</span><span><i style="background:var(--ss)"></i>Tax paid in</span></div>
+      </div>
+      <div class="chartbox" id="chartbox"><svg id="chart" role="img" aria-label="Account value by age"></svg><div class="tip" id="tip" hidden></div></div>
+      <p class="chartnote" id="chartNote"></p>
+    </section>
+
+    <details class="card" id="tableCard">
+      <summary><div><h2>Year-by-year detail</h2><span class="hint">Enter exact earnings for any year to replace our estimate</span></div><span class="chev"></span></summary>
+      <div class="dbody">
         <div class="tablewrap">
           <table>
-            <thead><tr><th>Year</th><th>Age</th><th>Work</th><th>Earnings</th><th>Taxed for SS</th><th>SS tax in</th><th>Fund return</th><th>Account at year end</th></tr></thead>
+            <thead><tr><th>Year</th><th>Age</th><th>Work</th><th>Earnings</th><th>Taxable</th><th>SS tax</th><th>Return</th><th>Balance</th></tr></thead>
             <tbody id="tbody"></tbody>
           </table>
         </div>
       </div>
+    </details>
 
-      <div class="panel notes">
-        <h3>How this is figured</h3>
-        <ul>
-          <li><b>Only the Social Security part of FICA</b> (called OASDI) is counted. The Medicare part is left out. Rates and the yearly earnings cap are the real ones for each year, including the 2011–2012 payroll tax holiday. Self-employed tax uses 92.35% of net earnings after 1990; the 1984–1989 self-employment credits are approximated.</li>
-          <li><b>Each year's tax goes in mid-year</b> and earns half that year's return, then full returns after that. The fund is rebalanced every year and the fee is taken out yearly.</li>
-          <li><b>Market returns</b> are S&amp;P 500 total returns with dividends reinvested, 1980–2025. Bonds are 10-year U.S. Treasury total returns. 2026 uses the S&amp;P figure above and about 4% for bonds. Later years use the return you set.</li>
-          <li><b>The Social Security estimate</b> uses the SSA formula: your top 35 years of wage-indexed earnings, the bend points for the year you turn 62, and cost-of-living raises since then (2.5%, 2.8%, and 3.6% for 2027). Your SSA statement is more accurate, so enter it in Step 4 if you have it.</li>
-          <li><b>This is a "what if," not advice.</b> Social Security also pays disability, survivor, and spouse benefits and rises with inflation for life. A private account can run out or be left to your heirs. Taxes on withdrawals are not included.</li>
-        </ul>
+    <details class="card">
+      <summary><div><h2>Methodology and assumptions</h2><span class="hint">Where the numbers come from</span></div><span class="chev"></span></summary>
+      <div class="dbody method">
+        <dl>
+          <div><dt>Social Security tax</dt><dd>Only the Social Security part of FICA (OASDI) is counted; Medicare is excluded. Each year uses its actual tax rate and taxable maximum, including the 2011–2012 payroll tax holiday. Self-employment tax applies to 92.35% of net earnings from 1990 on; 1984–1989 self-employment credits are approximated.</dd></div>
+          <div><dt>Pay in today's dollars</dt><dd>Pay ranges are converted to each year's dollars with SSA's National Average Wage Index (latest: $72,800 for 2025). Exact amounts entered in the year-by-year table are used as entered.</dd></div>
+          <div><dt>Investment returns</dt><dd>S&amp;P 500 total return with dividends reinvested, 1980–2025. Bonds use 10-year U.S. Treasury total returns. 2026 uses the year-to-date S&amp;P figure above and about 4% for bonds. Each year's tax is invested mid-year, the fund is rebalanced annually, and the fee is deducted yearly.</dd></div>
+          <div><dt>Social Security estimate</dt><dd>SSA's benefit formula: your highest 35 years of wage-indexed earnings, the bend points for the year you turn 62, and cost-of-living adjustments since then (2.5%, 2.8%, and 3.6% for 2027). Benefits are reduced for claiming before 67 and increased for waiting past it.</dd></div>
+        </dl>
+        <p class="disclaimer">This is an educational illustration, not financial advice. Social Security also provides disability, survivor, and spousal benefits and is adjusted for inflation for life. A private account can lose value or run out, but can also be left to heirs. Taxes on withdrawals are not included.</p>
       </div>
-    </section>
+    </details>
   </div>
+</main>
+
+<footer class="wrap">Sources: Social Security Administration (tax rates, taxable maximums, wage index, COLAs); S&amp;P Dow Jones Indices and NYU Stern historical return data. Figures are estimates.</footer>
 </div>
 
-<div class="dock" id="dock"><span id="dockLbl">At 65</span><b id="dockAmt">$0</b></div>
+<div class="dock"><span id="dockLbl">Account at 65</span><b id="dockAmt">$0</b></div>
 
 <script>
 (function () {
@@ -296,14 +371,14 @@ td.ret.down { color: var(--bad); }
 
   // ---------- Choices ----------
   var RANGES = [
-    { id: "r1", label: "Under $20,000", lo: 10000, hi: 20000 },
-    { id: "r2", label: "$20,000 – $35,000", lo: 20000, hi: 35000 },
-    { id: "r3", label: "$35,000 – $50,000", lo: 35000, hi: 50000 },
-    { id: "r4", label: "$50,000 – $75,000", lo: 50000, hi: 75000 },
-    { id: "r5", label: "$75,000 – $100,000", lo: 75000, hi: 100000 },
-    { id: "r6", label: "$100,000 – $150,000", lo: 100000, hi: 150000 },
-    { id: "r7", label: "$150,000 – $200,000", lo: 150000, hi: 200000 },
-    { id: "r8", label: "$200,000 – $300,000 (over the SS cap)", lo: 200000, hi: 300000 }
+    { id: "r1", label: "Under $20,000", short: "Under $20k", lo: 10000, hi: 20000 },
+    { id: "r2", label: "$20,000 – $35,000", short: "$20k–$35k", lo: 20000, hi: 35000 },
+    { id: "r3", label: "$35,000 – $50,000", short: "$35k–$50k", lo: 35000, hi: 50000 },
+    { id: "r4", label: "$50,000 – $75,000", short: "$50k–$75k", lo: 50000, hi: 75000 },
+    { id: "r5", label: "$75,000 – $100,000", short: "$75k–$100k", lo: 75000, hi: 100000 },
+    { id: "r6", label: "$100,000 – $150,000", short: "$100k–$150k", lo: 100000, hi: 150000 },
+    { id: "r7", label: "$150,000 – $200,000", short: "$150k–$200k", lo: 150000, hi: 200000 },
+    { id: "r8", label: "$200,000 – $300,000", short: "$200k–$300k", lo: 200000, hi: 300000 }
   ];
   var JOBS = [
     ["restaurant", "Restaurant / food service", "r2"],
@@ -323,8 +398,10 @@ td.ret.down { color: var(--bad); }
     ["manager", "Manager / professional", "r6"],
     ["other", "Other", "r3"]
   ];
-  var TYPES = [["w2", "Paycheck (W-2 employee)"], ["se", "Self-employed (1099)"], ["none", "Not working / no SS tax"]];
+  var TYPES = [["w2", "W-2 employee (paycheck)"], ["se", "Self-employed (1099)"], ["none", "Not working"]];
+  var TYPE_SHORT = { w2: "W-2", se: "1099", none: "Not working" };
   var POS = [["lo", "Low end"], ["mid", "Middle"], ["hi", "High end"]];
+  var POS_SHORT = { lo: "low end", mid: "middle", hi: "high end" };
 
   var SAMPLE = [
     { from: 18, to: 22, type: "w2", job: "restaurant", range: "r2", pos: "mid" },
@@ -337,15 +414,17 @@ td.ret.down { color: var(--bad); }
   var state;
   try { state = JSON.parse(localStorage.getItem("ss-what-if-v1") || "null"); } catch (e) { state = null; }
   if (!state || !Array.isArray(state.periods)) state = JSON.parse(JSON.stringify(DEFAULTS));
+  var openJob = -1;
   function save() { try { localStorage.setItem("ss-what-if-v1", JSON.stringify(state)); } catch (e) { /* storage unavailable */ } }
 
   // ---------- Helpers ----------
   var $ = function (id) { return document.getElementById(id); };
   var money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
   function fmt(n) { return money.format(Math.round(n)); }
-  function short(n) { var a = Math.abs(n); if (a >= 1e6) return "$" + (n / 1e6).toFixed(a >= 1e7 ? 1 : 2) + "M"; if (a >= 1e3) return "$" + Math.round(n / 1e3) + "k"; return "$" + Math.round(n); }
+  function short(n) { var a = Math.abs(n); if (a >= 1e6) return "$" + (n / 1e6).toFixed(a >= 1e7 ? 1 : (n % 1e6 === 0 ? 0 : 1)) + "M"; if (a >= 1e3) return "$" + Math.round(n / 1e3) + "k"; return "$" + Math.round(n); }
   function opt(v, t, sel) { return '<option value="' + v + '"' + (String(v) === String(sel) ? " selected" : "") + ">" + t + "</option>"; }
   function rangeById(id) { for (var i = 0; i < RANGES.length; i++) if (RANGES[i].id === id) return RANGES[i]; return RANGES[2]; }
+  function jobById(id) { for (var i = 0; i < JOBS.length; i++) if (JOBS[i][0] === id) return JOBS[i]; return JOBS[JOBS.length - 1]; }
   function amountFor(p) { var r = rangeById(p.range); return p.pos === "lo" ? r.lo : p.pos === "hi" ? r.hi : (r.lo + r.hi) / 2; }
   function workAges() { return { first: 18, last: state.retire - 1 }; }
 
@@ -358,9 +437,10 @@ td.ret.down { color: var(--bad); }
       for (var i = 0; i < state.periods.length; i++) { var q = state.periods[i]; if (age >= q.from && age <= q.to) p = q; }
       var type = p ? p.type : "none";
       var ov = state.overrides[y];
-      var earn = 0, estimated = false;
-      if (ov !== undefined && ov !== "" && !isNaN(+ov)) { earn = +ov; if (type === "none") type = "w2"; }
-      else if (p && type !== "none") { earn = amountFor(p) * awi(y) / awi(LAST_ACTUAL); estimated = true; }
+      var hasOv = ov !== undefined && ov !== "" && !isNaN(+ov);
+      var earn = 0;
+      if (hasOv) { earn = +ov; if (type === "none") type = "w2"; }
+      else if (p && type !== "none") earn = amountFor(p) * awi(y) / awi(LAST_ACTUAL);
       var base = wageBase(y), taxed = 0, tax = 0;
       if (type === "w2") { taxed = Math.min(earn, base); tax = taxed * (empRate(y) + (state.employer ? erRate(y) : 0)) / 100; }
       else if (type === "se") { taxed = Math.min(y >= 1990 ? earn * 0.9235 : earn, base); tax = taxed * seRate(y) / 100; }
@@ -373,7 +453,7 @@ td.ret.down { color: var(--bad); }
       var net = (1 + gross / 100) * (1 - fee) - 1;
       bal = bal * (1 + net) + tax * Math.sqrt(1 + net);
       paid += tax;
-      rows.push({ y: y, age: age, type: type, job: p ? p.job : "", earn: earn, estimated: estimated, override: ov !== undefined && ov !== "", taxed: taxed, tax: tax, ret: net * 100, bal: bal, paid: paid, future: y > NOW_YEAR });
+      rows.push({ y: y, age: age, type: type, job: p ? p.job : "", earn: earn, override: hasOv, taxed: taxed, tax: tax, ret: net * 100, bal: bal, paid: paid, future: y > NOW_YEAR });
     }
     return { rows: rows, bal: bal, paid: paid, ss: ssBenefit(b, R, ssEarn), ss67: ssBenefit(b, 67, ssEarn), endYear: b + R - 1 };
   }
@@ -390,7 +470,7 @@ td.ret.down { color: var(--bad); }
     pia = Math.floor(pia * 10) / 10;
     var claimYear = birth + claimAge;
     for (var cy = E; cy < claimYear; cy++) pia = Math.floor(pia * (1 + cola(cy) / 100) * 10) / 10;
-    var fra = 67, m = (claimAge - fra) * 12, adj = 1;
+    var m = (claimAge - 67) * 12, adj = 1;
     if (m < 0) { var e2 = -m; adj = 1 - (Math.min(e2, 36) * 5 / 900) - (Math.max(e2 - 36, 0) * 5 / 1200); }
     else if (m > 0) adj = 1 + m * (8 / 1200);
     return { monthly: Math.floor(pia * adj), aime: aime };
@@ -399,44 +479,54 @@ td.ret.down { color: var(--bad); }
   // ---------- Form rendering ----------
   function fillStatic() {
     var h = ""; for (var y = 1962; y <= 2008; y++) h += opt(y, y, state.birth); $("birth").innerHTML = h;
-    h = ""; for (var a = 62; a <= 70; a++) h += opt(a, a + (a === 67 ? " (full retirement age)" : ""), state.retire); $("retire").innerHTML = h;
-    $("fund").value = state.fund; $("employer").checked = !!state.employer; $("fee").value = state.fee; $("sp26").value = state.sp26; $("future").value = state.future; $("ssaActual").value = state.ssaActual;
+    h = ""; for (var a = 62; a <= 70; a++) h += opt(a, a + (a === 67 ? " (full retirement)" : ""), state.retire); $("retire").innerHTML = h;
+    $("employer").checked = !!state.employer; $("fee").value = state.fee; $("sp26").value = state.sp26; $("future").value = state.future; $("ssaActual").value = state.ssaActual;
+    syncFund();
   }
+  function syncFund() { document.querySelectorAll("#fundSeg button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.v === String(state.fund))); }); }
 
-  function ageOpts(sel) { var h = "", wa = workAges(); for (var a = wa.first; a <= wa.last; a++) h += opt(a, a + " (" + (+state.birth + a) + ")", sel); return h; }
+  function ageOpts(sel) { var h = "", wa = workAges(); for (var a = wa.first; a <= wa.last; a++) h += opt(a, a + "  ·  " + (+state.birth + a), sel); return h; }
 
-  function renderPeriods() {
-    var wrap = $("periods"); var h = "";
-    state.periods.forEach(function (p, i) {
-      var jobs = JOBS.map(function (j) { return opt(j[0], j[1], p.job); }).join("");
-      var types = TYPES.map(function (t) { return opt(t[0], t[1], p.type); }).join("");
-      var ranges = RANGES.map(function (r) { return opt(r.id, r.label, p.range); }).join("");
-      var pos = POS.map(function (t) { return opt(t[0], t[1], p.pos); }).join("");
-      var off = p.type === "none" ? " hidden" : "";
-      h += '<div class="period" data-i="' + i + '">' +
-        '<div class="period-head"><h3>Job ' + (i + 1) + ' <span class="yrs" data-yrs></span></h3>' +
-        '<button type="button" class="btn ghost small" data-del aria-label="Remove job ' + (i + 1) + '">Remove</button></div>' +
-        '<div class="row2"><label class="f">From age<select id="p' + i + 'from" data-k="from">' + ageOpts(p.from) + '</select></label>' +
-        '<label class="f">To age<select id="p' + i + 'to" data-k="to">' + ageOpts(p.to) + '</select></label></div>' +
-        '<label class="f">How you were paid<select id="p' + i + 'type" data-k="type">' + types + '</select></label>' +
-        '<div class="grp"' + off + ' style="display:grid;gap:10px">' +
-        '<label class="f">Kind of work<select id="p' + i + 'job" data-k="job">' + jobs + '</select></label>' +
-        '<label class="f">Yearly pay, in today\'s dollars<select id="p' + i + 'range" data-k="range">' + ranges + '</select></label>' +
-        '<label class="f">Where in that range<select id="p' + i + 'pos" data-k="pos">' + pos + '</select></label>' +
-        '<div class="equiv" data-eq></div></div></div>';
-    });
-    wrap.innerHTML = h || '<p class="hint" style="margin:0">No jobs yet. Add one below.</p>';
-    updatePeriodLabels();
-  }
-
-  function updatePeriodLabels() {
+  function jobSummary(p) {
     var b = +state.birth;
-    document.querySelectorAll(".period").forEach(function (el) {
+    var yrs = (b + p.from) + (p.to > p.from ? "–" + String(b + p.to).slice(-2) : "");
+    if (p.type === "none") return { yrs: yrs, title: "Not working", sub: "No Social Security tax" };
+    return { yrs: yrs, title: jobById(p.job)[1], sub: TYPE_SHORT[p.type] + " · " + rangeById(p.range).short + ", " + POS_SHORT[p.pos] };
+  }
+
+  function renderJobs() {
+    var h = "";
+    state.periods.forEach(function (p, i) {
+      var s = jobSummary(p), open = i === openJob;
+      h += '<div class="job' + (open ? " open" : "") + '" data-i="' + i + '">' +
+        '<button type="button" class="job-h" aria-expanded="' + open + '" data-toggle><span class="yrs tnum" data-yrs>' + s.yrs + '</span>' +
+        '<span class="what"><b data-title>' + s.title + '</b><small data-sub>' + s.sub + '</small></span><span class="chev"></span></button>';
+      if (open) {
+        h += '<div class="job-b">' +
+          '<div class="row2"><label class="field"><span>From age</span><select id="p' + i + 'from" data-k="from">' + ageOpts(p.from) + '</select></label>' +
+          '<label class="field"><span>To age</span><select id="p' + i + 'to" data-k="to">' + ageOpts(p.to) + '</select></label></div>' +
+          '<label class="field"><span>How you were paid</span><select id="p' + i + 'type" data-k="type">' + TYPES.map(function (t) { return opt(t[0], t[1], p.type); }).join("") + '</select></label>' +
+          '<div class="grp" style="display:grid;gap:12px"' + (p.type === "none" ? " hidden" : "") + '>' +
+          '<label class="field"><span>Kind of work</span><select id="p' + i + 'job" data-k="job">' + JOBS.map(function (j) { return opt(j[0], j[1], p.job); }).join("") + '</select></label>' +
+          '<label class="field"><span>Yearly pay (today\'s dollars)</span><select id="p' + i + 'range" data-k="range">' + RANGES.map(function (r) { return opt(r.id, r.label, p.range); }).join("") + '</select></label>' +
+          '<label class="field"><span>Where in that range</span><select id="p' + i + 'pos" data-k="pos">' + POS.map(function (t) { return opt(t[0], t[1], p.pos); }).join("") + '</select></label>' +
+          '<div class="equiv" data-eq></div></div>' +
+          '<div class="job-f"><button type="button" class="btn link" data-del>Remove job</button><button type="button" class="btn" data-toggle>Done</button></div></div>';
+      }
+      h += "</div>";
+    });
+    $("jobs").innerHTML = h || '<p class="help" style="margin:0">No jobs yet. Add your first one below.</p>';
+    updateJobLabels();
+  }
+
+  function updateJobLabels() {
+    var b = +state.birth;
+    document.querySelectorAll(".job").forEach(function (el) {
       var p = state.periods[+el.dataset.i]; if (!p) return;
-      el.querySelector("[data-yrs]").textContent = (b + p.from) + "–" + (b + p.to);
-      var amt = amountFor(p), y1 = b + p.from;
-      var then = amt * awi(y1) / awi(LAST_ACTUAL);
-      el.querySelector("[data-eq]").innerHTML = fmt(amt) + " a year today was about <b>" + fmt(then) + "</b> in " + y1 + ".";
+      var s = jobSummary(p);
+      el.querySelector("[data-yrs]").textContent = s.yrs; el.querySelector("[data-title]").textContent = s.title; el.querySelector("[data-sub]").textContent = s.sub;
+      var eq = el.querySelector("[data-eq]");
+      if (eq) { var amt = amountFor(p), y1 = b + p.from; eq.textContent = fmt(amt) + " a year today equals about " + fmt(amt * awi(y1) / awi(LAST_ACTUAL)) + " in " + y1 + " pay."; }
     });
     $("sampleFlag").hidden = !state.sample;
   }
@@ -444,18 +534,16 @@ td.ret.down { color: var(--bad); }
   // ---------- Results rendering ----------
   function render() {
     var r = compute(), R = +state.retire, b = +state.birth;
-    var growth = r.bal - r.paid;
-    $("ansLabel").textContent = "Your account at age " + R;
+    $("ansLabel").textContent = "Account value at age " + R;
     $("ansBig").textContent = fmt(r.bal);
     var nowRow = null; r.rows.forEach(function (x) { if (x.y === NOW_YEAR) nowRow = x; });
-    var sub = "Valued at the end of " + r.endYear + " (you turn " + R + " in " + (b + R) + "). ";
-    if (r.endYear > NOW_YEAR && nowRow) sub += "Worth about " + fmt(nowRow.bal) + " today. Years after 2026 assume " + state.future + "% a year.";
-    else if (r.endYear === NOW_YEAR) sub += "2026 uses the S&P 500's return so far this year.";
+    var sub = "As of year-end " + r.endYear + ", with " + (state.fund === "100" ? "100% in the S&P 500" : state.fund === "60" ? "a 60/40 balanced fund" : "a 40/60 conservative fund") + ".";
+    if (r.endYear > NOW_YEAR && nowRow) sub += " Worth about " + fmt(nowRow.bal) + " today.";
     $("ansSub").textContent = sub;
-    $("kPaid").textContent = state.employer ? "SS tax paid in (you + employer)" : "SS tax paid in (your share)";
+    $("kPaid").textContent = state.employer ? "Tax invested (you + employer)" : "Tax invested (your share)";
     $("vPaid").textContent = fmt(r.paid);
-    $("vGrowth").textContent = fmt(growth);
-    $("vMult").textContent = r.paid > 0 ? "$" + (r.bal / r.paid).toFixed(2) : "—";
+    $("vGrowth").textContent = fmt(r.bal - r.paid);
+    $("vMult").textContent = r.paid > 0 ? (r.bal / r.paid).toFixed(1) + "×" : "—";
 
     var acct = r.bal * 0.04 / 12;
     var ssaTyped = state.ssaActual !== "" && !isNaN(+state.ssaActual) && +state.ssaActual > 0;
@@ -463,39 +551,33 @@ td.ret.down { color: var(--bad); }
     var ss67 = r.ss67.monthly;
     if (ssaTyped && r.ss.monthly > 0) ss67 = Math.round(ss * r.ss67.monthly / r.ss.monthly);
     var max = Math.max(acct, ss, ss67, 1);
-    $("barAcct").style.width = (acct / max * 70) + "%"; $("amtAcct").textContent = fmt(acct) + "/mo";
-    $("barSS").style.width = (ss / max * 70) + "%"; $("amtSS").textContent = fmt(ss) + "/mo";
-    $("barSS67").style.width = (ss67 / max * 70) + "%"; $("amtSS67").textContent = fmt(ss67) + "/mo";
-    var tag = ssaTyped ? "from your SSA statement" : "our estimate";
-    $("ssName1").innerHTML = "Social Security at " + R + "<small>" + (R < 67 ? "reduced for claiming early, " : R > 67 ? "increased for waiting, " : "") + tag + "</small>";
+    $("barAcct").style.width = (acct / max * 100) + "%"; $("amtAcct").textContent = fmt(acct) + " / mo";
+    $("barSS").style.width = (ss / max * 100) + "%"; $("amtSS").textContent = fmt(ss) + " / mo";
+    $("barSS67").style.width = (ss67 / max * 100) + "%"; $("amtSS67").textContent = fmt(ss67) + " / mo";
+    $("ssName1").innerHTML = "Social Security at " + R + "<small>" + (ssaTyped ? "your SSA statement" : "estimated") + "</small>";
     $("ssaAgeLbl").textContent = R;
-    var v;
-    if (r.paid <= 0) v = "Add a job in Step 2 to see results.";
-    else if (acct >= ss) v = "Withdrawing 4% a year, the invested account would pay about <b>" + fmt(acct - ss) + " more per month</b> than Social Security at " + R + ", and the " + fmt(r.bal) + " balance would still be yours to leave to family.";
-    else v = "Withdrawing 4% a year, the invested account would pay about <b>" + fmt(ss - acct) + " less per month</b> than Social Security at " + R + ". Social Security's formula pays lower earners a bigger share back, so it often wins for smaller paychecks.";
-    $("verdict").innerHTML = v;
-    $("dockLbl").textContent = "Account at " + R; $("dockAmt").textContent = fmt(r.bal);
+    var v = $("verdict");
+    if (r.paid <= 0) { v.className = "verdict lower"; v.textContent = "Add a job in Step 2 to see your results."; }
+    else if (acct >= ss) { v.className = "verdict"; v.innerHTML = "The invested account would provide about <b>" + fmt(acct - ss) + " more per month</b> than Social Security at " + R + ", while keeping a " + fmt(r.bal) + " balance that could pass to your heirs."; }
+    else { v.className = "verdict lower"; v.innerHTML = "The invested account would provide about <b>" + fmt(ss - acct) + " less per month</b> than Social Security at " + R + ". Social Security's formula returns a larger share to lower earners."; }
+    $("dockLbl").textContent = "Account value at " + R; $("dockAmt").textContent = fmt(r.bal);
+    $("spanHint").textContent = "Counting work from age 18 (" + (b + 18) + ") through age " + (R - 1) + " (" + (b + R - 1) + ").";
 
-    renderTable(r); drawChart(r); updatePeriodLabels(); save();
-    $("spanHint").textContent = "Working years counted: age 18 (" + (b + 18) + ") through age " + (R - 1) + " (" + (b + R - 1) + ").";
+    renderTable(r); drawChart(r); updateJobLabels(); save();
   }
 
   function renderTable(r) {
-    var jobName = {}; JOBS.forEach(function (j) { jobName[j[0]] = j[1]; });
     var h = "";
     r.rows.forEach(function (x) {
-      var work = x.type === "none" ? "—" : (x.type === "se" ? "1099 · " : "W-2 · ") + (jobName[x.job] || "Your entry");
-      var cls = (x.future ? "future" : "");
-      var rc = x.ret >= 0 ? "up" : "down";
+      var work = x.type === "none" ? "—" : TYPE_SHORT[x.type] + " · " + (x.job ? jobById(x.job)[1] : "Entered");
       var val = x.override ? Math.round(state.overrides[x.y]) : "";
-      h += '<tr class="' + cls + '"><td>' + x.y + (x.y === NOW_YEAR ? "*" : "") + "</td><td>" + x.age + '</td><td class="w">' + work + "</td>" +
+      h += '<tr class="' + (x.future ? "future" : "") + '"><td>' + x.y + "</td><td>" + x.age + '</td><td class="w">' + work + "</td>" +
         '<td><input type="number" min="0" step="100" inputmode="numeric" id="ov' + x.y + '" data-y="' + x.y + '" aria-label="Earnings in ' + x.y + '" class="' + (x.override ? "set" : "") + '" value="' + val + '" placeholder="' + Math.round(x.earn).toLocaleString("en-US") + '"></td>' +
-        "<td>" + fmt(x.taxed) + "</td><td>" + fmt(x.tax) + '</td><td class="ret ' + rc + '">' + (x.ret >= 0 ? "+" : "") + x.ret.toFixed(1) + "%</td><td><b>" + fmt(x.bal) + "</b></td></tr>";
+        "<td>" + fmt(x.taxed) + "</td><td>" + fmt(x.tax) + '</td><td class="' + (x.ret >= 0 ? "up" : "down") + '">' + (x.ret >= 0 ? "+" : "−") + Math.abs(x.ret).toFixed(1) + '%</td><td class="bal">' + fmt(x.bal) + "</td></tr>";
     });
-    var tb = $("tbody");
     var active = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.y : null;
-    tb.innerHTML = h;
-    if (active) { var el = $("ov" + active); if (el) { el.focus(); var n = el.value.length; try { el.setSelectionRange(n, n); } catch (e) { /* number inputs */ } } }
+    $("tbody").innerHTML = h;
+    if (active) { var el = $("ov" + active); if (el) el.focus(); }
   }
 
   // ---------- Chart ----------
@@ -503,8 +585,8 @@ td.ret.down { color: var(--bad); }
   function drawChart(r) {
     lastChart = r;
     var svg = $("chart"), box = $("chartbox");
-    var W = Math.max(300, box.clientWidth || 640), H = Math.round(Math.min(340, Math.max(220, W * 0.45)));
-    var m = { l: 58, r: 16, t: 14, b: 34 };
+    var W = Math.max(300, box.clientWidth || 640), H = Math.round(Math.min(320, Math.max(220, W * 0.42)));
+    var m = { l: 52, r: 12, t: 12, b: 30 };
     svg.setAttribute("viewBox", "0 0 " + W + " " + H); svg.setAttribute("width", W); svg.setAttribute("height", H);
     var rows = r.rows; if (!rows.length) { svg.innerHTML = ""; return; }
     var a0 = rows[0].age, a1 = rows[rows.length - 1].age;
@@ -512,44 +594,39 @@ td.ret.down { color: var(--bad); }
     var step = niceStep(maxV / 4), top = Math.max(step, Math.ceil(maxV / step) * step);
     var X = function (a) { return m.l + (a - a0) / Math.max(1, a1 - a0) * (W - m.l - m.r); };
     var Yv = function (v) { return m.t + (1 - v / top) * (H - m.t - m.b); };
-    var g = "";
-    for (var v = 0; v <= top + 1; v += step) g += '<line x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + Yv(v) + '" y2="' + Yv(v) + '" stroke="var(--line)" stroke-width="1"/><text x="' + (m.l - 8) + '" y="' + (Yv(v) + 4) + '" text-anchor="end" font-size="12" fill="var(--muted)" font-family="IBM Plex Mono, monospace">' + short(v) + "</text>";
+    var font = 'font-family="Inter, system-ui, sans-serif"';
+    var g = '<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--acct)" stop-opacity="0.22"/><stop offset="1" stop-color="var(--acct)" stop-opacity="0.02"/></linearGradient></defs>';
+    for (var v = 0; v <= top + 1; v += step) g += '<line x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + Yv(v) + '" y2="' + Yv(v) + '" stroke="var(--line)" stroke-width="1"' + (v === 0 ? '' : ' stroke-dasharray="2 4"') + '/><text x="' + (m.l - 10) + '" y="' + (Yv(v) + 4) + '" text-anchor="end" font-size="11.5" fill="var(--faint)" ' + font + '>' + short(v) + "</text>";
     var tickEvery = (a1 - a0) > 30 ? 5 : (a1 - a0) > 12 ? 2 : 1;
-    for (var a = a0; a <= a1; a++) if ((a % tickEvery === 0) || a === a1) {
-      if (a !== a1 && a1 - a < tickEvery / 2) continue;
-      g += '<text x="' + X(a) + '" y="' + (H - m.b + 18) + '" text-anchor="middle" font-size="12" fill="var(--muted)" font-family="IBM Plex Mono, monospace">' + a + "</text>";
-    }
-    g += '<text x="' + (W - m.r) + '" y="' + (H - 2) + '" text-anchor="end" font-size="11" fill="var(--muted)">age</text>';
+    for (var a = a0; a <= a1; a++) if (a % tickEvery === 0 && a1 - a >= 2 || a === a1) g += '<text x="' + X(a) + '" y="' + (H - m.b + 19) + '" text-anchor="' + (a === a1 ? 'end' : 'middle') + '" font-size="11.5" fill="var(--faint)" ' + font + '>' + (a === a1 ? "Age " + a : a) + "</text>";
     var area = "M" + X(a0) + "," + Yv(0), line = "", pline = "";
     rows.forEach(function (x, i) { area += " L" + X(x.age) + "," + Yv(x.bal); line += (i ? " L" : "M") + X(x.age) + "," + Yv(x.bal); pline += (i ? " L" : "M") + X(x.age) + "," + Yv(x.paid); });
     area += " L" + X(a1) + "," + Yv(0) + " Z";
-    // mark today if inside the range
     var nowAge = NOW_YEAR - +state.birth;
-    if (nowAge > a0 && nowAge < a1) g += '<line x1="' + X(nowAge) + '" x2="' + X(nowAge) + '" y1="' + m.t + '" y2="' + (H - m.b) + '" stroke="var(--muted)" stroke-dasharray="3 4"/><text x="' + (X(nowAge) - 5) + '" y="' + (m.t + 12) + '" text-anchor="end" font-size="11" fill="var(--muted)">today</text>';
-    g += '<path d="' + area + '" fill="var(--accent)" fill-opacity="0.16"/>';
-    g += '<path d="' + pline + '" fill="none" stroke="var(--amber)" stroke-width="2" stroke-dasharray="5 4"/>';
-    g += '<path d="' + line + '" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>';
+    if (nowAge > a0 && nowAge < a1) g += '<line x1="' + X(nowAge) + '" x2="' + X(nowAge) + '" y1="' + m.t + '" y2="' + (H - m.b) + '" stroke="var(--faint)" stroke-dasharray="3 4"/><text x="' + (X(nowAge) - 6) + '" y="' + (m.t + 11) + '" text-anchor="end" font-size="11" fill="var(--faint)" ' + font + '>Today</text>';
+    g += '<path d="' + area + '" fill="url(#ag)"/>';
+    g += '<path d="' + pline + '" fill="none" stroke="var(--ss)" stroke-width="2" stroke-linejoin="round"/>';
+    g += '<path d="' + line + '" fill="none" stroke="var(--acct)" stroke-width="2.5" stroke-linejoin="round"/>';
     var last = rows[rows.length - 1];
-    g += '<circle cx="' + X(last.age) + '" cy="' + Yv(last.bal) + '" r="5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>';
-    g += '<line id="hov" x1="0" x2="0" y1="' + m.t + '" y2="' + (H - m.b) + '" stroke="var(--ink)" stroke-opacity="0.35" visibility="hidden"/>';
-    g += '<circle id="hovdot" r="5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2" visibility="hidden"/>';
+    g += '<circle cx="' + X(last.age) + '" cy="' + Yv(last.bal) + '" r="4.5" fill="var(--acct)" stroke="var(--surface)" stroke-width="2"/>';
+    g += '<line id="hov" x1="0" x2="0" y1="' + m.t + '" y2="' + (H - m.b) + '" stroke="var(--line-strong)" visibility="hidden"/>';
+    g += '<circle id="hovdot" r="4.5" fill="var(--acct)" stroke="var(--surface)" stroke-width="2" visibility="hidden"/>';
     g += '<rect x="' + m.l + '" y="' + m.t + '" width="' + (W - m.l - m.r) + '" height="' + (H - m.t - m.b) + '" fill="transparent" id="hit"/>';
     svg.innerHTML = g;
-    // crash note
     var worst = null; rows.forEach(function (x) { if (!x.future && (!worst || x.ret < worst.ret)) worst = x; });
-    $("chartNote").textContent = worst && worst.ret < 0 ? "Worst year: " + worst.y + " (age " + worst.age + "), when the fund lost " + Math.abs(worst.ret).toFixed(1) + "%. The account dips in years like that and recovers over time." : "";
+    $("chartNote").textContent = worst && worst.ret < 0 ? "Largest one-year decline: " + worst.y + " (age " + worst.age + "), −" + Math.abs(worst.ret).toFixed(1) + "%. Hover or tap the chart for any year." : "Hover or tap the chart for any year.";
     var hit = $("hit"), tip = $("tip");
     function move(ev) {
-      var rect = svg.getBoundingClientRect(); var sx = (ev.clientX - rect.left) * W / rect.width;
+      var rect = svg.getBoundingClientRect(), sx = (ev.clientX - rect.left) * W / rect.width;
       var age = Math.round(a0 + (sx - m.l) / (W - m.l - m.r) * (a1 - a0)); age = Math.max(a0, Math.min(a1, age));
       var x = rows[age - a0]; if (!x) return;
       var px = X(age), py = Yv(x.bal);
       $("hov").setAttribute("x1", px); $("hov").setAttribute("x2", px); $("hov").setAttribute("visibility", "visible");
       $("hovdot").setAttribute("cx", px); $("hovdot").setAttribute("cy", py); $("hovdot").setAttribute("visibility", "visible");
       tip.hidden = false;
-      tip.innerHTML = "<b>" + x.y + "</b> · age " + x.age + '<br>Account <span class="num">' + fmt(x.bal) + '</span><br>Paid in <span class="num">' + fmt(x.paid) + "</span>";
-      var left = px * rect.width / W; left = Math.max(80, Math.min(rect.width - 80, left));
-      tip.style.left = left + "px"; tip.style.top = (Math.max(py * rect.height / H, 64) - 8) + "px";
+      tip.innerHTML = "<b>" + x.y + " · Age " + x.age + '</b><div class="r"><span>Account</span><b>' + fmt(x.bal) + '</b></div><div class="r"><span>Tax paid in</span><b>' + fmt(x.paid) + '</b></div><div class="r"><span>Return</span><b>' + (x.ret >= 0 ? "+" : "−") + Math.abs(x.ret).toFixed(1) + "%</b></div>";
+      var left = Math.max(90, Math.min(rect.width - 90, px * rect.width / W));
+      tip.style.left = left + "px"; tip.style.top = (Math.max(py * rect.height / H, 84) - 10) + "px";
     }
     function leave() { tip.hidden = true; $("hov").setAttribute("visibility", "hidden"); $("hovdot").setAttribute("visibility", "hidden"); }
     hit.addEventListener("pointermove", move); hit.addEventListener("pointerdown", move); hit.addEventListener("pointerleave", leave);
@@ -561,39 +638,41 @@ td.ret.down { color: var(--bad); }
     var wa = workAges();
     state.periods.forEach(function (p) { p.from = Math.max(wa.first, Math.min(wa.last, p.from)); p.to = Math.max(p.from, Math.min(wa.last, p.to)); });
   }
-  $("birth").addEventListener("change", function (e) { state.birth = +e.target.value; state.overrides = {}; renderPeriods(); render(); });
-  $("retire").addEventListener("change", function (e) { state.retire = +e.target.value; clampPeriods(); renderPeriods(); render(); });
-  $("fund").addEventListener("change", function (e) { state.fund = e.target.value; state.future = FUTURE_BY_FUND[state.fund]; $("future").value = state.future; render(); });
+  $("birth").addEventListener("change", function (e) { state.birth = +e.target.value; state.overrides = {}; renderJobs(); render(); });
+  $("retire").addEventListener("change", function (e) { state.retire = +e.target.value; clampPeriods(); renderJobs(); render(); });
+  $("fundSeg").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; state.fund = b.dataset.v; state.future = FUTURE_BY_FUND[state.fund]; $("future").value = state.future; syncFund(); render(); });
   $("employer").addEventListener("change", function (e) { state.employer = e.target.checked; render(); });
   ["fee", "sp26", "future"].forEach(function (k) { $(k).addEventListener("input", function (e) { if (e.target.value === "" || isNaN(+e.target.value)) return; state[k] = +e.target.value; render(); }); });
   $("ssaActual").addEventListener("input", function (e) { state.ssaActual = e.target.value; render(); });
 
-  $("periods").addEventListener("change", function (e) {
-    var el = e.target, card = el.closest(".period"); if (!card || !el.dataset.k) return;
+  $("jobs").addEventListener("change", function (e) {
+    var el = e.target, card = el.closest(".job"); if (!card || !el.dataset.k) return;
     var p = state.periods[+card.dataset.i], k = el.dataset.k;
     p[k] = (k === "from" || k === "to") ? +el.value : el.value;
     state.sample = false;
     if (k === "from" && p.to < p.from) { p.to = p.from; card.querySelector('[data-k="to"]').value = p.to; }
     if (k === "to" && p.from > p.to) { p.from = p.to; card.querySelector('[data-k="from"]').value = p.from; }
-    if (k === "job") { var j = JOBS.filter(function (x) { return x[0] === p.job; })[0]; if (j) { p.range = j[2]; card.querySelector('[data-k="range"]').value = p.range; } if (p.job === "owner" && p.type === "w2") { p.type = "se"; card.querySelector('[data-k="type"]').value = "se"; } }
+    if (k === "job") { p.range = jobById(p.job)[2]; card.querySelector('[data-k="range"]').value = p.range; if (p.job === "owner" && p.type === "w2") { p.type = "se"; card.querySelector('[data-k="type"]').value = "se"; } }
     if (k === "type") card.querySelector(".grp").hidden = p.type === "none";
     render();
   });
-  $("periods").addEventListener("click", function (e) {
-    if (!e.target.closest("[data-del]")) return;
-    var card = e.target.closest(".period"); state.periods.splice(+card.dataset.i, 1); state.sample = false; renderPeriods(); render();
+  $("jobs").addEventListener("click", function (e) {
+    var card = e.target.closest(".job"); if (!card) return;
+    var i = +card.dataset.i;
+    if (e.target.closest("[data-del]")) { state.periods.splice(i, 1); state.sample = false; openJob = -1; renderJobs(); render(); return; }
+    if (e.target.closest("[data-toggle]")) { openJob = openJob === i ? -1 : i; renderJobs(); var h = document.querySelector('.job[data-i="' + i + '"] .job-h'); if (h) h.focus(); }
   });
-  $("addPeriod").addEventListener("click", function () {
+  $("addJob").addEventListener("click", function () {
     var wa = workAges(), lastTo = state.periods.reduce(function (m, p) { return Math.max(m, p.to); }, wa.first - 1);
     var from = Math.min(wa.last, lastTo + 1);
     state.periods.push({ from: from, to: wa.last, type: "w2", job: "office", range: "r3", pos: "mid" });
-    state.sample = false; renderPeriods(); render();
-    var sel = $("p" + (state.periods.length - 1) + "from"); if (sel) sel.focus();
+    state.sample = false; openJob = state.periods.length - 1; renderJobs(); render();
+    var sel = $("p" + openJob + "from"); if (sel) sel.focus();
   });
   $("clearAll").addEventListener("click", function () {
     var wa = workAges();
-    state.periods = [{ from: wa.first, to: wa.last, type: "w2", job: "office", range: "r3", pos: "mid" }]; state.overrides = {}; state.sample = false;
-    renderPeriods(); render();
+    state.periods = [{ from: wa.first, to: wa.last, type: "w2", job: "office", range: "r3", pos: "mid" }]; state.overrides = {}; state.sample = false; openJob = 0;
+    renderJobs(); render();
   });
   $("tbody").addEventListener("change", function (e) {
     var y = e.target.dataset.y; if (!y) return;
@@ -603,6 +682,6 @@ td.ret.down { color: var(--bad); }
   $("form").addEventListener("submit", function (e) { e.preventDefault(); });
   var rz; window.addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(function () { if (lastChart) drawChart(lastChart); }, 120); });
 
-  clampPeriods(); fillStatic(); renderPeriods(); render();
+  clampPeriods(); fillStatic(); renderJobs(); render();
 })();
 </script>
