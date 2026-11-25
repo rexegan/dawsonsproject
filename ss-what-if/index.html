@@ -44,6 +44,7 @@
   --good: #3ccf9b; --bad: #f08a7e; --focus: #7aa7ff; --shadow: none; color-scheme: dark;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.5; padding-block: 0 88px; -webkit-font-smoothing: antialiased; }
 .gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .wrap { max-width: 1200px; margin: 0 auto; }
@@ -209,6 +210,31 @@ td.bal { font-weight: 600; }
 .method dt { font-weight: 600; color: var(--ink); font-size: 14px; }
 .method dd { margin: 2px 0 0; }
 .disclaimer { font-size: 12.5px; color: var(--faint); padding-top: 4px; }
+/* Saved estimates bar */
+.estbar { padding: 16px 20px; display: grid; gap: 12px; margin-bottom: 24px; }
+.est-main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) auto; gap: 12px; align-items: end; }
+@media (max-width: 860px) { .est-main { grid-template-columns: minmax(0, 1fr); } }
+.est-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+input[type="text"] { width: 100%; height: 42px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); font-size: 14.5px; font-weight: 600; }
+input[type="text"]:hover { border-color: var(--faint); }
+.est-panel { border: 1px solid var(--line-strong); background: var(--surface-2); border-radius: 10px; padding: 14px; display: grid; gap: 12px; }
+.est-panel p { margin: 0; font-size: 14px; }
+.est-panel .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.est-panel .choices { display: flex; gap: 8px 18px; flex-wrap: wrap; font-size: 14px; }
+.est-panel .choices label { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+.est-panel .choices input { accent-color: var(--acct); width: 18px; height: 18px; margin: 0; }
+.btn.primary { background: var(--acct); color: var(--surface); border-color: var(--acct); }
+.btn.primary:hover { background: var(--acct); filter: brightness(1.08); }
+.btn.danger { background: var(--bad); color: var(--surface); border-color: var(--bad); }
+.btn.danger:hover { background: var(--bad); filter: brightness(1.08); }
+.est-foot { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.est-compare summary { cursor: pointer; font-size: 14px; font-weight: 600; color: var(--acct); padding: 2px 0; }
+.est-compare[open] summary { margin-bottom: 10px; }
+.est-compare td:first-child { font-family: var(--font); }
+.est-compare tr.cur td { background: var(--acct-soft); }
+.est-compare .openbtn { border: 0; background: none; padding: 0; color: var(--ink); font-weight: 600; cursor: pointer; text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
+.est-compare .openbtn:hover { color: var(--acct); }
+.est-compare th:nth-child(-n+3), .est-compare td:nth-child(-n+3) { text-align: left; }
 footer { margin-top: 28px; padding-block: 20px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--faint); }
 
 /* Phone: answer pinned to the bottom so it updates while you edit */
@@ -235,6 +261,31 @@ footer { margin-top: 28px; padding-block: 20px; border-top: 1px solid var(--line
 <section class="intro wrap">
   <h1>What would your Social Security taxes be worth if they had been invested?</h1>
   <p>Describe the jobs you've held and roughly what they paid. We take the Social Security portion of FICA from each year, invest it at that year's actual market return, and compare the result with the benefit Social Security would pay you.</p>
+</section>
+
+<section class="wrap card estbar" aria-label="Saved estimates">
+  <div class="est-main">
+    <label class="field"><span>Estimate name</span><input type="text" id="estName" maxlength="60" placeholder="Name this estimate"></label>
+    <label class="field"><span>Open a saved estimate</span><select id="estOpen"></select></label>
+    <div class="est-actions">
+      <button type="button" class="btn" id="estSaveAs">Save as new…</button>
+      <button type="button" class="btn" id="estNew">+ New estimate</button>
+      <button type="button" class="btn link" id="estDelete">Delete</button>
+    </div>
+  </div>
+  <div class="est-panel" id="estPanel" hidden></div>
+  <div class="est-foot">
+    <span class="help" id="estStatus">Changes are saved automatically on this device.</span>
+  </div>
+  <details class="est-compare" id="estCompare" hidden>
+    <summary>Compare saved estimates</summary>
+    <div class="tablewrap" style="max-height:none">
+      <table>
+        <thead><tr><th>Estimate</th><th>Born</th><th>Fund</th><th>Account value</th><th>Account income</th><th>Social Security</th></tr></thead>
+        <tbody id="estTbody"></tbody>
+      </table>
+    </div>
+  </details>
 </section>
 
 <main class="wrap layout">
@@ -411,11 +462,33 @@ footer { margin-top: 28px; padding-block: 20px; border-top: 1px solid var(--line
   var DEFAULTS = { birth: 1962, retire: 65, fund: "60", employer: true, fee: 0.10, sp26: 12, future: 6, ssaActual: "", sample: true, periods: SAMPLE, overrides: {} };
   var FUTURE_BY_FUND = { "100": 7, "60": 6, "40": 5 };
 
-  var state;
-  try { state = JSON.parse(localStorage.getItem("ss-what-if-v1") || "null"); } catch (e) { state = null; }
-  if (!state || !Array.isArray(state.periods)) state = JSON.parse(JSON.stringify(DEFAULTS));
-  var openJob = -1;
-  function save() { try { localStorage.setItem("ss-what-if-v1", JSON.stringify(state)); } catch (e) { /* storage unavailable */ } }
+  // ---------- Saved estimates (kept in this browser) ----------
+  var STORE_KEY = "ss-what-if-estimates-v1";
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function uid() { return "e" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function validData(d) { return d && Array.isArray(d.periods); }
+  var store = null;
+  try { store = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); } catch (e) { store = null; }
+  if (!store || !Array.isArray(store.list) || !store.list.length) {
+    var legacy = null;
+    try { legacy = JSON.parse(localStorage.getItem("ss-what-if-v1") || "null"); } catch (e) { legacy = null; }
+    var first = { id: uid(), name: "My estimate", updated: Date.now(), data: validData(legacy) ? legacy : clone(DEFAULTS) };
+    store = { cur: first.id, list: [first] };
+  }
+  store.list = store.list.filter(function (it) { return it && validData(it.data); });
+  if (!store.list.length) store.list.push({ id: uid(), name: "My estimate", updated: Date.now(), data: clone(DEFAULTS) });
+  function curItem() { for (var i = 0; i < store.list.length; i++) if (store.list[i].id === store.cur) return store.list[i]; store.cur = store.list[0].id; return store.list[0]; }
+  var state = curItem().data;
+  var openJob = -1, lastSummary = null;
+  function persist() { try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) { /* storage unavailable: works for this visit only */ } }
+  var snaps = {};
+  function save() {
+    var it = curItem(), snap = JSON.stringify(it.data);
+    if (snaps[it.id] !== undefined && snaps[it.id] !== snap) it.updated = Date.now();
+    snaps[it.id] = snap;
+    if (lastSummary) it.summary = lastSummary;
+    persist(); renderEstBar();
+  }
 
   // ---------- Helpers ----------
   var $ = function (id) { return document.getElementById(id); };
@@ -563,6 +636,7 @@ footer { margin-top: 28px; padding-block: 20px; border-top: 1px solid var(--line
     $("dockLbl").textContent = "Account value at " + R; $("dockAmt").textContent = fmt(r.bal);
     $("spanHint").textContent = "Counting work from age 18 (" + (b + 18) + ") through age " + (R - 1) + " (" + (b + R - 1) + ").";
 
+    lastSummary = { value: r.bal, retire: R, birth: b, fund: state.fund, acct: acct, ss: ss };
     renderTable(r); drawChart(r); updateJobLabels(); save();
   }
 
@@ -681,6 +755,97 @@ footer { margin-top: 28px; padding-block: 20px; border-top: 1px solid var(--line
   });
   $("form").addEventListener("submit", function (e) { e.preventDefault(); });
   var rz; window.addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(function () { if (lastChart) drawChart(lastChart); }, 120); });
+
+  // ---------- Saved estimates bar ----------
+  var FUND_NAME = { "100": "S&P 500", "60": "Balanced 60/40", "40": "Conservative 40/60" };
+  var timeFmt = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function sortedList() { return store.list.slice().sort(function (a, b) { return (b.updated || 0) - (a.updated || 0); }); }
+  function uniqueName(base) {
+    var names = {}; store.list.forEach(function (it) { names[it.name.toLowerCase()] = 1; });
+    if (!names[base.toLowerCase()]) return base;
+    for (var n = 2; ; n++) if (!names[(base + " " + n).toLowerCase()]) return base + " " + n;
+  }
+  function renderEstBar() {
+    var cur = curItem();
+    if (document.activeElement !== $("estName")) $("estName").value = cur.name;
+    $("estOpen").innerHTML = sortedList().map(function (it) {
+      var s = it.summary, extra = s ? "  —  " + fmt(s.value) + " at " + s.retire : "";
+      return '<option value="' + it.id + '"' + (it.id === cur.id ? " selected" : "") + ">" + esc(it.name) + extra + "</option>";
+    }).join("");
+    $("estStatus").textContent = (store.list.length === 1 ? "1 saved estimate" : store.list.length + " saved estimates") +
+      " · Changes save automatically on this device" + (cur.updated ? " · Last saved " + timeFmt.format(cur.updated) : "");
+    $("estDelete").hidden = false;
+    var cmp = $("estCompare"); cmp.hidden = store.list.length < 2;
+    if (!cmp.hidden) {
+      $("estTbody").innerHTML = sortedList().map(function (it) {
+        var s = it.summary || {};
+        return '<tr class="' + (it.id === cur.id ? "cur" : "") + '"><td><button type="button" class="openbtn" data-open="' + it.id + '">' + esc(it.name) + "</button></td>" +
+          "<td>" + (s.birth || it.data.birth) + "</td><td>" + (FUND_NAME[s.fund || it.data.fund] || "") + "</td>" +
+          "<td><b>" + (s.value != null ? fmt(s.value) : "—") + "</b>" + (s.retire ? " at " + s.retire : "") + "</td>" +
+          "<td>" + (s.acct != null ? fmt(s.acct) + " / mo" : "—") + "</td><td>" + (s.ss != null ? fmt(s.ss) + " / mo" : "—") + "</td></tr>";
+      }).join("");
+    }
+  }
+  function switchTo(id) {
+    store.cur = id; state = curItem().data; openJob = -1; closePanel();
+    clampPeriods(); fillStatic(); renderJobs(); render();
+  }
+  function closePanel() { $("estPanel").hidden = true; $("estPanel").innerHTML = ""; }
+  function openPanel(html, focusId) { var p = $("estPanel"); p.innerHTML = html; p.hidden = false; var f = focusId && $(focusId); if (f) { f.focus(); if (f.select) f.select(); } }
+
+  $("estName").addEventListener("input", function (e) { curItem().name = e.target.value.trim() || "Untitled estimate"; persist(); renderEstBar(); });
+  $("estName").addEventListener("blur", function () { renderEstBar(); });
+  $("estOpen").addEventListener("change", function (e) { switchTo(e.target.value); });
+  $("estSaveAs").addEventListener("click", function () {
+    openPanel('<p><b>Save a copy of this estimate</b> under a new name. The copy becomes the one you are working on, and "' + esc(curItem().name) + '" stays as it is.</p>' +
+      '<label class="field"><span>Name for the copy</span><input type="text" id="estNewName" maxlength="60" value="' + esc(uniqueName(curItem().name + " (copy)")) + '"></label>' +
+      '<div class="acts"><button type="button" class="btn primary" data-act="saveas">Save copy</button><button type="button" class="btn" data-act="cancel">Cancel</button></div>', "estNewName");
+  });
+  $("estNew").addEventListener("click", function () {
+    openPanel('<p><b>Start a new estimate.</b> Your current one stays saved, and you can switch back to it any time.</p>' +
+      '<label class="field"><span>Name</span><input type="text" id="estNewName" maxlength="60" value="' + esc(uniqueName("Estimate " + (store.list.length + 1))) + '"></label>' +
+      '<div class="choices" role="radiogroup" aria-label="Start from"><label><input type="radio" name="estStart" value="blank" checked> Start with a blank work history</label>' +
+      '<label><input type="radio" name="estStart" value="example"> Start from the example</label></div>' +
+      '<div class="acts"><button type="button" class="btn primary" data-act="new">Create estimate</button><button type="button" class="btn" data-act="cancel">Cancel</button></div>', "estNewName");
+  });
+  $("estDelete").addEventListener("click", function () {
+    var last = store.list.length === 1;
+    openPanel('<p>Delete <b>"' + esc(curItem().name) + '"</b>? This can\'t be undone.' + (last ? " A new blank estimate will take its place." : "") + "</p>" +
+      '<div class="acts"><button type="button" class="btn danger" data-act="delete">Delete estimate</button><button type="button" class="btn" data-act="cancel">Cancel</button></div>');
+  });
+  $("estPanel").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]"); if (!b) return;
+    var act = b.dataset.act, nameEl = $("estNewName"), name = nameEl ? (nameEl.value.trim() || "Untitled estimate") : "";
+    if (act === "cancel") { closePanel(); return; }
+    if (act === "saveas") {
+      var copy = { id: uid(), name: name, updated: Date.now(), data: clone(state) };
+      store.list.push(copy); switchTo(copy.id); flash("Saved as “" + name + "”");
+    } else if (act === "new") {
+      var start = (document.querySelector('input[name="estStart"]:checked') || {}).value;
+      var d;
+      if (start === "example") d = clone(DEFAULTS);
+      else {
+        d = clone(DEFAULTS); d.birth = state.birth; d.retire = state.retire; d.sample = false; d.overrides = {};
+        d.periods = [{ from: 18, to: state.retire - 1, type: "w2", job: "office", range: "r3", pos: "mid" }];
+      }
+      var it = { id: uid(), name: name, updated: Date.now(), data: d };
+      store.list.push(it); switchTo(it.id); if (start !== "example") { openJob = 0; renderJobs(); }
+      flash("Created “" + name + "”");
+    } else if (act === "delete") {
+      var gone = curItem().name;
+      store.list = store.list.filter(function (x) { return x.id !== store.cur; });
+      if (!store.list.length) { var blank = clone(DEFAULTS); blank.sample = false; store.list.push({ id: uid(), name: "My estimate", updated: Date.now(), data: blank }); }
+      switchTo(sortedList()[0].id); flash("Deleted “" + gone + "”");
+    }
+  });
+  $("estPanel").addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && e.target.id === "estNewName") { e.preventDefault(); var b = $("estPanel").querySelector(".btn.primary"); if (b) b.click(); }
+    if (e.key === "Escape") closePanel();
+  });
+  $("estTbody").addEventListener("click", function (e) { var b = e.target.closest("[data-open]"); if (b) { switchTo(b.dataset.open); window.scrollTo({ top: $("estName").getBoundingClientRect().top + window.scrollY - 80, behavior: "smooth" }); } });
+  var flashT;
+  function flash(msg) { var s = $("estStatus"); clearTimeout(flashT); s.textContent = msg + " ✓"; s.style.color = "var(--acct)"; flashT = setTimeout(function () { s.style.color = ""; renderEstBar(); }, 2200); }
 
   clampPeriods(); fillStatic(); renderJobs(); render();
 })();
